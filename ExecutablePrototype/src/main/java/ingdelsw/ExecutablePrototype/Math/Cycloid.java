@@ -12,8 +12,7 @@ public class Cycloid extends Curve {
 	private double r; // Raggio del cerchio generatore della cicloide
 
     public Cycloid(Point2D startPoint, Point2D endPoint) {
-    	intervalX= endPoint.getX()-startPoint.getX();
-    	double intervalY= endPoint.getY()-startPoint.getY();
+    	super(startPoint, endPoint);
     	alfa=calculateAlfa(intervalX,intervalY);
         r=calculateR(intervalX,intervalY);
     }

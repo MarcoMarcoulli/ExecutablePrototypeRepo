@@ -24,7 +24,10 @@ public class InputManager {
     public void setEndpoint(Point2D endPoint) {
     	if(endPoint.getY()<=startPoint.getY())
     		throw new IllegalArgumentException("Il punto di arrivo deve essere più in basso di quello di partenza");
-    	else {this.endPoint=endPoint;
+    	else if(endPoint.getX() == startPoint.getX())
+    		this.endPoint.add(endPoint.getX() + 1, endPoint.getY());
+    	else {
+    		this.endPoint=endPoint;
     		System.out.println(endPoint);
     	}
     }
