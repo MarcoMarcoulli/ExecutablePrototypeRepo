@@ -32,9 +32,10 @@ public abstract class Curve {
     	double deltaX = intervalX / (double) (numPoints - 1);
     	double x=startPoint.getX();
     	double y=startPoint.getY();
-    	for (int i = 0; i < numPoints; i++) {
-    		x += i * deltaX;
-            y += evaluateY(x-startPoint.getX());
+    	points.add(new Point2D(x,y));
+    	for (int i = 0; i < numPoints-1; i++) {
+    		x += deltaX;
+            y = startPoint.getY() + evaluateY(x-startPoint.getX());
             points.add(new Point2D(x, y));
             System.out.println("x : " + x + "y : " + y);
         }

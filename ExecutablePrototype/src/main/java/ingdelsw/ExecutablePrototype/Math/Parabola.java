@@ -14,7 +14,6 @@ public class Parabola extends Curve {
 
     public Parabola(Point2D startPoint, Point2D endPoint) {
     	super(startPoint,endPoint);
-    	intervalX=endPoint.getX()-startPoint.getX();
         a=(endPoint.getX()-startPoint.getX())/Math.pow(endPoint.getY()-startPoint.getY(), 2);
     }
     
