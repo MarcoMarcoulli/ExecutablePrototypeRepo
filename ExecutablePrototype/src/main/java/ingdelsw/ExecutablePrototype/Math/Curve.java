@@ -11,14 +11,13 @@ public abstract class Curve {
 	protected double intervalX, intervalY;
 	
 	public abstract ArrayList<Point2D> calculatePointList(Point2D startPoint, int numPoints);
+	public abstract double evaluateY(double parametro);
 	
 	public Curve(Point2D startPoint, Point2D endPoint)
 	{
 		intervalX = endPoint.getX()-startPoint.getX();
 		intervalY = endPoint.getY()-startPoint.getY();
 	}
-	
-	public abstract double evaluateY(double parametro);
 	
 	public void drawCurve(Point2D startPoint, int numPoints, GraphicsContext gc) {
 		System.out.println("drawCurve chiamato");

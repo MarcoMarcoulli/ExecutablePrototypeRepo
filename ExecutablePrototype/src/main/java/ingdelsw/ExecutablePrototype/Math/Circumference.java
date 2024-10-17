@@ -67,7 +67,10 @@ public class Circumference extends Curve {
     
     private double xCenter(Point2D startPoint)
     {	
-    	double xCenter = (bCoefficient() + Math.sqrt(delta()))/(2*aCoefficient());
+    	double xCenter;
+    	if(intervalX>0)
+    		xCenter = (bCoefficient() + Math.sqrt(delta()))/(2*aCoefficient());
+    	else xCenter = (bCoefficient() - Math.sqrt(delta()))/(2*aCoefficient());
     	System.out.print("xCenter : " + (xCenter+startPoint.getX()));
     	System.out.print(" xR : " + (xCenter+startPoint.getX()-r));
     	return xCenter;
