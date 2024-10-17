@@ -3,8 +3,6 @@ package ingdelsw.ExecutablePrototype.Math;
 import java.util.ArrayList;
 
 import javafx.geometry.Point2D;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 public class Circumference extends Curve {
 	
@@ -29,8 +27,7 @@ public class Circumference extends Curve {
     	return Math.sqrt(2*x*r - Math.pow(x, 2));
     }
     
-    @Override
-    protected ArrayList<Point2D> calculatePointList(Point2D startPoint, int numPoints, GraphicsContext gc) {
+    public ArrayList<Point2D> calculatePointList(Point2D startPoint, int numPoints) {
     	ArrayList<Point2D> points = new ArrayList<>();
     	
     	double deltaX = intervalX / (double) (numPoints - 1);
@@ -38,7 +35,6 @@ public class Circumference extends Curve {
     	double y = startPoint.getY();
     	double xCenter = xCenter(startPoint) + x;
     	double yCenter = yCenter(startPoint) + y;
-    	visualizePoint(gc, xCenter, yCenter);
     	points.add(new Point2D(x,y));
     	for (int i = 0; i < numPoints-1; i++) {
     		x += deltaX;
@@ -48,13 +44,6 @@ public class Circumference extends Curve {
         }
     	return points;
     }
-    
-    private void visualizePoint(GraphicsContext gc, double x, double y)
-    {
-    	gc.setFill(Color.GREEN);
-        gc.fillOval(x - 5, y - 5, 10, 10);
-    }
-    
     
     private double aCoefficient()
     {

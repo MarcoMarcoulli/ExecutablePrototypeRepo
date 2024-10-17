@@ -3,21 +3,16 @@ package ingdelsw.ExecutablePrototype;
 import java.util.ArrayList;
 
 import ingdelsw.ExecutablePrototype.Math.Circumference;
-import ingdelsw.ExecutablePrototype.Math.CubicSpline;
 import ingdelsw.ExecutablePrototype.Math.Curve;
 import ingdelsw.ExecutablePrototype.Math.Cycloid;
 import ingdelsw.ExecutablePrototype.Math.Parabola;
-import ingdelsw.ExecutablePrototype.InputManager;
-import ingdelsw.ExecutablePrototype.SimulationManager;
 import javafx.application.Application;
-import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -33,7 +28,6 @@ public class Interface extends Application {
     private ArrayList<SimulationManager> simulations;
     private UIStates state;
     
-    private StackPane stackPane;
     private Canvas pointsCanvas;
     private Canvas curveCanvas;
     private VBox controlPanel;
@@ -205,7 +199,7 @@ public class Interface extends Application {
     {
     	System.out.println("handleCircumferenceClick chiamato");
     	controlPanel.getChildren().clear();
-    	controlPanel.getChildren().addAll(chooseRadiusMessage, btnCancelInput);
+    	controlPanel.getChildren().add(chooseRadiusMessage);
 
     	double x = inputManager.getEndPoint().getX() - inputManager.getStartPoint().getX();
     	double y = inputManager.getEndPoint().getY() - inputManager.getStartPoint().getY();
@@ -213,12 +207,12 @@ public class Interface extends Application {
     	circumferenceInitial.drawCurve(inputManager.getStartPoint(), 1000, curveCanvas.getGraphicsContext2D());
     	Circumference circumference = (Circumference)circumferenceInitial;
     	
-    	radiusSlider = new Slider(circumference.getR(), circumference.getR()*10, circumference.getR());
+    	radiusSlider = new Slider(circumference.getR(), circumference.getR()*4, circumference.getR());
     	// Aggiungi un listener per il valore dello slider e chiama la funzione
         radiusSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             handleSliderChange(newValue.doubleValue());
         });
-    	controlPanel.getChildren().addAll(radiusSlider, btnConfirmRadius);
+    	controlPanel.getChildren().addAll(radiusSlider, btnConfirmRadius, btnCancelInput);
     	state = UIStates.CHOOSING_RADIUS;
     }
     

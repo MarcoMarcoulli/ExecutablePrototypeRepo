@@ -10,6 +10,8 @@ public abstract class Curve {
 	
 	protected double intervalX, intervalY;
 	
+	public abstract ArrayList<Point2D> calculatePointList(Point2D startPoint, int numPoints);
+	
 	public Curve(Point2D startPoint, Point2D endPoint)
 	{
 		intervalX = endPoint.getX()-startPoint.getX();
@@ -22,23 +24,8 @@ public abstract class Curve {
 		System.out.println("drawCurve chiamato");
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(2);
-        ArrayList<Point2D> points = calculatePointList(startPoint, numPoints, gc);
+        ArrayList<Point2D> points = calculatePointList(startPoint, numPoints);
         for (int i = 0; i < points.size() - 1; i++) 
         	gc.strokeLine(points.get(i).getX(), points.get(i).getY(), points.get(i+1).getX(), points.get(i+1).getY());
     }
-	
-	protected ArrayList<Point2D> calculatePointList(Point2D startPoint, int numPoints, GraphicsContext gc) {
-    	ArrayList<Point2D> points = new ArrayList<>();
-    	double deltaX = intervalX / (double) (numPoints - 1);
-    	double x = startPoint.getX();
-    	double y = startPoint.getY();
-    	points.add(new Point2D(x,y));
-    	for (int i = 0; i < numPoints-1; i++) {
-    		x += deltaX;
-            y = startPoint.getY() + evaluateY(x-startPoint.getX());
-            points.add(new Point2D(x, y));
-            System.out.println("x : " + x + "y : " + y);
-        }
-    	return points;
-	}
 }

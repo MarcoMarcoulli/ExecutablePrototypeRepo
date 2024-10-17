@@ -3,8 +3,6 @@ package ingdelsw.ExecutablePrototype.Math;
 import java.util.ArrayList;
 
 import javafx.geometry.Point2D;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 public class Cycloid extends Curve {
 	
