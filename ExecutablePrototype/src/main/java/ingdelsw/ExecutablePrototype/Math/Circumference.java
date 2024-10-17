@@ -33,14 +33,17 @@ public class Circumference extends Curve {
     	ArrayList<Point2D> points = new ArrayList<>();
     	
     	double deltaX = intervalX / (double) (numPoints - 1);
-    	double x = startPoint.getX() - xCenter() - r;
+    	double x = startPoint.getX();
     	double y = startPoint.getY();
-    	
-    	for (int i = 0; i < numPoints; i++) {
-    		x += i * deltaX;
-            y += evaluateY(x-startPoint.getX());
+    	double xCenter = xCenter();
+    	double yCenter = yCenter();
+    	points.add(new Point2D(x,y));
+    	System.out.println("x : " + x + " y : " + y);
+    	for (int i = 0; i < numPoints-1; i++) {
+    		x += deltaX;
+            y = yCenter + evaluateY(x - xCenter);
             points.add(new Point2D(x, y));
-            System.out.println("x : " + x + "y : " + y);
+            System.out.println("x : " + x + " y : " + y);
         }
     	return points;
     }
@@ -67,12 +70,18 @@ public class Circumference extends Curve {
     
     private double xCenter()
     {	
-    	return (bCoefficient()-Math.sqrt(delta()))/2*aCoefficient();
+    	double xCenter = (bCoefficient()-Math.sqrt(delta()))/(2*aCoefficient());
+    	System.out.print("xCenter : " + xCenter);
+    	System.out.print("  xR : " + (xCenter-r));
+    	return xCenter;
     }
     
     private double yCenter()
     {
-    	return (Math.pow(intervalX, 2) + Math.pow(intervalY, 2) - 2*xCenter()*intervalX)/2*intervalY;
+    	double yCenter = (Math.pow(intervalX, 2) + Math.pow(intervalY, 2) - 2*xCenter()*intervalX)/(2*intervalY);
+    	System.out.println(" yCenter : " + yCenter);
+    	return yCenter;
+    	
     }
     
     

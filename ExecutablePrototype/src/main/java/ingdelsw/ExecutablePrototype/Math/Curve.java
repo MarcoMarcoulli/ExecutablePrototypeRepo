@@ -30,8 +30,8 @@ public abstract class Curve {
 	protected ArrayList<Point2D> calculatePointList(Point2D startPoint, int numPoints) {
     	ArrayList<Point2D> points = new ArrayList<>();
     	double deltaX = intervalX / (double) (numPoints - 1);
-    	double x=startPoint.getX();
-    	double y=startPoint.getY();
+    	double x = startPoint.getX();
+    	double y = startPoint.getY();
     	points.add(new Point2D(x,y));
     	for (int i = 0; i < numPoints-1; i++) {
     		x += deltaX;

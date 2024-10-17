@@ -18,7 +18,7 @@ public class InputManager {
 
     public void setStartpoint(Point2D startPoint) {
         this.startPoint = startPoint;
-        System.out.println(startPoint);
+        System.out.println("StartPoint : " + startPoint);
     }
     
     public void setEndpoint(Point2D endPoint) {
@@ -28,7 +28,7 @@ public class InputManager {
     		this.endPoint.add(endPoint.getX() + 1, endPoint.getY());
     	else {
     		this.endPoint=endPoint;
-    		System.out.println(endPoint);
+    		System.out.println("EndPoint : " + endPoint);
     	}
     }
     

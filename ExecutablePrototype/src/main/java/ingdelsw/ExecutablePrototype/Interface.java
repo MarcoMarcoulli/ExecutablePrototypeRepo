@@ -185,7 +185,7 @@ public class Interface extends Application {
     	controlPanel.getChildren().addAll(chooseMassMessage, btnCancelInput);
     	Cycloid cycloid = new Cycloid(inputManager.getStartPoint(),inputManager.getEndPoint());
     	simulations.add(new SimulationManager(cycloid, curveCanvas));
-    	cycloid.drawCurve(inputManager.getStartPoint(), 100, curveCanvas.getGraphicsContext2D());
+    	cycloid.drawCurve(inputManager.getStartPoint(), 1000, curveCanvas.getGraphicsContext2D());
     	state = UIStates.CHOOSING_MASS;
     }
     
