@@ -203,11 +203,10 @@ public class Interface extends Application {
 
     	double x = inputManager.getEndPoint().getX() - inputManager.getStartPoint().getX();
     	double y = inputManager.getEndPoint().getY() - inputManager.getStartPoint().getY();
-    	Curve circumferenceInitial = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), (Math.pow(x, 2)+Math.pow(y, 2))/(2*x));
+    	Circumference circumferenceInitial = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), (Math.pow(x, 2)+Math.pow(y, 2))/(2*x));
     	circumferenceInitial.drawCurve(inputManager.getStartPoint(), 1000, curveCanvas.getGraphicsContext2D());
-    	Circumference circumference = (Circumference)circumferenceInitial;
     	
-    	radiusSlider = new Slider(circumference.getR(), circumference.getR()*4, circumference.getR());
+    	radiusSlider = new Slider((x/Math.abs(x))*circumferenceInitial.getR(), (x/Math.abs(x))*circumferenceInitial.getR()*3, (x/Math.abs(x))*circumferenceInitial.getR());
     	// Aggiungi un listener per il valore dello slider e chiama la funzione
         radiusSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             handleSliderChange(newValue.doubleValue());
