@@ -22,12 +22,12 @@ public abstract class Curve {
 		System.out.println("drawCurve chiamato");
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(2);
-        ArrayList<Point2D> points = calculatePointList(startPoint, numPoints);
+        ArrayList<Point2D> points = calculatePointList(startPoint, numPoints, gc);
         for (int i = 0; i < points.size() - 1; i++) 
         	gc.strokeLine(points.get(i).getX(), points.get(i).getY(), points.get(i+1).getX(), points.get(i+1).getY());
     }
 	
-	protected ArrayList<Point2D> calculatePointList(Point2D startPoint, int numPoints) {
+	protected ArrayList<Point2D> calculatePointList(Point2D startPoint, int numPoints, GraphicsContext gc) {
     	ArrayList<Point2D> points = new ArrayList<>();
     	double deltaX = intervalX / (double) (numPoints - 1);
     	double x = startPoint.getX();
@@ -40,6 +40,5 @@ public abstract class Curve {
             System.out.println("x : " + x + "y : " + y);
         }
     	return points;
-    }
-	
+	}
 }

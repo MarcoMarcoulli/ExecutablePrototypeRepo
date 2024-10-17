@@ -212,20 +212,20 @@ public class Interface extends Application {
     	Curve circumferenceInitial = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), (Math.pow(x, 2)+Math.pow(y, 2))/(2*x));
     	circumferenceInitial.drawCurve(inputManager.getStartPoint(), 1000, curveCanvas.getGraphicsContext2D());
     	Circumference circumference = (Circumference)circumferenceInitial;
+    	
     	radiusSlider = new Slider(circumference.getR(), circumference.getR()*10, circumference.getR());
     	// Aggiungi un listener per il valore dello slider e chiama la funzione
         radiusSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             handleSliderChange(newValue.doubleValue());
         });
     	controlPanel.getChildren().addAll(radiusSlider, btnConfirmRadius);
-    	
     	state = UIStates.CHOOSING_RADIUS;
     }
     
-    private void handleSliderChange(double newRadius)
+    private void handleSliderChange(double radius)
     {
     	curveCanvas.getGraphicsContext2D().clearRect(0, 0, curveCanvas.getWidth(), curveCanvas.getHeight());
-    	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), newRadius);
+    	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), radius);
     	circumference.drawCurve(inputManager.getStartPoint(), 1000, curveCanvas.getGraphicsContext2D());
     }
     
