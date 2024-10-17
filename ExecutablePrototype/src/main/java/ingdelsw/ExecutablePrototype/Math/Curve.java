@@ -8,30 +8,23 @@ import javafx.scene.paint.Color;
 
 public abstract class Curve {
 	
-	protected double intervalX;
+	protected double intervalX, intervalY;
 	
+	public abstract ArrayList<Point2D> calculatePointList(Point2D startPoint, int numPoints);
 	public abstract double evaluateY(double parametro);
 	
-	public void drawCurve(Point2D origin, int numPoints, GraphicsContext gc) {
+	public Curve(Point2D startPoint, Point2D endPoint)
+	{
+		intervalX = endPoint.getX()-startPoint.getX();
+		intervalY = endPoint.getY()-startPoint.getY();
+	}
+	
+	public void drawCurve(Point2D startPoint, int numPoints, GraphicsContext gc) {
 		System.out.println("drawCurve chiamato");
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(2);
-        ArrayList<Point2D> points = calculatePointList(origin, numPoints);
+        ArrayList<Point2D> points = calculatePointList(startPoint, numPoints);
         for (int i = 0; i < points.size() - 1; i++) 
         	gc.strokeLine(points.get(i).getX(), points.get(i).getY(), points.get(i+1).getX(), points.get(i+1).getY());
     }
-	
-	public ArrayList<Point2D> calculatePointList(Point2D origin, int numPoints) {
-    	ArrayList<Point2D> points = new ArrayList<>();
-    	double deltaX = intervalX / (double) (numPoints - 1);
-    	
-    	for (int i = 0; i < numPoints; i++) {
-    		double x = origin.getX() + i * deltaX;
-            double y = origin.getY() + evaluateY(x-origin.getX());
-            points.add(new Point2D(x, y));
-            System.out.println("x : " + x + "y : " + y);
-        }
-    	return points;
-    }
-	
 }

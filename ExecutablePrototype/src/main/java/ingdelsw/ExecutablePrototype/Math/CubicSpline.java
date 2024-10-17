@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import javafx.geometry.Point2D;
 
 public class CubicSpline extends Curve {
+	
+		public CubicSpline(Point2D startPoint, Point2D endPoint) {
+			super(startPoint, endPoint);
+		}
 		
 		private double intervalX;
 		

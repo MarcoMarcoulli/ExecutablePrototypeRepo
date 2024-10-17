@@ -18,14 +18,17 @@ public class InputManager {
 
     public void setStartpoint(Point2D startPoint) {
         this.startPoint = startPoint;
-        System.out.println(startPoint);
+        System.out.println("StartPoint : " + startPoint);
     }
     
     public void setEndpoint(Point2D endPoint) {
     	if(endPoint.getY()<=startPoint.getY())
     		throw new IllegalArgumentException("Il punto di arrivo deve essere più in basso di quello di partenza");
-    	else {this.endPoint=endPoint;
-    		System.out.println(endPoint);
+    	else if(endPoint.getX() == startPoint.getX())
+    		this.endPoint = new Point2D(endPoint.getX()+1, endPoint.getY());
+    	else {
+    		this.endPoint=endPoint;
+    		System.out.println("EndPoint : " + endPoint);
     	}
     }
     
