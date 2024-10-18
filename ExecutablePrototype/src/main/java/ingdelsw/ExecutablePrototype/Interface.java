@@ -6,8 +6,8 @@ import ingdelsw.ExecutablePrototype.Math.Circumference;
 import ingdelsw.ExecutablePrototype.Math.Curve;
 import ingdelsw.ExecutablePrototype.Math.Cycloid;
 import ingdelsw.ExecutablePrototype.Math.Parabola;
+import ingdelsw.ExecutablePrototype.Math.Point;
 import javafx.application.Application;
-import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -133,7 +133,7 @@ public class Interface extends Application {
         GraphicsContext gc = pointsCanvas.getGraphicsContext2D();
         switch (state) {
         case WAITING_FOR_START_POINT:
-            inputManager.setStartpoint(new Point2D(x, y));
+            inputManager.setStartpoint(new Point(x, y));
             gc.setFill(Color.RED);
             gc.fillOval(x - 5, y - 5, 10, 10);  // Cerchio rosso per il punto di partenza
             controlPanel.getChildren().remove(startPointMessage);
@@ -142,7 +142,7 @@ public class Interface extends Application {
             break;
         case WAITING_FOR_END_POINT:
             try {
-                inputManager.setEndpoint(new Point2D(x, y));
+                inputManager.setEndpoint(new Point(x, y));
             } catch (IllegalArgumentException e) {
                 inputManager.handleException(e);
                 return;

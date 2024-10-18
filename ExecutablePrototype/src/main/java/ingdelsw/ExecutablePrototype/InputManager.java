@@ -1,31 +1,31 @@
 package ingdelsw.ExecutablePrototype;
 
-import javafx.geometry.Point2D;
+import ingdelsw.ExecutablePrototype.Math.Point;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 
 public class InputManager {
-    private Point2D startPoint, endPoint;
+    private Point startPoint, endPoint;
 
-    public Point2D getStartPoint() {
+    public Point getStartPoint() {
         return startPoint;
     }
     
-    public Point2D getEndPoint() {
+    public Point getEndPoint() {
     	return endPoint;
     }
 
-    public void setStartpoint(Point2D startPoint) {
+    public void setStartpoint(Point startPoint) {
         this.startPoint = startPoint;
         System.out.println("StartPoint : " + startPoint);
     }
     
-    public void setEndpoint(Point2D endPoint) {
+    public void setEndpoint(Point endPoint) {
     	if(endPoint.getY()<=startPoint.getY())
     		throw new IllegalArgumentException("Il punto di arrivo deve essere più in basso di quello di partenza");
     	else if(endPoint.getX() == startPoint.getX())
-    		this.endPoint = new Point2D(endPoint.getX()+1, endPoint.getY());
+    		this.endPoint = new Point(endPoint.getX()+1, endPoint.getY());
     	else {
     		this.endPoint=endPoint;
     		System.out.println("EndPoint : " + endPoint);

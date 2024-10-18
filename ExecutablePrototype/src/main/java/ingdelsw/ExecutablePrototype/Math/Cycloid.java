@@ -2,14 +2,12 @@ package ingdelsw.ExecutablePrototype.Math;
 
 import java.util.ArrayList;
 
-import javafx.geometry.Point2D;
-
 public class Cycloid extends Curve {
 	
 	private double alfa;
 	private double r; // Raggio del cerchio generatore della cicloide
 
-    public Cycloid(Point2D startPoint, Point2D endPoint) {
+    public Cycloid(Point startPoint, Point endPoint) {
     	super(startPoint, endPoint);
     	alfa=calculateAlfa(intervalX,intervalY);
         r=calculateR(intervalX,intervalY);
@@ -59,13 +57,13 @@ public class Cycloid extends Curve {
     	return r*(1-Math.cos(a));
     }
     
-    public ArrayList<Point2D> calculatePointList(Point2D origin, int numPoints) {
-    	ArrayList<Point2D> points = new ArrayList<>();
+    public ArrayList<Point> calculatePointList(Point origin, int numPoints) {
+    	ArrayList<Point> points = new ArrayList<>();
     	double deltaAlfa = alfa / (double) (numPoints - 1);
     	
     	for (int i = 0; i < numPoints; i++) {
     		double a = i * deltaAlfa;
-            points.add(new Point2D(origin.getX()+evaluateX(a),origin.getY()+evaluateY(a)));
+            points.add(new Point(origin.getX()+evaluateX(a),origin.getY()+evaluateY(a)));
         }
     	return points;
     }

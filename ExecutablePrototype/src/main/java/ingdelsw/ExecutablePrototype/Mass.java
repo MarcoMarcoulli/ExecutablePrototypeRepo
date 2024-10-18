@@ -1,24 +1,24 @@
 package ingdelsw.ExecutablePrototype;
 
 import ingdelsw.ExecutablePrototype.MassIcon;
-import javafx.geometry.Point2D;
+import ingdelsw.ExecutablePrototype.Math.Point;
 
 public class Mass {
-    private Point2D currentPosition;
+    private Point currentPosition;
     private MassIcon iconType;
 
     // Costruttore
-    public Mass(Point2D startPosition, MassIcon iconType) {
+    public Mass(Point startPosition, MassIcon iconType) {
         this.currentPosition = startPosition;
         this.iconType = iconType;
     }
 
     // Getter e Setter per la posizione corrente
-    public Point2D getCurrentPosition() {
+    public Point getCurrentPosition() {
         return currentPosition;
     }
 
-    public void setCurrentPosition(Point2D newPosition) {
+    public void setCurrentPosition(Point newPosition) {
         this.currentPosition = newPosition;
     }
 

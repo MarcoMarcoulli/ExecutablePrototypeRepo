@@ -2,11 +2,9 @@ package ingdelsw.ExecutablePrototype.Math;
 
 import java.util.ArrayList;
 
-import javafx.geometry.Point2D;
-
 public class CubicSpline extends Curve {
 	
-		public CubicSpline(Point2D startPoint, Point2D endPoint) {
+		public CubicSpline(Point startPoint, Point endPoint) {
 			super(startPoint, endPoint);
 		}
 		
@@ -16,14 +14,14 @@ public class CubicSpline extends Curve {
 	    	return Math.sqrt(x);
 	    }
 	    
-	    public ArrayList<Point2D> calculatePointList(Point2D origin, int numPoints) {
-	    	ArrayList<Point2D> points = new ArrayList<>();
+	    public ArrayList<Point> calculatePointList(Point origin, int numPoints) {
+	    	ArrayList<Point> points = new ArrayList<>();
 	    	double deltaX = intervalX / (double) (numPoints - 1);
 	    	
 	    	for (int i = 0; i < numPoints; i++) {
 	    		double x = origin.getX() + i * deltaX;
 	            double y = origin.getY() + evaluateY(x-origin.getX());
-	            points.add(new Point2D(x, y));
+	            points.add(new Point(x, y));
 	        }
 	    	return points;
 	    }
