@@ -5,10 +5,12 @@ import java.util.ArrayList;
 public class Circumference extends Curve {
 	
 	private double r; // Raggio della circonferenza
+	private int convexity;
 
-    public Circumference(Point startPoint, Point endPoint, double r) {
+    public Circumference(Point startPoint, Point endPoint, double r, int convexity) {
     	super(startPoint, endPoint);
         this.r=r;
+        this.convexity=convexity;
     }
     
     public void setR(double r)
@@ -21,25 +23,40 @@ public class Circumference extends Curve {
     	return r;
     }
     
-    public double evaluateY(double x) {
-    	return Math.sqrt(2*x*r - Math.pow(x, 2));
+    public double evaluateFunction(double var) {
+    	return Math.sqrt(2*var*r - Math.pow(var, 2));
     }
     
     public ArrayList<Point> calculatePointList(Point startPoint, int numPoints) {
     	ArrayList<Point> points = new ArrayList<>();
-    	
-    	double deltaX = intervalX / (double) (numPoints - 1);
     	double x = startPoint.getX();
     	double y = startPoint.getY();
     	double xCenter = xCenter(startPoint) + x;
     	double yCenter = yCenter(startPoint) + y;
-    	points.add(new Point(x,y));
-    	for (int i = 0; i < numPoints-1; i++) {
-    		x += deltaX;
-            y = yCenter + evaluateY(x + r - xCenter);
-            points.add(new Point(x, y));
-            System.out.println("x : " + x + "y : " + y);
-        }
+    	
+    	if(convexity == 1)
+    	{
+    		double deltaX = intervalX / (double) (numPoints - 1);
+        	points.add(new Point(x,y));
+        	for (int i = 0; i < numPoints-1; i++) {
+        		x += deltaX;
+                y = yCenter + evaluateFunction(x + r - xCenter);
+                points.add(new Point(x, y));
+                System.out.println("x : " + x + "y : " + y);
+            }
+    	}
+    	
+    	else if(convexity == -1)
+    	{
+    		double deltaY = intervalY / (double) (numPoints - 1);
+        	points.add(new Point(x,y));
+        	for (int i = 0; i < numPoints-1; i++) {
+        		y += deltaY;
+                x = xCenter + (intervalX/Math.abs(intervalX))*evaluateFunction(y + r - yCenter);
+                points.add(new Point(x, y));
+                System.out.println("x : " + x + "y : " + y);
+            }
+    	}
     	return points;
     }
     
@@ -66,7 +83,7 @@ public class Circumference extends Curve {
     private double xCenter(Point startPoint)
     {	
     	double xCenter;
-    	xCenter = (bCoefficient() + (intervalX/Math.abs(intervalX)) * Math.sqrt(delta()))/(2*aCoefficient());
+    	xCenter = (bCoefficient() + convexity*(intervalX/Math.abs(intervalX))*Math.sqrt(delta()))/(2*aCoefficient());
     	System.out.print("xCenter : " + (xCenter+startPoint.getX()));
     	System.out.print(" xR : " + (xCenter+startPoint.getX()-r));
     	return xCenter;

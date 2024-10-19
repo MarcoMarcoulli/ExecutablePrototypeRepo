@@ -10,7 +10,6 @@ public abstract class Curve {
 	protected double intervalX, intervalY;
 	
 	public abstract ArrayList<Point> calculatePointList(Point startPoint, int numPoints);
-	public abstract double evaluateY(double parametro);
 	
 	public Curve(Point startPoint, Point endPoint)
 	{

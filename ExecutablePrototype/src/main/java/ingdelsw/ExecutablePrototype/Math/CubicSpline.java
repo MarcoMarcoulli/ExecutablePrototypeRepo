@@ -3,12 +3,30 @@ package ingdelsw.ExecutablePrototype.Math;
 import java.util.ArrayList;
 
 public class CubicSpline extends Curve {
+		
+	    private Point[] controlPoints;
+	    private CubicSegment[] segments;
+		
 	
-		public CubicSpline(Point startPoint, Point endPoint) {
+		public CubicSpline(Point startPoint, Point endPoint, ArrayList<Point> intermediatePoints) {
 			super(startPoint, endPoint);
+			int n = intermediatePoints.size() + 2;
+			controlPoints = new Point[n];
+			controlPoints[0] = startPoint;
+			for(int i = 1; i <= n-2; i++)
+			{
+				controlPoints[i] = intermediatePoints.get(i);
+			}
+			controlPoints[n-1] = endPoint;
+			
+			segments = new CubicSegment[n-1];
+			for(int i=0; i < n-1; i++)
+			{
+				
+			}
 		}
 		
-		private double intervalX;
+		
 		
 		public double evaluateY(double x) {
 	    	return Math.sqrt(x);

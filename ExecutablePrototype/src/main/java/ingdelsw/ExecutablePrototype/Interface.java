@@ -32,8 +32,8 @@ public class Interface extends Application {
     private Canvas curveCanvas;
     private VBox controlPanel;
     private HBox curveButtons;
-    private Label startPointMessage, endPointMessage, chooseCurveMessage, intermediatePointsMessage, chooseMassMessage, chooseRadiusMessage;
-    private Button btnCancelInput, btnCycloid, btnParabola, btnCubicSpline, btnCircumference, btnConfirmRadius;
+    private Label startPointMessage, endPointMessage, chooseCurveMessage, intermediatePointsMessage, chooseMassMessage, chooseRadiusMessage, chooseConvexityMessage;
+    private Button btnCancelInput, btnCycloid, btnParabola, btnCubicSpline, btnCircumference, btnConfirmRadius, btnConvexityUp, btnConvexityDown;
     private Slider radiusSlider;
     
     public enum UIStates {
@@ -41,6 +41,7 @@ public class Interface extends Application {
         WAITING_FOR_END_POINT,
         CHOOSING_CURVE,
         INSERTING_INTERMEDIATE_POINTS,
+        CHOOSING_CONVEXITY,
         CHOOSING_RADIUS,
         CHOOSING_MASS,
         WAITING_TO_START_SIMULATION,
@@ -59,6 +60,7 @@ public class Interface extends Application {
         intermediatePointsMessage = new Label("Inserisci dei punti intermedi da interpolare");
         chooseMassMessage = new Label("Inserisci chi vuoi far scivolare"); 
         chooseRadiusMessage = new Label("Seleziona il raggio della circonferenza");
+        chooseConvexityMessage = new Label("scegli la convessita");
         
         btnCancelInput = new Button("Cancella Input");
         // Pulsanti per le curve
@@ -67,6 +69,8 @@ public class Interface extends Application {
         btnParabola = new Button("Parabola");
         btnCircumference = new Button("Circonferenza");
         btnConfirmRadius = new Button("Seleziona Raggio");
+        btnConvexityUp = new Button("verso l'alto");
+        btnConvexityDown = new Button("verso il basso");
         
         curveButtons = new HBox(2);
         curveButtons.getChildren().addAll(btnCycloid, btnCircumference, btnParabola, btnCubicSpline);
@@ -117,7 +121,8 @@ public class Interface extends Application {
         btnCycloid.setOnAction(e -> handleCycloidClick());
         btnCircumference.setOnAction(e -> handleCircumferenceClick());
         btnCubicSpline.setOnAction(e-> handleCubicSplineClick());
-        btnConfirmRadius.setOnAction(e -> handleConfirmRadiusClick(radiusSlider.getValue()));
+        btnConvexityUp.setOnAction(e -> handleConvexityUpClick());
+        btnConvexityDown.setOnAction(e -> handleConvexityDownClick());
     
         // Configura la scena
         Scene scene = new Scene(root, 1000, 700);
@@ -197,36 +202,60 @@ public class Interface extends Application {
     //gestore del click sul pulsante Circumference
     private void handleCircumferenceClick()
     {
-    	System.out.println("handleCircumferenceClick chiamato");
     	controlPanel.getChildren().clear();
-    	controlPanel.getChildren().add(chooseRadiusMessage);
-
+    	controlPanel.getChildren().add(chooseConvexityMessage);
+    	controlPanel.getChildren().addAll(btnConvexityUp, btnConvexityDown);
+    	controlPanel.getChildren().add(btnCancelInput);
+    }
+    
+    private void handleConvexityUpClick()
+    {
     	double x = inputManager.getEndPoint().getX() - inputManager.getStartPoint().getX();
     	double y = inputManager.getEndPoint().getY() - inputManager.getStartPoint().getY();
-    	Circumference circumferenceInitial = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), (Math.pow(x, 2)+Math.pow(y, 2))/(2*x));
+    	Circumference circumferenceInitial = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), (Math.pow(x, 2)+Math.pow(y, 2))/(2*x), 1);
     	circumferenceInitial.drawCurve(inputManager.getStartPoint(), 1000, curveCanvas.getGraphicsContext2D());
     	
     	radiusSlider = new Slider((x/Math.abs(x))*circumferenceInitial.getR(), (x/Math.abs(x))*circumferenceInitial.getR()*3, (x/Math.abs(x))*circumferenceInitial.getR());
     	// Aggiungi un listener per il valore dello slider e chiama la funzione
         radiusSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            handleSliderChange(newValue.doubleValue());
+            handleSliderChange(newValue.doubleValue(), 1);
         });
-    	controlPanel.getChildren().addAll(radiusSlider, btnConfirmRadius, btnCancelInput);
+        btnConfirmRadius.setOnAction(e -> handleConfirmRadiusClick(radiusSlider.getValue(), 1));
+    	controlPanel.getChildren().addAll(chooseRadiusMessage, radiusSlider, btnConfirmRadius);
     	state = UIStates.CHOOSING_RADIUS;
     }
     
-    private void handleSliderChange(double radius)
+    private void handleConvexityDownClick()
+    {
+    	double x = inputManager.getEndPoint().getX() - inputManager.getStartPoint().getX();
+    	double y = inputManager.getEndPoint().getY() - inputManager.getStartPoint().getY();
+    	Circumference circumferenceInitial;
+    	circumferenceInitial = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), (Math.pow(x, 2)+Math.pow(y, 2))/(2*y), -1);
+    	
+    	circumferenceInitial.drawCurve(inputManager.getStartPoint(), 1000, curveCanvas.getGraphicsContext2D());
+    	
+    	radiusSlider = new Slider(circumferenceInitial.getR(), circumferenceInitial.getR()*3, circumferenceInitial.getR());
+    	// Aggiungi un listener per il valore dello slider e chiama la funzione
+        radiusSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            handleSliderChange(newValue.doubleValue(), -1);
+        });
+        btnConfirmRadius.setOnAction(e -> handleConfirmRadiusClick(radiusSlider.getValue(), -1));
+    	controlPanel.getChildren().addAll(chooseRadiusMessage, radiusSlider, btnConfirmRadius);
+    	state = UIStates.CHOOSING_RADIUS;
+    }
+    
+    private void handleSliderChange(double radius, int convexity)
     {
     	curveCanvas.getGraphicsContext2D().clearRect(0, 0, curveCanvas.getWidth(), curveCanvas.getHeight());
-    	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), radius);
+    	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), radius, convexity);
     	circumference.drawCurve(inputManager.getStartPoint(), 1000, curveCanvas.getGraphicsContext2D());
     }
     
-    private void handleConfirmRadiusClick(double radius)
+    private void handleConfirmRadiusClick(double radius, int convexity)
     {
     	controlPanel.getChildren().clear();
     	controlPanel.getChildren().addAll(chooseMassMessage, btnCancelInput);
-    	simulations.add(new SimulationManager(new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), radius), curveCanvas));
+    	simulations.add(new SimulationManager(new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), radius, convexity), curveCanvas));
     	state = UIStates.CHOOSING_MASS;
     }
     
