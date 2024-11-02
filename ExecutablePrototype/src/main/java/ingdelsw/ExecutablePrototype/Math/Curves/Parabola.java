@@ -1,6 +1,8 @@
-package ingdelsw.ExecutablePrototype.Math;
+package ingdelsw.ExecutablePrototype.Math.Curves;
 
 import java.util.ArrayList;
+
+import ingdelsw.ExecutablePrototype.Math.Point;
 
 public class Parabola extends Curve {
 	
@@ -20,13 +22,13 @@ public class Parabola extends Curve {
     	return Math.sqrt(x/a);
     }
     
-    public ArrayList<Point> calculatePointList(Point startPoint, int numPoints) {
+    public ArrayList<Point> calculatePointList() {
     	ArrayList<Point> points = new ArrayList<>();
-    	double deltaX = intervalX / (double) (numPoints - 1);
+    	double deltaX = intervalX / (double) numPoints;
     	double x = startPoint.getX();
     	double y = startPoint.getY();
     	points.add(new Point(x,y));
-    	for (int i = 0; i < numPoints-1; i++) {
+    	for (int i = 0; i < numPoints; i++) {
     		x += deltaX;
             y = startPoint.getY() + evaluateY(x-startPoint.getX());
             points.add(new Point(x, y));

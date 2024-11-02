@@ -2,11 +2,12 @@ package ingdelsw.ExecutablePrototype;
 
 import java.util.ArrayList;
 
-import ingdelsw.ExecutablePrototype.Math.Circumference;
-import ingdelsw.ExecutablePrototype.Math.Curve;
-import ingdelsw.ExecutablePrototype.Math.Cycloid;
-import ingdelsw.ExecutablePrototype.Math.Parabola;
 import ingdelsw.ExecutablePrototype.Math.Point;
+import ingdelsw.ExecutablePrototype.Math.Curves.Circumference;
+import ingdelsw.ExecutablePrototype.Math.Curves.CubicSpline;
+import ingdelsw.ExecutablePrototype.Math.Curves.Curve;
+import ingdelsw.ExecutablePrototype.Math.Curves.Cycloid;
+import ingdelsw.ExecutablePrototype.Math.Curves.Parabola;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -33,7 +34,7 @@ public class Interface extends Application {
     private VBox controlPanel;
     private HBox curveButtons;
     private Label startPointMessage, endPointMessage, chooseCurveMessage, intermediatePointsMessage, chooseMassMessage, chooseRadiusMessage, chooseConvexityMessage;
-    private Button btnCancelInput, btnCycloid, btnParabola, btnCubicSpline, btnCircumference, btnConfirmRadius, btnConvexityUp, btnConvexityDown;
+    private Button btnCancelInput, btnCycloid, btnParabola, btnCubicSpline, btnCircumference, btnConfirmRadius, btnConvexityUp, btnConvexityDown, btnStopIntermediatePointsInsertion;
     private Slider radiusSlider;
     
     public enum UIStates {
@@ -46,7 +47,7 @@ public class Interface extends Application {
         CHOOSING_MASS,
         WAITING_TO_START_SIMULATION,
         SIMULATING,
-        SHOWING_SIMULATION_RESULTS
+        SHOWING_SIMULATION_RESULTS;
     }
 
     @Override
@@ -71,6 +72,7 @@ public class Interface extends Application {
         btnConfirmRadius = new Button("Seleziona Raggio");
         btnConvexityUp = new Button("verso l'alto");
         btnConvexityDown = new Button("verso il basso");
+        btnStopIntermediatePointsInsertion = new Button("Fine immissione");
         
         curveButtons = new HBox(2);
         curveButtons.getChildren().addAll(btnCycloid, btnCircumference, btnParabola, btnCubicSpline);
@@ -123,6 +125,7 @@ public class Interface extends Application {
         btnCubicSpline.setOnAction(e-> handleCubicSplineClick());
         btnConvexityUp.setOnAction(e -> handleConvexityUpClick());
         btnConvexityDown.setOnAction(e -> handleConvexityDownClick());
+        btnStopIntermediatePointsInsertion.setOnAction(e -> handleStopIntermediatePointsInsertionClick());
     
         // Configura la scena
         Scene scene = new Scene(root, 1000, 700);
@@ -137,27 +140,38 @@ public class Interface extends Application {
         double y = event.getY();
         GraphicsContext gc = pointsCanvas.getGraphicsContext2D();
         switch (state) {
-        case WAITING_FOR_START_POINT:
-            inputManager.setStartpoint(new Point(x, y));
-            gc.setFill(Color.RED);
-            gc.fillOval(x - 5, y - 5, 10, 10);  // Cerchio rosso per il punto di partenza
-            controlPanel.getChildren().remove(startPointMessage);
-            controlPanel.getChildren().addAll(endPointMessage, btnCancelInput);
-            state = UIStates.WAITING_FOR_END_POINT;
-            break;
-        case WAITING_FOR_END_POINT:
-            try {
-                inputManager.setEndpoint(new Point(x, y));
-            } catch (IllegalArgumentException e) {
-                inputManager.handleException(e);
-                return;
-            }
-            gc.setFill(Color.BLUE);
-            gc.fillOval(x - 5, y - 5, 10, 10);  // Cerchio blu per il punto di arrivo
-            controlPanel.getChildren().clear();
-            controlPanel.getChildren().addAll(chooseCurveMessage, curveButtons, btnCancelInput);
-            state = UIStates.CHOOSING_CURVE;
-            break;
+	        case WAITING_FOR_START_POINT:
+	            inputManager.setStartpoint(new Point(x, y));
+	            gc.setFill(Color.RED);
+	            gc.fillOval(x - 5, y - 5, 10, 10);  // Cerchio rosso per il punto di partenza
+	            controlPanel.getChildren().remove(startPointMessage);
+	            controlPanel.getChildren().addAll(endPointMessage, btnCancelInput);
+	            state = UIStates.WAITING_FOR_END_POINT;
+	            break;
+	        case WAITING_FOR_END_POINT:
+	            try {
+	                inputManager.setEndpoint(new Point(x, y));
+	            } catch (IllegalArgumentException e) {
+	                inputManager.handleException(e);
+	                return;
+	            }
+	            gc.setFill(Color.BLUE);
+	            gc.fillOval(x - 5, y - 5, 10, 10);  // Cerchio blu per il punto di arrivo
+	            controlPanel.getChildren().clear();
+	            controlPanel.getChildren().addAll(chooseCurveMessage, curveButtons, btnCancelInput);
+	            state = UIStates.CHOOSING_CURVE;
+	            break;
+	        case INSERTING_INTERMEDIATE_POINTS:
+	        	try {
+	                inputManager.addIntermediatePoint(new Point(x,y));
+	            } catch (IllegalArgumentException e) {
+	                inputManager.handleException(e);
+	                return;
+	            }
+	        	
+	            gc.setFill(Color.GREEN);
+	            gc.fillOval(x - 5, y - 5, 10, 10);  // Cerchio verde per il punto intermedio
+	            break;
         }
     }
     
@@ -173,7 +187,7 @@ public class Interface extends Application {
     private void handleCubicSplineClick()
     {
     	controlPanel.getChildren().clear();
-    	controlPanel.getChildren().addAll(intermediatePointsMessage, btnCancelInput);
+    	controlPanel.getChildren().addAll(intermediatePointsMessage, btnStopIntermediatePointsInsertion, btnCancelInput);
     	state = UIStates.INSERTING_INTERMEDIATE_POINTS;
     }
     
@@ -184,7 +198,7 @@ public class Interface extends Application {
     	controlPanel.getChildren().addAll(chooseMassMessage, btnCancelInput);
     	Cycloid cycloid = new Cycloid(inputManager.getStartPoint(),inputManager.getEndPoint());
     	simulations.add(new SimulationManager(cycloid, curveCanvas));
-    	cycloid.drawCurve(inputManager.getStartPoint(), 1000, curveCanvas.getGraphicsContext2D());
+    	cycloid.drawCurve(curveCanvas.getGraphicsContext2D());
     	state = UIStates.CHOOSING_MASS;
     }
     
@@ -195,7 +209,7 @@ public class Interface extends Application {
     	controlPanel.getChildren().addAll(chooseMassMessage, btnCancelInput);
     	Parabola parabola = new Parabola(inputManager.getStartPoint(),inputManager.getEndPoint());
     	simulations.add(new SimulationManager(parabola, curveCanvas));
-    	parabola.drawCurve(inputManager.getStartPoint(), 1000, curveCanvas.getGraphicsContext2D());
+    	parabola.drawCurve(curveCanvas.getGraphicsContext2D());
     	state = UIStates.CHOOSING_MASS;
     }
     
@@ -211,9 +225,8 @@ public class Interface extends Application {
     private void handleConvexityUpClick()
     {
     	double x = inputManager.getEndPoint().getX() - inputManager.getStartPoint().getX();
-    	double y = inputManager.getEndPoint().getY() - inputManager.getStartPoint().getY();
-    	Circumference circumferenceInitial = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), (Math.pow(x, 2)+Math.pow(y, 2))/(2*x), 1);
-    	circumferenceInitial.drawCurve(inputManager.getStartPoint(), 1000, curveCanvas.getGraphicsContext2D());
+    	Circumference circumferenceInitial = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), 1);
+    	circumferenceInitial.drawCurve(curveCanvas.getGraphicsContext2D());
     	
     	radiusSlider = new Slider((x/Math.abs(x))*circumferenceInitial.getR(), (x/Math.abs(x))*circumferenceInitial.getR()*3, (x/Math.abs(x))*circumferenceInitial.getR());
     	// Aggiungi un listener per il valore dello slider e chiama la funzione
@@ -232,7 +245,7 @@ public class Interface extends Application {
     	Circumference circumferenceInitial;
     	circumferenceInitial = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), (Math.pow(x, 2)+Math.pow(y, 2))/(2*y), -1);
     	
-    	circumferenceInitial.drawCurve(inputManager.getStartPoint(), 1000, curveCanvas.getGraphicsContext2D());
+    	circumferenceInitial.drawCurve(curveCanvas.getGraphicsContext2D());
     	
     	radiusSlider = new Slider(circumferenceInitial.getR(), circumferenceInitial.getR()*3, circumferenceInitial.getR());
     	// Aggiungi un listener per il valore dello slider e chiama la funzione
@@ -248,7 +261,7 @@ public class Interface extends Application {
     {
     	curveCanvas.getGraphicsContext2D().clearRect(0, 0, curveCanvas.getWidth(), curveCanvas.getHeight());
     	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), radius, convexity);
-    	circumference.drawCurve(inputManager.getStartPoint(), 1000, curveCanvas.getGraphicsContext2D());
+    	circumference.drawCurve(curveCanvas.getGraphicsContext2D());
     }
     
     private void handleConfirmRadiusClick(double radius, int convexity)
@@ -258,6 +271,18 @@ public class Interface extends Application {
     	simulations.add(new SimulationManager(new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), radius, convexity), curveCanvas));
     	state = UIStates.CHOOSING_MASS;
     }
+    
+    private void handleStopIntermediatePointsInsertionClick()
+    {
+    	controlPanel.getChildren().clear();
+    	controlPanel.getChildren().addAll(chooseMassMessage, btnCancelInput);
+    	CubicSpline spline = new CubicSpline(inputManager.getStartPoint(),inputManager.getEndPoint(), inputManager.getIntermediatePoint());
+    	inputManager.clearIntermediatePoints();
+    	simulations.add(new SimulationManager(spline, curveCanvas));
+    	spline.drawCurve(curveCanvas.getGraphicsContext2D());
+    	state = UIStates.CHOOSING_MASS;
+    }
+   
     
     public static void main(String[] args) {
         launch(args);

@@ -1,7 +1,7 @@
 package ingdelsw.ExecutablePrototype;
 
 import ingdelsw.ExecutablePrototype.Mass;
-import ingdelsw.ExecutablePrototype.Math.Curve;
+import ingdelsw.ExecutablePrototype.Math.Curves.Curve;
 import javafx.animation.Timeline;
 import javafx.scene.canvas.Canvas;
 

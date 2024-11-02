@@ -4,7 +4,8 @@ public enum MassIcon{
     GALILEO("galileo.png"),
     NEWTON("newton.png"),
     LEIBNITZ("leibnitz.png"),
-	BERNOULLI("bernoulli.png");
+	BERNOULLI("bernoulli.png"),
+	JAKOB("jakob.png");
 
     private String filePath;
 

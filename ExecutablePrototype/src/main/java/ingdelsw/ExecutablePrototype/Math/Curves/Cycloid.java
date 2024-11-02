@@ -1,6 +1,8 @@
-package ingdelsw.ExecutablePrototype.Math;
+package ingdelsw.ExecutablePrototype.Math.Curves;
 
 import java.util.ArrayList;
+
+import ingdelsw.ExecutablePrototype.Math.Point;
 
 public class Cycloid extends Curve {
 	
@@ -57,13 +59,13 @@ public class Cycloid extends Curve {
     	return r*(1-Math.cos(a));
     }
     
-    public ArrayList<Point> calculatePointList(Point origin, int numPoints) {
+    public ArrayList<Point> calculatePointList() {
     	ArrayList<Point> points = new ArrayList<>();
-    	double deltaAlfa = alfa / (double) (numPoints - 1);
+    	double deltaAlfa = alfa / (double) numPoints;
     	
     	for (int i = 0; i < numPoints; i++) {
     		double a = i * deltaAlfa;
-            points.add(new Point(origin.getX()+evaluateX(a),origin.getY()+evaluateY(a)));
+            points.add(new Point(startPoint.getX() + evaluateX(a), startPoint.getY() + evaluateY(a)));
         }
     	return points;
     }
