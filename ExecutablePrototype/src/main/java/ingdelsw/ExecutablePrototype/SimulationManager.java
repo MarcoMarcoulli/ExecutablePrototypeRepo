@@ -20,5 +20,10 @@ public class SimulationManager {
         this.curve = curve;
         this.timeline = new Timeline();
     }
+	
+	public Curve getCurve()
+	{
+		return curve;
+	}
 
 }

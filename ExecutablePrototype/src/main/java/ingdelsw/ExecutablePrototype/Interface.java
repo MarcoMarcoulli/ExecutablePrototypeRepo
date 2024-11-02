@@ -15,6 +15,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -32,9 +34,11 @@ public class Interface extends Application {
     private Canvas pointsCanvas;
     private Canvas curveCanvas;
     private VBox controlPanel;
-    private HBox curveButtons;
-    private Label startPointMessage, endPointMessage, chooseCurveMessage, intermediatePointsMessage, chooseMassMessage, chooseRadiusMessage, chooseConvexityMessage;
-    private Button btnCancelInput, btnCycloid, btnParabola, btnCubicSpline, btnCircumference, btnConfirmRadius, btnConvexityUp, btnConvexityDown, btnStopIntermediatePointsInsertion;
+    private HBox curveButtons, iconButtons;
+    private Label startPointMessage, endPointMessage, chooseCurveMessage, intermediatePointsMessage, chooseMassMessage, 
+    				chooseRadiusMessage, chooseConvexityMessage;
+    private Button btnCancelInput, btnCycloid, btnParabola, btnCubicSpline, btnCircumference, btnConfirmRadius, btnConvexityUp, 
+    				btnConvexityDown, btnStopIntermediatePointsInsertion, btnStartSimulation, btnInsertAnotherCurve;
     private Slider radiusSlider;
     
     public enum UIStates {
@@ -62,6 +66,9 @@ public class Interface extends Application {
         chooseMassMessage = new Label("Inserisci chi vuoi far scivolare"); 
         chooseRadiusMessage = new Label("Seleziona il raggio della circonferenza");
         chooseConvexityMessage = new Label("scegli la convessita");
+       
+        
+        
         
         btnCancelInput = new Button("Cancella Input");
         // Pulsanti per le curve
@@ -73,6 +80,27 @@ public class Interface extends Application {
         btnConvexityUp = new Button("verso l'alto");
         btnConvexityDown = new Button("verso il basso");
         btnStopIntermediatePointsInsertion = new Button("Fine immissione");
+        btnStartSimulation = new Button("avvia simulazione");
+        btnInsertAnotherCurve = new Button("inserisci un' altra curva");
+        
+
+        // Carica le icone
+        Image iconBernoulli = new Image(getClass().getResource("/images/Bernoulli.png").toExternalForm());
+        Image iconGalileo = new Image(getClass().getResource("/images/Galileo.png").toExternalForm());
+        Image iconJakob = new Image(getClass().getResource("/images/Jakob.png").toExternalForm());
+        Image iconLeibnitz = new Image(getClass().getResource("/images/Leibnitz.png").toExternalForm());
+        Image iconNewton = new Image(getClass().getResource("/images/Newton.png").toExternalForm());
+
+        // Crea pulsanti immagine
+        ImageView iconViewBernoulli = createIconButton(iconBernoulli, "Bernoulli");
+        ImageView iconViewGalileo = createIconButton(iconGalileo,"Galileo");
+        ImageView iconViewJakob = createIconButton(iconJakob, "Jakob");
+        ImageView iconViewLeibnitz = createIconButton(iconLeibnitz, "Leibnitz");
+        ImageView iconViewNewton = createIconButton(iconNewton, "Newton");
+        
+        iconButtons = new HBox(10); // Layout per tenere insieme le icone
+        iconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
+        iconButtons.setSpacing(10);
         
         curveButtons = new HBox(2);
         curveButtons.getChildren().addAll(btnCycloid, btnCircumference, btnParabola, btnCubicSpline);
@@ -112,7 +140,7 @@ public class Interface extends Application {
         
         // Inizializzazione InputManager
         inputManager = new InputManager();
-        simulations = new ArrayList<>();
+        simulations = new ArrayList<SimulationManager>();
         controlPanel.getChildren().add(startPointMessage);
         state = UIStates.WAITING_FOR_START_POINT;
 
@@ -126,6 +154,7 @@ public class Interface extends Application {
         btnConvexityUp.setOnAction(e -> handleConvexityUpClick());
         btnConvexityDown.setOnAction(e -> handleConvexityDownClick());
         btnStopIntermediatePointsInsertion.setOnAction(e -> handleStopIntermediatePointsInsertionClick());
+        btnInsertAnotherCurve.setOnAction(e -> handleInsertAnotherCurveClick());
     
         // Configura la scena
         Scene scene = new Scene(root, 1000, 700);
@@ -178,6 +207,7 @@ public class Interface extends Application {
     private void handleCancelInputClick() {
         pointsCanvas.getGraphicsContext2D().clearRect(0, 0, pointsCanvas.getWidth(), pointsCanvas.getHeight());
         curveCanvas.getGraphicsContext2D().clearRect(0, 0, curveCanvas.getWidth(), curveCanvas.getHeight());
+        simulations.clear();
         controlPanel.getChildren().clear();
         controlPanel.getChildren().add(startPointMessage);
         state = UIStates.WAITING_FOR_START_POINT;
@@ -195,7 +225,7 @@ public class Interface extends Application {
     private void handleCycloidClick()
     {
     	controlPanel.getChildren().clear();
-    	controlPanel.getChildren().addAll(chooseMassMessage, btnCancelInput);
+    	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
     	Cycloid cycloid = new Cycloid(inputManager.getStartPoint(),inputManager.getEndPoint());
     	simulations.add(new SimulationManager(cycloid, curveCanvas));
     	cycloid.drawCurve(curveCanvas.getGraphicsContext2D());
@@ -206,7 +236,7 @@ public class Interface extends Application {
     private void handleParabolaClick()
     {
     	controlPanel.getChildren().clear();
-    	controlPanel.getChildren().addAll(chooseMassMessage, btnCancelInput);
+    	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
     	Parabola parabola = new Parabola(inputManager.getStartPoint(),inputManager.getEndPoint());
     	simulations.add(new SimulationManager(parabola, curveCanvas));
     	parabola.drawCurve(curveCanvas.getGraphicsContext2D());
@@ -262,12 +292,15 @@ public class Interface extends Application {
     	curveCanvas.getGraphicsContext2D().clearRect(0, 0, curveCanvas.getWidth(), curveCanvas.getHeight());
     	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), radius, convexity);
     	circumference.drawCurve(curveCanvas.getGraphicsContext2D());
+    	for (int i = 0; i < simulations.size(); i++) {
+    	    simulations.get(i).getCurve().drawCurve(curveCanvas.getGraphicsContext2D());
+    	}
     }
     
     private void handleConfirmRadiusClick(double radius, int convexity)
     {
     	controlPanel.getChildren().clear();
-    	controlPanel.getChildren().addAll(chooseMassMessage, btnCancelInput);
+    	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
     	simulations.add(new SimulationManager(new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), radius, convexity), curveCanvas));
     	state = UIStates.CHOOSING_MASS;
     }
@@ -275,12 +308,36 @@ public class Interface extends Application {
     private void handleStopIntermediatePointsInsertionClick()
     {
     	controlPanel.getChildren().clear();
-    	controlPanel.getChildren().addAll(chooseMassMessage, btnCancelInput);
+    	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
     	CubicSpline spline = new CubicSpline(inputManager.getStartPoint(),inputManager.getEndPoint(), inputManager.getIntermediatePoint());
     	inputManager.clearIntermediatePoints();
     	simulations.add(new SimulationManager(spline, curveCanvas));
     	spline.drawCurve(curveCanvas.getGraphicsContext2D());
     	state = UIStates.CHOOSING_MASS;
+    }
+    
+    // Metodo helper per creare un pulsante icona
+    private ImageView createIconButton(Image image, String massType) {
+        ImageView iconView = new ImageView(image);
+        iconView.setFitWidth(50); // Imposta la larghezza desiderata per l'icona
+        iconView.setFitHeight(50); // Imposta l'altezza desiderata per l'icona
+        iconView.setOnMouseClicked(e -> handleMassSelection(massType));
+        return iconView;
+    }
+    
+    // Gestione della selezione della massa
+    private void handleMassSelection(String massType) {
+        // Logica per gestire la massa selezionata
+        System.out.println("Selected mass: " + massType);
+        // Procedi allo stato successivo o all'avvio della simulazione
+        controlPanel.getChildren().clear();
+        controlPanel.getChildren().addAll(btnStartSimulation, btnInsertAnotherCurve); 
+    }
+    
+    private void handleInsertAnotherCurveClick()
+    {
+    	controlPanel.getChildren().clear();
+    	controlPanel.getChildren().addAll(chooseCurveMessage, curveButtons, btnCancelInput);
     }
    
     
