@@ -1,6 +1,7 @@
 package ingdelsw.ExecutablePrototype;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import ingdelsw.ExecutablePrototype.Math.Point;
 import ingdelsw.ExecutablePrototype.Math.Curves.Circumference;
@@ -171,11 +172,17 @@ public class Interface extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    
+    Random random = new Random();
+    int randomRed, randomGreen, randomBlue;
 
     // Gestione dei click per selezionare il punto di partenza
     private void handleMouseClick(MouseEvent event) {
         double x = event.getX();
         double y = event.getY();
+        
+        
+        
         GraphicsContext gc = pointsCanvas.getGraphicsContext2D();
         switch (state) {
 	        case WAITING_FOR_START_POINT:
@@ -207,7 +214,7 @@ public class Interface extends Application {
 	                return;
 	            }
 	        	
-	            gc.setFill(Color.GREEN);
+	            gc.setFill(Color.rgb(randomRed, randomGreen, randomBlue));
 	            gc.fillOval(x - 5, y - 5, 10, 10);  // Cerchio verde per il punto intermedio
 	            break;
         }
@@ -222,6 +229,8 @@ public class Interface extends Application {
         controlPanel.getChildren().add(startPointMessage);
         iconButtons.getChildren().clear();
         iconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
+        curveButtons.getChildren().clear();
+        curveButtons.getChildren().addAll(btnCycloid, btnCircumference, btnParabola, btnCubicSpline);
         state = UIStates.WAITING_FOR_START_POINT;
     }
     
@@ -230,6 +239,9 @@ public class Interface extends Application {
     {
     	controlPanel.getChildren().clear();
     	controlPanel.getChildren().addAll(intermediatePointsMessage, btnStopIntermediatePointsInsertion, btnCancelInput);
+    	randomRed = random.nextInt(255);
+    	randomGreen = random.nextInt(255);
+    	randomBlue = random.nextInt(255);
     	state = UIStates.INSERTING_INTERMEDIATE_POINTS;
     }
     
@@ -241,6 +253,7 @@ public class Interface extends Application {
     	Cycloid cycloid = new Cycloid(inputManager.getStartPoint(),inputManager.getEndPoint());
     	simulations.add(new SimulationManager(cycloid, curveCanvas));
     	cycloid.drawCurve(curveCanvas.getGraphicsContext2D());
+    	curveButtons.getChildren().remove(btnCycloid);
     	state = UIStates.CHOOSING_MASS;
     }
     
@@ -252,6 +265,7 @@ public class Interface extends Application {
     	Parabola parabola = new Parabola(inputManager.getStartPoint(),inputManager.getEndPoint());
     	simulations.add(new SimulationManager(parabola, curveCanvas));
     	parabola.drawCurve(curveCanvas.getGraphicsContext2D());
+    	curveButtons.getChildren().remove(btnParabola);
     	state = UIStates.CHOOSING_MASS;
     }
     

@@ -1,6 +1,7 @@
 package ingdelsw.ExecutablePrototype.Math.Curves;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import ingdelsw.ExecutablePrototype.Math.Point;
 import javafx.scene.canvas.GraphicsContext;
@@ -10,7 +11,7 @@ public abstract class Curve {
 	
 	protected double intervalX, intervalY;
 	protected Point startPoint, endPoint;
-	protected static final int numPoints = 10000;
+	protected static final int numPoints = 5000;
 	
 	public abstract ArrayList<Point> calculatePointList();
 	
@@ -24,7 +25,8 @@ public abstract class Curve {
 	
 	public void drawCurve(GraphicsContext gc) {
 		System.out.println("drawCurve chiamato");
-        gc.setStroke(Color.BLUE);
+		Random random = new Random();
+        gc.setStroke(Color.rgb(random.nextInt(0,255), random.nextInt(0,255), random.nextInt(0,255)));
         gc.setLineWidth(2);
         ArrayList<Point> points = calculatePointList();
         for (int i = 0; i < points.size() - 1; i++) 
