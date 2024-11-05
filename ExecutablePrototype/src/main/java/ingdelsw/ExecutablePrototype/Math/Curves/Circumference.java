@@ -11,7 +11,6 @@ public class Circumference extends Curve {
 
     public Circumference(Point startPoint, Point endPoint, double r, int convexity) {
     	super(startPoint, endPoint);
-        this.r=r;
         this.convexity=convexity;
     }
     
