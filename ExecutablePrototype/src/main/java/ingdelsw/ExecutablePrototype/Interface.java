@@ -20,6 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -33,12 +34,14 @@ public class Interface extends Application {
     
     private Canvas pointsCanvas;
     private Canvas curveCanvas;
+    private Pane animationPane;
     private VBox controlPanel;
     private HBox curveButtons, iconButtons;
     private Label startPointMessage, endPointMessage, chooseCurveMessage, intermediatePointsMessage, chooseMassMessage, 
     				chooseRadiusMessage, chooseConvexityMessage;
     private Button btnCancelInput, btnCycloid, btnParabola, btnCubicSpline, btnCircumference, btnConfirmRadius, btnConvexityUp, 
     				btnConvexityDown, btnStopIntermediatePointsInsertion, btnStartSimulation, btnInsertAnotherCurve;
+    private ImageView iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton;
     private Slider radiusSlider;
     
     public enum UIStates {
@@ -92,11 +95,11 @@ public class Interface extends Application {
         Image iconNewton = new Image(getClass().getResource("/images/Newton.png").toExternalForm());
 
         // Crea pulsanti immagine
-        ImageView iconViewBernoulli = createIconButton(iconBernoulli, "Bernoulli");
-        ImageView iconViewGalileo = createIconButton(iconGalileo,"Galileo");
-        ImageView iconViewJakob = createIconButton(iconJakob, "Jakob");
-        ImageView iconViewLeibnitz = createIconButton(iconLeibnitz, "Leibnitz");
-        ImageView iconViewNewton = createIconButton(iconNewton, "Newton");
+        iconViewBernoulli = createIconButton(iconBernoulli, MassIcon.BERNOULLI);
+        iconViewGalileo = createIconButton(iconGalileo,MassIcon.GALILEO);
+        iconViewJakob = createIconButton(iconJakob, MassIcon.JAKOB);
+        iconViewLeibnitz = createIconButton(iconLeibnitz, MassIcon.LEIBNITZ);
+        iconViewNewton = createIconButton(iconNewton, MassIcon.NEWTON);
         
         iconButtons = new HBox(10); // Layout per tenere insieme le icone
         iconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
@@ -107,13 +110,16 @@ public class Interface extends Application {
 
         // Pannello di controllo (a sinistra)
         controlPanel = new VBox(10);
-        controlPanel.setPrefWidth(308); // Imposta la larghezza predefinita
+        controlPanel.setPrefWidth(400); // Imposta la larghezza predefinita
         controlPanel.setStyle("-fx-background-color: lightgray;"); // Colore grigio chiaro per il controllo
         root.setLeft(controlPanel);
         
         // Canvas per disegno (a destra)
         curveCanvas = new Canvas();
         pointsCanvas = new Canvas();
+        animationPane = new Pane();
+        
+        animationPane.setMouseTransparent(true); // Rendi animationPane trasparente agli eventi di mouse
         
         root.widthProperty().addListener((obs, oldVal, newVal) -> {
             double newWidth = newVal.doubleValue() - controlPanel.getWidth();
@@ -131,7 +137,7 @@ public class Interface extends Application {
         
         // Aggiungi entrambi i Canvas al centro del layout
         StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(curveCanvas, pointsCanvas);
+        stackPane.getChildren().addAll(curveCanvas, pointsCanvas, animationPane);
         root.setCenter(stackPane);
         
         root.setLeft(controlPanel);
@@ -155,10 +161,13 @@ public class Interface extends Application {
         btnConvexityDown.setOnAction(e -> handleConvexityDownClick());
         btnStopIntermediatePointsInsertion.setOnAction(e -> handleStopIntermediatePointsInsertionClick());
         btnInsertAnotherCurve.setOnAction(e -> handleInsertAnotherCurveClick());
+        
+        // Configura la finestra per aprirsi massimizzata
+        primaryStage.setMaximized(true);
     
         // Configura la scena
         Scene scene = new Scene(root, 1000, 700);
-        primaryStage.setTitle("Simulatore di Curve");
+        primaryStage.setTitle("Fall Simulator");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -207,9 +216,12 @@ public class Interface extends Application {
     private void handleCancelInputClick() {
         pointsCanvas.getGraphicsContext2D().clearRect(0, 0, pointsCanvas.getWidth(), pointsCanvas.getHeight());
         curveCanvas.getGraphicsContext2D().clearRect(0, 0, curveCanvas.getWidth(), curveCanvas.getHeight());
+        animationPane.getChildren().clear();
         simulations.clear();
         controlPanel.getChildren().clear();
         controlPanel.getChildren().add(startPointMessage);
+        iconButtons.getChildren().clear();
+        iconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
         state = UIStates.WAITING_FOR_START_POINT;
     }
     
@@ -317,21 +329,29 @@ public class Interface extends Application {
     }
     
     // Metodo helper per creare un pulsante icona
-    private ImageView createIconButton(Image image, String massType) {
+    private ImageView createIconButton(Image image, MassIcon iconType) {
         ImageView iconView = new ImageView(image);
-        iconView.setFitWidth(50); // Imposta la larghezza desiderata per l'icona
-        iconView.setFitHeight(50); // Imposta l'altezza desiderata per l'icona
-        iconView.setOnMouseClicked(e -> handleMassSelection(massType));
+        iconView.setFitWidth(70); // Imposta la larghezza desiderata per l'icona
+        iconView.setFitHeight(70); // Imposta l'altezza desiderata per l'icona
+        iconView.setOnMouseClicked(e -> handleMassSelection(iconType, (ImageView) e.getSource()));
         return iconView;
     }
     
     // Gestione della selezione della massa
-    private void handleMassSelection(String massType) {
-        // Logica per gestire la massa selezionata
-        System.out.println("Selected mass: " + massType);
-        // Procedi allo stato successivo o all'avvio della simulazione
+    private void handleMassSelection(MassIcon iconType, ImageView selectedMass) {
+        ImageView mass = new ImageView(selectedMass.getImage());
+        mass.setFitWidth(60);
+        mass.setFitHeight(60);
+        simulations.getLast().setMass(new Mass(inputManager.getStartPoint(), iconType, mass));
+        // Centra l'immagine rispetto al punto di partenza
+        simulations.getLast().getMass().getIcon().setX(inputManager.getStartPoint().getX() - 30);
+        simulations.getLast().getMass().getIcon().setY(inputManager.getStartPoint().getY() - 30);
+        animationPane.getChildren().add(simulations.getLast().getMass().getIcon());
         controlPanel.getChildren().clear();
-        controlPanel.getChildren().addAll(btnStartSimulation, btnInsertAnotherCurve); 
+        iconButtons.getChildren().remove(selectedMass);
+        if(iconButtons.getChildren().isEmpty())
+        	controlPanel.getChildren().addAll(btnStartSimulation, btnCancelInput); 
+        else controlPanel.getChildren().addAll(btnStartSimulation, btnInsertAnotherCurve, btnCancelInput); 
     }
     
     private void handleInsertAnotherCurveClick()

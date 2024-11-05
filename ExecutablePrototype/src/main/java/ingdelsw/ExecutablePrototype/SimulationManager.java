@@ -25,5 +25,15 @@ public class SimulationManager {
 	{
 		return curve;
 	}
+	
+	public void setMass(Mass mass)
+	{
+		this.mass = mass;
+	}
+	
+	public Mass getMass()
+	{
+		return mass;
+	}
 
 }
