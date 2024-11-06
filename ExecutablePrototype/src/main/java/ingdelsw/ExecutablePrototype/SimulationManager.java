@@ -12,18 +12,17 @@ public class SimulationManager {
     private Curve curve;
     private Point[] points;
     private double[] slopes;
+    private double[] times;
    
     private Canvas drawingCanvas;  // Pannello di disegno per la visualizzazione
     private Timeline timeline;  // Animazione della simulazione
-    private int numSteps = 300;  // Numero di passi della simulazione
-    private static int g;
+    private static int g = 100;
 
 	public SimulationManager(Curve curve, Canvas drawingCanvas) {
         mass=null;
         this.drawingCanvas = drawingCanvas;
         this.curve = curve;
         this.points = curve.calculatePointList();
-        this.slopes = curve.slope();
         this.timeline = new Timeline();
     }
 	
@@ -40,6 +39,28 @@ public class SimulationManager {
 	public Mass getMass()
 	{
 		return mass;
+	}
+	
+	public void setSlopes(double[] slopes)
+	{
+		this.slopes = slopes;
+	}
+	
+	public double[] calculateTimeParametrization()
+	{
+		times = new double[Curve.getNumPoints()];
+		times[0] = 0;
+		int i=0;
+		System.out.println("parametrizzazione curva rispetto al tempo");
+		while(true)
+		{
+			times[i+1] = times[i] + (1/(Math.sqrt(2*g*points[i + 1].getY()) * Math.sin(slopes[i + 1]))) * (points[i+1].getY() - points[i].getY());
+			System.out.println(times[i]);
+			i++;
+			if(i == Curve.getNumPoints() - 1)
+				break;
+		}
+		return times;
 	}
 
 }

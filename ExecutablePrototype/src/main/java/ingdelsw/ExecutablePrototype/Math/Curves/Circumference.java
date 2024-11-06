@@ -9,17 +9,10 @@ public class Circumference extends Curve {
 	private double r; 
 	private int convexity;
 
-    public Circumference(Point startPoint, Point endPoint, double r, int convexity) {
-    	super(startPoint, endPoint);
-        this.convexity=convexity;
-    }
     
     //initial circumference constructor
     public Circumference(Point startPoint, Point endPoint, int convexity) {
     	super(startPoint, endPoint);
-    	if(convexity == 1)
-    		r = (Math.pow(intervalX, 2)+Math.pow(intervalY, 2))/(2*intervalX);
-    	else r = (Math.pow(intervalX, 2)+Math.pow(intervalY, 2))/(2*intervalY);
         this.convexity=convexity;
     }
     

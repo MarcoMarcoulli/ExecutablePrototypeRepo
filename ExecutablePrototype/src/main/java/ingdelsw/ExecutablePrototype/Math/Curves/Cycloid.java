@@ -73,11 +73,14 @@ public class Cycloid extends Curve {
     public double[] slope()
     {
     	double[] slopes = new double[numPoints];
-    	double deltaX = intervalX / (double) numPoints;
-    	double x = 0;
+    	double deltaAlfa = alfa / (double) numPoints;
+    	double a = 0;
+    	slopes[0] = Math.atan(Double.POSITIVE_INFINITY);
+    	System.out.println((slopes[0]/Math.PI)*180);
     	for (int i=1; i < numPoints; i++) {
-    		x += deltaX;
-            slopes[i] =  Math.atan(0.5 * Math.sqrt(1/(x)));
+    		a += deltaAlfa;
+            slopes[i] =  Math.atan(Math.sin(a)/(1-Math.cos(a)));
+            System.out.println((slopes[i]/Math.PI)*180);
         }
     	return slopes;
     }

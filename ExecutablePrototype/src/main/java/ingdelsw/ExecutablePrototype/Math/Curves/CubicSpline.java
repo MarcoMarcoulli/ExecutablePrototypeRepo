@@ -86,7 +86,7 @@ public class CubicSpline extends Curve {
 	    	else {
 		    	double deltaX = intervalX / (double) numPoints;
 		    	double x = startPoint.getX();
-		    	for (int i=1; i < numPoints; i++) {
+		    	for (int i=0; i < numPoints; i++) {
 		            slopes[i] =  Math.atan(splineFunction.derivative().value(x));
 		            x += deltaX;
 		            System.out.println((slopes[i]/Math.PI)*180);

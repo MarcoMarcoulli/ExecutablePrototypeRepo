@@ -30,6 +30,11 @@ public abstract class Curve {
 		
 	}
 	
+	public static int getNumPoints()
+	{
+		return numPoints;
+	}
+	
 	public void drawCurve(GraphicsContext gc) {
 		System.out.println("drawCurve chiamato");
 		Random random = new Random();

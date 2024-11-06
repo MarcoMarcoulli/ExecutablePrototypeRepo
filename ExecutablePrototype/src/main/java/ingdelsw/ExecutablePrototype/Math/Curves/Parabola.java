@@ -40,7 +40,7 @@ public class Parabola extends Curve {
     	double[] slopes = new double[numPoints];
     	double deltaX = intervalX / (double) (numPoints-1);
     	double x = 0;
-    	for (int i=1; i < numPoints; i++) {
+    	for (int i=0; i < numPoints; i++) {
     		slopes[i] =  Math.atan(0.5 * Math.sqrt(1/(a*x)));
     		x += deltaX;
             System.out.println((slopes[i]/Math.PI)*180);
