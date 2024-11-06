@@ -1,6 +1,7 @@
 package ingdelsw.ExecutablePrototype;
 
 import ingdelsw.ExecutablePrototype.Mass;
+import ingdelsw.ExecutablePrototype.Math.Point;
 import ingdelsw.ExecutablePrototype.Math.Curves.Curve;
 import javafx.animation.Timeline;
 import javafx.scene.canvas.Canvas;
@@ -9,15 +10,20 @@ public class SimulationManager {
 	
 	private Mass mass;  // Oggetto rappresentante la massa
     private Curve curve;
+    private Point[] points;
+    private double[] slopes;
    
     private Canvas drawingCanvas;  // Pannello di disegno per la visualizzazione
     private Timeline timeline;  // Animazione della simulazione
     private int numSteps = 300;  // Numero di passi della simulazione
+    private static int g;
 
 	public SimulationManager(Curve curve, Canvas drawingCanvas) {
         mass=null;
         this.drawingCanvas = drawingCanvas;
         this.curve = curve;
+        this.points = curve.calculatePointList();
+        this.slopes = curve.slope();
         this.timeline = new Timeline();
     }
 	

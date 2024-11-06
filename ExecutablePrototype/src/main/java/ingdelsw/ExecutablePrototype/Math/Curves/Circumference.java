@@ -37,35 +37,32 @@ public class Circumference extends Curve {
     	return Math.sqrt(2*var*r - Math.pow(var, 2));
     }
     
-    public ArrayList<Point> calculatePointList() {
-    	ArrayList<Point> points = new ArrayList<>();
+    public Point[] calculatePointList() {
+    	Point[] points = new Point[numPoints];
     	double x = startPoint.getX();
     	double y = startPoint.getY();
     	double xCenter = xCenter(startPoint) + x;
     	double yCenter = yCenter(startPoint) + y;
-    	points.add(new Point(x,y));
     	
     	if(convexity == 1)
     	{
-    		double deltaX = intervalX / (double) numPoints;
+    		double deltaX = intervalX / (double) (numPoints-1);
     		
-        	for (int i = 0; i < numPoints; i++) {
+        	for (int i=0; i < numPoints; i++) {
+        		points[i] = new Point(x,y);
         		x += deltaX;
                 y = yCenter + evaluateFunction(x + r - xCenter);
-                points.add(new Point(x, y));
-                System.out.println("x : " + x + "y : " + y);
             }
     	}
     	
     	else if(convexity == -1)
     	{
-    		double deltaY = intervalY / (double) (numPoints - 1);
+    		double deltaY = intervalY / (double) (numPoints-1);
     		
-        	for (int i = 0; i < numPoints-1; i++) {
+        	for (int i=0; i < numPoints; i++) {
+        		points[i] = new Point(x,y);
         		y += deltaY;
                 x = xCenter + (intervalX/Math.abs(intervalX))*evaluateFunction(y + r - yCenter);
-                points.add(new Point(x, y));
-                System.out.println("x : " + x + "y : " + y);
             }
     	}
     	return points;
@@ -106,4 +103,32 @@ public class Circumference extends Curve {
     	System.out.println(" yCenter : " + (yCenter+startPoint.getY()));
     	return yCenter;
     } 
+    
+    public double[] slope()
+    {
+    	double[] slopes = new double[numPoints];
+    	
+    	if(convexity == 1)
+    	{
+    		double deltaX = intervalX / (double) (numPoints - 1);
+    		double x = r - xCenter(startPoint);
+        	for (int i=0; i < numPoints; i++) {
+                slopes[i] = Math.atan((r-x)*Math.sqrt(1/(2*r*x - Math.pow(x, 2))));
+                x += deltaX;
+                System.out.println((slopes[i]/Math.PI)*180);
+            }
+    	}
+    	
+    	else if(convexity == -1)
+    	{
+    		double deltaY = intervalY / (double) (numPoints - 1);
+    		double y = r - yCenter(startPoint);
+        	for (int i=0; i < numPoints; i++) {
+                slopes[i] = (Math.PI)/2 - Math.atan((r-y)*Math.sqrt(1/(2*r*y - Math.pow(y, 2))));
+                y += deltaY;
+                System.out.println((slopes[i]/Math.PI)*180);
+            }
+    	}
+    	return slopes;
+    }
 }

@@ -12,9 +12,10 @@ public abstract class Curve {
 	protected double intervalX, intervalY;
 	protected Point startPoint, endPoint;
 	protected int randomRed, randomGreen, randomBlue;
-	protected static final int numPoints = 5000;
+	protected static final int numPoints = 1000;
 	
-	public abstract ArrayList<Point> calculatePointList();
+	public abstract Point[] calculatePointList();
+	public abstract double[] slope();
 	
 	public Curve(Point startPoint, Point endPoint)
 	{
@@ -34,8 +35,9 @@ public abstract class Curve {
 		Random random = new Random();
         gc.setStroke(Color.rgb(randomRed, randomGreen, randomBlue));
         gc.setLineWidth(2);
-        ArrayList<Point> points = calculatePointList();
-        for (int i = 0; i < points.size() - 1; i++) 
-        	gc.strokeLine(points.get(i).getX(), points.get(i).getY(), points.get(i+1).getX(), points.get(i+1).getY());
+        Point[] points = new Point[numPoints];
+        points = calculatePointList();
+        for (int i = 0; i < numPoints - 1; i++) 
+        	gc.strokeLine(points[i].getX(), points[i].getY(), points[i+1].getX(), points[i+1].getY());
     }
 }

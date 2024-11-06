@@ -59,15 +59,27 @@ public class Cycloid extends Curve {
     	return r*(1-Math.cos(a));
     }
     
-    public ArrayList<Point> calculatePointList() {
-    	ArrayList<Point> points = new ArrayList<>();
+    public Point[] calculatePointList() {
+    	Point[] points = new Point[numPoints];
     	double deltaAlfa = alfa / (double) numPoints;
-    	
-    	for (int i = 0; i < numPoints; i++) {
-    		double a = i * deltaAlfa;
-            points.add(new Point(startPoint.getX() + evaluateX(a), startPoint.getY() + evaluateY(a)));
+    	double a = 0;
+    	for (int i=0; i < numPoints; i++) {
+    		points[i] = new Point(startPoint.getX() + evaluateX(a), startPoint.getY() + evaluateY(a));
+    		a += deltaAlfa;
         }
     	return points;
+    }
+    
+    public double[] slope()
+    {
+    	double[] slopes = new double[numPoints];
+    	double deltaX = intervalX / (double) numPoints;
+    	double x = 0;
+    	for (int i=1; i < numPoints; i++) {
+    		x += deltaX;
+            slopes[i] =  Math.atan(0.5 * Math.sqrt(1/(x)));
+        }
+    	return slopes;
     }
 
 }

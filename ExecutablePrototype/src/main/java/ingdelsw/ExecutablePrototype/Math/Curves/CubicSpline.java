@@ -56,21 +56,44 @@ public class CubicSpline extends Curve {
 	    	else return splineFunction.value(x);
 	    }
 	    
-	    public ArrayList<Point> calculatePointList()
+	    public Point[] calculatePointList()
         {
-        	ArrayList<Point> points = new ArrayList<>();
+        	Point[] points = new Point[numPoints];
         	double deltaX = intervalX / (double) numPoints;
         	double x = startPoint.getX();
         	double y = startPoint.getY();
-        	points.add(new Point(x,y));
-        	for (int i = 0; i < numPoints-1; i++) {
+        	for (int i=0; i < numPoints; i++) {
+        		y = evaluateY(x);
+        		points[i] = new Point(x, y);
         		x += deltaX;
-                y = evaluateY(x);
-                points.add(new Point(x, y));
-                System.out.println("x : " + x + "y : " + y);
             }
         	return points;
         }
+	    
+	    public double[] slope()
+	    {
+	    	double[] slopes = new double[numPoints];
+	    	if(splineFunction == null)
+	    	{
+	    		double m = (controlPoints[1].getY() - controlPoints[0].getY()) / (controlPoints[1].getX() - controlPoints[0].getX());
+	    		for(int i=0; i < numPoints; i++)
+	    		{	
+	    			slopes[i] = m;
+	    			System.out.println((slopes[i]/Math.PI)*180);
+	    		}
+	    		return slopes;
+	    	}
+	    	else {
+		    	double deltaX = intervalX / (double) numPoints;
+		    	double x = startPoint.getX();
+		    	for (int i=1; i < numPoints; i++) {
+		            slopes[i] =  Math.atan(splineFunction.derivative().value(x));
+		            x += deltaX;
+		            System.out.println((slopes[i]/Math.PI)*180);
+		        }
+		    	return slopes;
+	    	}
+	    }
 }
 
 /*

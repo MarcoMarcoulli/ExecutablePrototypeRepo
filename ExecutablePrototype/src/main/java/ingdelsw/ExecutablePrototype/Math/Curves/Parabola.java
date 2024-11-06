@@ -22,18 +22,30 @@ public class Parabola extends Curve {
     	return Math.sqrt(x/a);
     }
     
-    public ArrayList<Point> calculatePointList() {
-    	ArrayList<Point> points = new ArrayList<>();
-    	double deltaX = intervalX / (double) numPoints;
+    public Point[] calculatePointList() {
+    	Point[] points = new Point[numPoints];
+    	double deltaX = intervalX / (double) (numPoints-1);
     	double x = startPoint.getX();
     	double y = startPoint.getY();
-    	points.add(new Point(x,y));
-    	for (int i = 0; i < numPoints; i++) {
+    	for (int i=0; i < numPoints; i++) {
+    		points[i] = new Point(x,y);
     		x += deltaX;
             y = startPoint.getY() + evaluateY(x-startPoint.getX());
-            points.add(new Point(x, y));
-            System.out.println("x : " + x + "y : " + y);
         }
     	return points;
 	}
+    
+    public double[] slope()
+    {
+    	double[] slopes = new double[numPoints];
+    	double deltaX = intervalX / (double) (numPoints-1);
+    	double x = 0;
+    	for (int i=1; i < numPoints; i++) {
+    		slopes[i] =  Math.atan(0.5 * Math.sqrt(1/(a*x)));
+    		x += deltaX;
+            System.out.println((slopes[i]/Math.PI)*180);
+        }
+    	return slopes;
+    }
+    
 }
