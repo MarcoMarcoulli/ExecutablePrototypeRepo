@@ -32,6 +32,7 @@ public class InputManager {
 
     public void setStartpoint(Point startPoint) {
         this.startPoint = startPoint;
+        System.out.println("startPoint : X : " + startPoint.getX() + " Y : " + startPoint.getY());
     }
     
     public void setEndpoint(Point endPoint) {

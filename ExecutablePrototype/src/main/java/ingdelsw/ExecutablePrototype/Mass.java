@@ -2,6 +2,7 @@ package ingdelsw.ExecutablePrototype;
 
 import ingdelsw.ExecutablePrototype.MassIcon;
 import ingdelsw.ExecutablePrototype.Math.Point;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 
 public class Mass {
@@ -13,9 +14,11 @@ public class Mass {
     public Mass(Point startPosition, MassIcon iconType, ImageView icon) {
         this.currentPosition = startPosition;
         this.iconType = iconType;
+        icon.setFitWidth(60);
+        icon.setFitHeight(60);
         this.icon = icon;
-        this.icon.setX(startPosition.getX());
-        this.icon.setY(startPosition.getY());
+        this.icon.setX(startPosition.getX() - 30);
+        this.icon.setY(startPosition.getY() - 30);
     }
 
     // Getter e Setter per la posizione corrente

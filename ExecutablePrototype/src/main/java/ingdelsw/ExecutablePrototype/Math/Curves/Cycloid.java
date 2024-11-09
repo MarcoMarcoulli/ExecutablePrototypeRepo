@@ -59,7 +59,7 @@ public class Cycloid extends Curve {
     	return r*(1-Math.cos(a));
     }
     
-    public Point[] calculatePointList() {
+    public Point[] calculatePoints() {
     	Point[] points = new Point[numPoints];
     	double deltaAlfa = alfa / (double) numPoints;
     	double a = 0;
@@ -70,7 +70,7 @@ public class Cycloid extends Curve {
     	return points;
     }
     
-    public double[] slope()
+    public double[] calculateSlopes()
     {
     	double[] slopes = new double[numPoints];
     	double deltaAlfa = alfa / (double) numPoints;

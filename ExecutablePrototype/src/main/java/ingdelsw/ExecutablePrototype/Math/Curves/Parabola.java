@@ -22,7 +22,7 @@ public class Parabola extends Curve {
     	return Math.sqrt(x/a);
     }
     
-    public Point[] calculatePointList() {
+    public Point[] calculatePoints() {
     	Point[] points = new Point[numPoints];
     	double deltaX = intervalX / (double) (numPoints-1);
     	double x = startPoint.getX();
@@ -35,7 +35,7 @@ public class Parabola extends Curve {
     	return points;
 	}
     
-    public double[] slope()
+    public double[] calculateSlopes()
     {
     	double[] slopes = new double[numPoints];
     	double deltaX = intervalX / (double) (numPoints-1);

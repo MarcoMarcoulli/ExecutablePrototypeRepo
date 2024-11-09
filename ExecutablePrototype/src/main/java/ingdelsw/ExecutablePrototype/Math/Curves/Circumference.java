@@ -14,12 +14,18 @@ public class Circumference extends Curve {
     public Circumference(Point startPoint, Point endPoint, int convexity) {
     	super(startPoint, endPoint);
         this.convexity=convexity;
+        if(convexity == -1)
+        	this.r = (Math.pow(intervalX, 2)+Math.pow(intervalY, 2))/(2 * intervalY) + 1;
+        else this.r = (Math.pow(intervalX, 2)+Math.pow(intervalY, 2))/(2 * intervalX);
     }
     
-    public void setR(double r)
-    {
-    	this.r=r;
+    //initial circumference constructor
+    public Circumference(Point startPoint, Point endPoint, int convexity, double r) {
+    	super(startPoint, endPoint);
+    	this.r = r;
+        this.convexity = convexity;
     }
+    
     
     public double getR()
     {
@@ -30,7 +36,7 @@ public class Circumference extends Curve {
     	return Math.sqrt(2*var*r - Math.pow(var, 2));
     }
     
-    public Point[] calculatePointList() {
+    public Point[] calculatePoints() {
     	Point[] points = new Point[numPoints];
     	double x = startPoint.getX();
     	double y = startPoint.getY();
@@ -97,7 +103,7 @@ public class Circumference extends Curve {
     	return yCenter;
     } 
     
-    public double[] slope()
+    public double[] calculateSlopes()
     {
     	double[] slopes = new double[numPoints];
     	

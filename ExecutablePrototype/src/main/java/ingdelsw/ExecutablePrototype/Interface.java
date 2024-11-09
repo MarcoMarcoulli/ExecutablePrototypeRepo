@@ -128,12 +128,14 @@ public class Interface extends Application {
             double newWidth = newVal.doubleValue() - controlPanel.getWidth();
             curveCanvas.setWidth(newWidth);
             pointsCanvas.setWidth(newWidth);
+            animationPane.setPrefWidth(newWidth);
         });
 
         root.heightProperty().addListener((obs, oldVal, newVal) -> {
             double newHeight = newVal.doubleValue();
             curveCanvas.setHeight(newHeight);
             pointsCanvas.setHeight(newHeight);
+            animationPane.setPrefHeight(newHeight);
         });
         
         
@@ -216,7 +218,6 @@ public class Interface extends Application {
 	                inputManager.handleException(e);
 	                return;
 	            }
-	        	
 	            gc.setFill(Color.rgb(randomRed, randomGreen, randomBlue));
 	            gc.fillOval(x - 5, y - 5, 10, 10);  // Cerchio verde per il punto intermedio
 	            break;
@@ -242,22 +243,24 @@ public class Interface extends Application {
     {
     	controlPanel.getChildren().clear();
     	controlPanel.getChildren().addAll(intermediatePointsMessage, btnStopIntermediatePointsInsertion, btnCancelInput);
-    	randomRed = random.nextInt(255);
-    	randomGreen = random.nextInt(255);
-    	randomBlue = random.nextInt(255);
+    	Random random = new Random();
+        randomRed = random.nextInt(230);
+        randomGreen = random.nextInt(230);
+        randomBlue = random.nextInt(230);
     	state = UIStates.INSERTING_INTERMEDIATE_POINTS;
     }
     
     //gestore del click sul pulsante Cycloid
     private void handleCycloidClick()
     {
+    	Cycloid cycloid = new Cycloid(inputManager.getStartPoint(),inputManager.getEndPoint());
+    	cycloid.setRandomColors();
+    	simulations.add(new SimulationManager(cycloid));
+    	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
+    	simulations.getLast().setSlopes(cycloid.calculateSlopes());
+    	simulations.getLast().calculateTimeParametrization();
     	controlPanel.getChildren().clear();
     	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
-    	Cycloid cycloid = new Cycloid(inputManager.getStartPoint(),inputManager.getEndPoint());
-    	simulations.add(new SimulationManager(cycloid, curveCanvas));
-    	cycloid.drawCurve(curveCanvas.getGraphicsContext2D());
-    	simulations.getLast().setSlopes(cycloid.slope());
-    	simulations.getLast().calculateTimeParametrization();
     	curveButtons.getChildren().remove(btnCycloid);
     	state = UIStates.CHOOSING_MASS;
     }
@@ -265,13 +268,14 @@ public class Interface extends Application {
     //gestore del click sul pulsante Parabola
     private void handleParabolaClick()
     {
+    	Parabola parabola = new Parabola(inputManager.getStartPoint(),inputManager.getEndPoint());
+    	parabola.setRandomColors();
+    	simulations.add(new SimulationManager(parabola));
+    	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
+    	simulations.getLast().setSlopes(parabola.calculateSlopes());
+    	simulations.getLast().calculateTimeParametrization();
     	controlPanel.getChildren().clear();
     	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
-    	Parabola parabola = new Parabola(inputManager.getStartPoint(),inputManager.getEndPoint());
-    	simulations.add(new SimulationManager(parabola, curveCanvas));
-    	parabola.drawCurve(curveCanvas.getGraphicsContext2D());
-    	simulations.getLast().setSlopes(parabola.slope());
-    	simulations.getLast().calculateTimeParametrization();
     	curveButtons.getChildren().remove(btnParabola);
     	state = UIStates.CHOOSING_MASS;
     }
@@ -287,11 +291,10 @@ public class Interface extends Application {
     private void handleConvexityUpClick()
     {
     	double deltaX = inputManager.getEndPoint().getX() - inputManager.getStartPoint().getX();
-    	double deltaY = inputManager.getEndPoint().getY() - inputManager.getStartPoint().getY();
     	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), 1);
-    	circumference.setR((Math.pow(deltaX, 2)+Math.pow(deltaY, 2))/(2*deltaX));
-    	simulations.add(new SimulationManager(circumference, curveCanvas));
-    	circumference.drawCurve(curveCanvas.getGraphicsContext2D());
+    	circumference.setRandomColors();
+    	simulations.add(new SimulationManager(circumference));
+    	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
     	
     	radiusSlider = new Slider((deltaX/Math.abs(deltaX))*circumference.getR(), (deltaX/Math.abs(deltaX))*circumference.getR()*3, (deltaX/Math.abs(deltaX))*circumference.getR());
     	// Aggiungi un listener per il valore dello slider e chiama la funzione
@@ -306,12 +309,10 @@ public class Interface extends Application {
     
     private void handleConvexityDownClick()
     {
-    	double deltaX = inputManager.getEndPoint().getX() - inputManager.getStartPoint().getX();
-    	double deltaY = inputManager.getEndPoint().getY() - inputManager.getStartPoint().getY();
     	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), -1);
-    	circumference.setR((Math.pow(deltaX, 2)+Math.pow(deltaY, 2))/(2*deltaY) + 1);
-    	simulations.add(new SimulationManager(circumference, curveCanvas));
-    	circumference.drawCurve(curveCanvas.getGraphicsContext2D());
+    	circumference.setRandomColors();
+    	simulations.add(new SimulationManager(circumference));
+    	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
     	
     	radiusSlider = new Slider(circumference.getR(), circumference.getR()*3, circumference.getR());
     	// Aggiungi un listener per il valore dello slider e chiama la funzione
@@ -327,33 +328,38 @@ public class Interface extends Application {
     private void handleSliderChange(double radius, int convexity)
     {
     	curveCanvas.getGraphicsContext2D().clearRect(0, 0, curveCanvas.getWidth(), curveCanvas.getHeight());
-    	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), convexity);
-    	circumference.drawCurve(curveCanvas.getGraphicsContext2D());
-    	((Circumference) simulations.getLast().getCurve()).setR(radius);
-    	for (int i = 0; i < simulations.size(); i++) {
-    	    simulations.get(i).getCurve().drawCurve(curveCanvas.getGraphicsContext2D());
+    	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), convexity, radius);
+    	circumference.setRed(simulations.getLast().getCurve().getRed());
+    	circumference.setGreen(simulations.getLast().getCurve().getGreen());
+    	circumference.setBlue(simulations.getLast().getCurve().getBlue());
+    	simulations.removeLast();
+    	simulations.add(new SimulationManager(circumference));
+    	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
+    	for (int i = 0; i < simulations.size() - 1; i++) {
+    	    CurveVisualizer.drawCurve(simulations.get(i).getPoints(), curveCanvas.getGraphicsContext2D(), simulations.get(i).getCurve().getRed(), simulations.get(i).getCurve().getGreen(), simulations.get(i).getCurve().getBlue());
     	}
     }
     
     private void handleConfirmRadiusClick(double radius, int convexity)
     {
+    	simulations.getLast().setSlopes(simulations.getLast().getCurve().calculateSlopes());
+    	simulations.getLast().calculateTimeParametrization();
     	controlPanel.getChildren().clear();
     	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
-    	simulations.getLast().setSlopes(simulations.getLast().getCurve().slope());
-    	simulations.getLast().calculateTimeParametrization();
     	state = UIStates.CHOOSING_MASS;
     }
     
     private void handleStopIntermediatePointsInsertionClick()
     {
+    	CubicSpline spline = new CubicSpline(inputManager.getStartPoint(),inputManager.getEndPoint(), inputManager.getIntermediatePoint());
+    	spline.setRandomColors();
+    	inputManager.clearIntermediatePoints();
+    	simulations.add(new SimulationManager(spline));
+    	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
+    	simulations.getLast().setSlopes(spline.calculateSlopes());
+    	simulations.getLast().calculateTimeParametrization();
     	controlPanel.getChildren().clear();
     	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
-    	CubicSpline spline = new CubicSpline(inputManager.getStartPoint(),inputManager.getEndPoint(), inputManager.getIntermediatePoint());
-    	inputManager.clearIntermediatePoints();
-    	simulations.add(new SimulationManager(spline, curveCanvas));
-    	simulations.getLast().setSlopes(spline.slope());
-    	simulations.getLast().calculateTimeParametrization();
-    	spline.drawCurve(curveCanvas.getGraphicsContext2D());
     	state = UIStates.CHOOSING_MASS;
     }
     
@@ -369,12 +375,7 @@ public class Interface extends Application {
     // Gestione della selezione della massa
     private void handleMassSelection(MassIcon iconType, ImageView selectedMass) {
         ImageView mass = new ImageView(selectedMass.getImage());
-        mass.setFitWidth(60);
-        mass.setFitHeight(60);
         simulations.getLast().setMass(new Mass(inputManager.getStartPoint(), iconType, mass));
-        // Centra l'immagine rispetto al punto di partenza
-        simulations.getLast().getMass().getIcon().setX(inputManager.getStartPoint().getX() - 30);
-        simulations.getLast().getMass().getIcon().setY(inputManager.getStartPoint().getY() - 30);
         animationPane.getChildren().add(simulations.getLast().getMass().getIcon());
         controlPanel.getChildren().clear();
         iconButtons.getChildren().remove(selectedMass);
@@ -393,9 +394,7 @@ public class Interface extends Application {
     {
     	for(int i=0; i<simulations.size(); i++)
     	{
-    		// Centra l'immagine rispetto al punto di partenza
-            simulations.getLast().getMass().getIcon().setX( - 30);
-            simulations.getLast().getMass().getIcon().setY( - 30);
+    		simulations.get(i).startAnimation();
     	}
     }
     

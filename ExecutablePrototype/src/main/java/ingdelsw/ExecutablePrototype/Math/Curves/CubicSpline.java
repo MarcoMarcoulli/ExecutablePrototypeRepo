@@ -56,7 +56,7 @@ public class CubicSpline extends Curve {
 	    	else return splineFunction.value(x);
 	    }
 	    
-	    public Point[] calculatePointList()
+	    public Point[] calculatePoints()
         {
         	Point[] points = new Point[numPoints];
         	double deltaX = intervalX / (double) numPoints;
@@ -70,7 +70,7 @@ public class CubicSpline extends Curve {
         	return points;
         }
 	    
-	    public double[] slope()
+	    public double[] calculateSlopes()
 	    {
 	    	double[] slopes = new double[numPoints];
 	    	if(splineFunction == null)
