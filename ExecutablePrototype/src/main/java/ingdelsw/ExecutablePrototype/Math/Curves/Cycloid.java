@@ -59,13 +59,20 @@ public class Cycloid extends Curve {
     	return r*(1-Math.cos(a));
     }
     
-    public Point[] calculatePoints() {
+    public Point[] calculatePoints() 
+    {
     	Point[] points = new Point[numPoints];
-    	double deltaAlfa = alfa / (double) numPoints;
+    	double t, aCubic;
     	double a = 0;
+    	double x = startPoint.getX();
+    	double y = startPoint.getY();
     	for (int i=0; i < numPoints; i++) {
-    		points[i] = new Point(startPoint.getX() + evaluateX(a), startPoint.getY() + evaluateY(a));
-    		a += deltaAlfa;
+    		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
+            aCubic = alfa * Math.pow(t, 3);     // Densità maggiore all'inizio con t^3
+            x = startPoint.getX() + evaluateX(aCubic);
+    		y = startPoint.getY() + evaluateY(aCubic);
+            points[i] = new Point(x, y);
+    		//System.out.println("punto " + i + "-esimo - X : " + x + " Y : "+ y );
         }
     	return points;
     }
@@ -73,14 +80,15 @@ public class Cycloid extends Curve {
     public double[] calculateSlopes()
     {
     	double[] slopes = new double[numPoints];
-    	double deltaAlfa = alfa / (double) numPoints;
+    	double t, aCubic;
     	double a = 0;
     	slopes[0] = Math.atan(Double.POSITIVE_INFINITY);
     	System.out.println((slopes[0]/Math.PI)*180);
     	for (int i=1; i < numPoints; i++) {
-    		a += deltaAlfa;
-            slopes[i] =  Math.atan(Math.sin(a)/(1-Math.cos(a)));
-            System.out.println((slopes[i]/Math.PI)*180);
+    		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
+            aCubic = alfa * Math.pow(t, 3);     // Densità maggiore all'inizio con t^3
+            slopes[i] =  Math.atan(Math.sin(aCubic)/(1-Math.cos(aCubic)));
+            //System.out.println((slopes[i]/Math.PI)*180);
         }
     	return slopes;
     }

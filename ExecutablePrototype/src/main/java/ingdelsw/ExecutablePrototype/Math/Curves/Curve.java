@@ -12,7 +12,7 @@ public abstract class Curve {
 	protected double intervalX, intervalY;
 	protected Point startPoint, endPoint;
 	protected int red, green, blue;
-	protected static final int numPoints = 1000;
+	protected static final int numPoints = 10000;
 	
 	public abstract Point[] calculatePoints();
 	public abstract double[] calculateSlopes();
@@ -67,6 +67,11 @@ public abstract class Curve {
 	public static int getNumPoints()
 	{
 		return numPoints;
+	}
+	
+	public Point getStartPoint()
+	{
+		return startPoint;
 	}
 	
 }

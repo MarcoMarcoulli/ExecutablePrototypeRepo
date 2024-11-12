@@ -39,10 +39,11 @@ public class InputManager {
     	if(endPoint.getY()<=startPoint.getY())
     		throw new IllegalArgumentException("Il punto di arrivo deve essere più in basso di quello di partenza");
     	else if(endPoint.getX() == startPoint.getX())
-    		this.endPoint = new Point(endPoint.getX()+1, endPoint.getY());
+    		this.endPoint = new Point(endPoint.getX() + 1, endPoint.getY());
     	else {
     		this.endPoint=endPoint;
     	}
+    	System.out.println("endPoint : X : " + endPoint.getX() + " Y : " + endPoint.getY());
     }
     
     public void addIntermediatePoint(Point p) {

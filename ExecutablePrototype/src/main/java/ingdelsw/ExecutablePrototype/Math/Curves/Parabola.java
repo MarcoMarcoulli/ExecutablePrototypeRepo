@@ -22,15 +22,19 @@ public class Parabola extends Curve {
     	return Math.sqrt(x/a);
     }
     
-    public Point[] calculatePoints() {
+    public Point[] calculatePoints() 
+    {
     	Point[] points = new Point[numPoints];
-    	double deltaX = intervalX / (double) (numPoints-1);
     	double x = startPoint.getX();
     	double y = startPoint.getY();
+    	double t, xCubic;
     	for (int i=0; i < numPoints; i++) {
-    		points[i] = new Point(x,y);
-    		x += deltaX;
+    		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
+            xCubic = intervalX * Math.pow(t, 3);     // Densità maggiore all'inizio con t^3
+            x = startPoint.getX() + xCubic;
             y = startPoint.getY() + evaluateY(x-startPoint.getX());
+            points[i] = new Point(x,y);
+    		//System.out.println("punto " + i + "-esimo - X : " + x + " Y : "+ y );
         }
     	return points;
 	}
@@ -38,12 +42,13 @@ public class Parabola extends Curve {
     public double[] calculateSlopes()
     {
     	double[] slopes = new double[numPoints];
-    	double deltaX = intervalX / (double) (numPoints-1);
-    	double x = 0;
+    	double x = startPoint.getX();
+    	double t, xCubic;
     	for (int i=0; i < numPoints; i++) {
-    		slopes[i] =  Math.atan(0.5 * Math.sqrt(1/(a*x)));
-    		x += deltaX;
-            System.out.println((slopes[i]/Math.PI)*180);
+    		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
+            xCubic = intervalX * Math.pow(t, 3);     // Densità maggiore all'inizio con t^2
+    		slopes[i] =  Math.atan(0.5 * Math.sqrt(1/(a*xCubic)));
+            //System.out.println((slopes[i]/Math.PI)*180);
         }
     	return slopes;
     }

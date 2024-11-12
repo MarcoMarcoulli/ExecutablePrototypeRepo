@@ -253,13 +253,13 @@ public class Interface extends Application {
     //gestore del click sul pulsante Cycloid
     private void handleCycloidClick()
     {
+    	controlPanel.getChildren().clear();
     	Cycloid cycloid = new Cycloid(inputManager.getStartPoint(),inputManager.getEndPoint());
     	cycloid.setRandomColors();
     	simulations.add(new SimulationManager(cycloid));
     	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
     	simulations.getLast().setSlopes(cycloid.calculateSlopes());
     	simulations.getLast().calculateTimeParametrization();
-    	controlPanel.getChildren().clear();
     	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
     	curveButtons.getChildren().remove(btnCycloid);
     	state = UIStates.CHOOSING_MASS;
@@ -268,13 +268,13 @@ public class Interface extends Application {
     //gestore del click sul pulsante Parabola
     private void handleParabolaClick()
     {
+    	controlPanel.getChildren().clear();
     	Parabola parabola = new Parabola(inputManager.getStartPoint(),inputManager.getEndPoint());
     	parabola.setRandomColors();
     	simulations.add(new SimulationManager(parabola));
-    	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
+    	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), parabola.getRed(),  parabola.getGreen(),  parabola.getBlue());
     	simulations.getLast().setSlopes(parabola.calculateSlopes());
     	simulations.getLast().calculateTimeParametrization();
-    	controlPanel.getChildren().clear();
     	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
     	curveButtons.getChildren().remove(btnParabola);
     	state = UIStates.CHOOSING_MASS;
@@ -363,11 +363,13 @@ public class Interface extends Application {
     	state = UIStates.CHOOSING_MASS;
     }
     
+    final double IconButtonDiameter = 70;
+    
     // Metodo helper per creare un pulsante icona
     private ImageView createIconButton(Image image, MassIcon iconType) {
         ImageView iconView = new ImageView(image);
-        iconView.setFitWidth(70); // Imposta la larghezza desiderata per l'icona
-        iconView.setFitHeight(70); // Imposta l'altezza desiderata per l'icona
+        iconView.setFitWidth(IconButtonDiameter); // Imposta la larghezza desiderata per l'icona
+        iconView.setFitHeight(IconButtonDiameter);
         iconView.setOnMouseClicked(e -> handleMassSelection(iconType, (ImageView) e.getSource()));
         return iconView;
     }

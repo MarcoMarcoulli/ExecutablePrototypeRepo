@@ -114,7 +114,7 @@ public class Circumference extends Curve {
         	for (int i=0; i < numPoints; i++) {
                 slopes[i] = Math.atan((r-x)*Math.sqrt(1/(2*r*x - Math.pow(x, 2))));
                 x += deltaX;
-                System.out.println((slopes[i]/Math.PI)*180);
+                //System.out.println((slopes[i]/Math.PI)*180);
             }
     	}
     	
@@ -125,7 +125,7 @@ public class Circumference extends Curve {
         	for (int i=0; i < numPoints; i++) {
                 slopes[i] = (Math.PI)/2 - Math.atan((r-y)*Math.sqrt(1/(2*r*y - Math.pow(y, 2))));
                 y += deltaY;
-                System.out.println((slopes[i]/Math.PI)*180);
+                //System.out.println((slopes[i]/Math.PI)*180);
             }
     	}
     	return slopes;

@@ -3,92 +3,88 @@ package ingdelsw.ExecutablePrototype;
 import ingdelsw.ExecutablePrototype.Math.Point;
 import ingdelsw.ExecutablePrototype.Math.Curves.Curve;
 
-import javafx.animation.Timeline;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
-import javafx.util.Duration;
-
-import javafx.scene.canvas.Canvas;
 
 public class SimulationManager {
-	
-	private Mass mass;  // Oggetto rappresentante la massa
+
+    private Mass mass;  // Oggetto rappresentante la massa
     private Curve curve;
     private Point[] points;
     private double[] slopes;
     private double[] times;
    
-    private Timeline timeline;  // Animazione della simulazione
-    private static int g = 100;
+    private static int g = 50;
+    private long startTime; // Tempo di inizio dell'animazione in nanosecondi
 
-	public SimulationManager(Curve curve) {
-        mass=null;
+    public SimulationManager(Curve curve) {
+        mass = null;
         this.curve = curve;
         this.points = curve.calculatePoints();
-        this.timeline = new Timeline();
+        //System.out.println("punti calcolati");
     }
-	
-	public Curve getCurve()
-	{
-		return curve;
-	}
-	
-	public void setMass(Mass mass)
-	{
-		this.mass = mass;
-	}
-	
-	public Mass getMass()
-	{
-		return mass;
-	}
-	
-	public Point[] getPoints()
-	{
-		return points;
-	}
-	
-	public void setSlopes(double[] slopes)
-	{
-		this.slopes = slopes;
-	}
-	
-	public double[] calculateTimeParametrization()
-	{
-		times = new double[Curve.getNumPoints()];
-		times[0] = 0;
-		System.out.println("parametrizzazione curva rispetto al tempo");
-		for(int i = 0; i < Curve.getNumPoints() - 1; i++)
-		{
-			times[i+1] = times[i] + (1/(Math.sqrt(2*g*points[i + 1].getY()) * Math.sin(slopes[i + 1]))) * (Math.abs(points[i+1].getY() - points[i].getY()));
-			System.out.println(times[i]);
-		}
-		return times;
-	}
-	
+
+    public Curve getCurve() {
+        return curve;
+    }
+
+    public void setMass(Mass mass) {
+        this.mass = mass;
+    }
+
+    public Mass getMass() {
+        return mass;
+    }
+
+    public Point[] getPoints() {
+        return points;
+    }
+
+    public void setSlopes(double[] slopes) {
+        this.slopes = slopes;
+    }
+
+    public double[] calculateTimeParametrization() {
+        times = new double[points.length];
+        times[0] = 0;
+        System.out.println("parametrizzazione curva rispetto al tempo");
+        for (int i = 1; i < points.length-1; i++) {
+        	times[i+1] = times[i] + (1/(Math.sqrt(2*g*points[i].getY()) * Math.abs(Math.sin(slopes[i-1])))) * (Math.abs(points[i+1].getY() - points[i].getY()));
+            System.out.println(" tempi : " + times[i]);
+        }
+        return times;
+    }
 
     public void startAnimation() {
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                if (startTime == 0) startTime = now; // Inizializza il tempo di inizio
 
-        // Crea un KeyFrame per ciascun punto della curva
-        for (int i = 0; i <points.length ; i++) {
-            Point point = points[i];
-            System.out.println("X : " + points[i].getX() + " Y : " + points[i].getY());
-            System.out.println("Tempi calcolati: " + times[i]);
+                double elapsedTime = (now - startTime) / 1_000_000_000.0; // Tempo trascorso in secondi
+                
+                // Trova il punto più vicino al tempo trascorso
+                for (int i = 0; i < times.length - 1; i++) {
+                    if (elapsedTime >= times[i] && elapsedTime < times[i + 1]) {
+                        // Calcola la posizione interpolata tra points[i] e points[i+1]
+                        double ratio = (elapsedTime - times[i]) / (times[i + 1] - times[i]);
+                        double x = points[i].getX() + (points[i + 1].getX() - points[i].getX()) * ratio;
+                        double y = points[i].getY() + (points[i + 1].getY() - points[i].getY()) * ratio;
 
-            Duration duration = Duration.seconds(times[i]);
+                        // Posiziona la massa
+                        mass.getIcon().relocate(x - mass.getMassDiameter() / 2, y - mass.getMassDiameter() / 2);
+                        break;
+                    }
+                }
+                
+                // Ferma l'animazione se abbiamo raggiunto l'ultimo punto
+                if (elapsedTime >= times[times.length - 1]) {
+                    this.stop();
+                }
+            }
+        };
 
-            // Creiamo un evento personalizzato che userà relocate per spostare la massa
-            KeyFrame keyFrame = new KeyFrame(duration, event -> {
-                mass.getIcon().relocate(point.getX() - 30, point.getY() - 30);
-            });
-
-            // Aggiunge il KeyFrame alla Timeline
-            timeline.getKeyFrames().add(keyFrame);
-        }
-        // Avvia l'animazione
-        timeline.play();
+        // Avvia l'AnimationTimer
+        timer.start();
     }
-
 }

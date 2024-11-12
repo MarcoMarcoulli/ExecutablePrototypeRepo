@@ -9,21 +9,27 @@ public class Mass {
     private Point currentPosition;
     private MassIcon iconType;
     private ImageView icon;
+    private final double massDiameter = 40;
 
     // Costruttore
     public Mass(Point startPosition, MassIcon iconType, ImageView icon) {
         this.currentPosition = startPosition;
         this.iconType = iconType;
-        icon.setFitWidth(60);
-        icon.setFitHeight(60);
+        icon.setFitWidth(massDiameter);
+        icon.setFitHeight(massDiameter);
         this.icon = icon;
-        this.icon.setX(startPosition.getX() - 30);
-        this.icon.setY(startPosition.getY() - 30);
+        this.icon.setX(startPosition.getX() - massDiameter/2);
+        this.icon.setY(startPosition.getY() - massDiameter/2);
     }
 
     // Getter e Setter per la posizione corrente
     public Point getCurrentPosition() {
         return currentPosition;
+    }
+    
+    public double getMassDiameter()
+    {
+    	return massDiameter;
     }
 
     public void setCurrentPosition(Point newPosition) {
