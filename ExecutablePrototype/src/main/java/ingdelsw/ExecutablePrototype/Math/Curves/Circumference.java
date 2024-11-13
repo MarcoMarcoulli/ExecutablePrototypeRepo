@@ -38,30 +38,33 @@ public class Circumference extends Curve {
     
     public Point[] calculatePoints() {
     	Point[] points = new Point[numPoints];
-    	double x = startPoint.getX();
-    	double y = startPoint.getY();
-    	double xCenter = xCenter(startPoint) + x;
-    	double yCenter = yCenter(startPoint) + y;
+    	double xCenter = xCenter(startPoint) + startPoint.getX();
+    	double yCenter = yCenter(startPoint) + startPoint.getY();
+    	double x, y;
     	
     	if(convexity == 1)
     	{
-    		double deltaX = intervalX / (double) (numPoints-1);
+    		double t, xCubic;
     		
         	for (int i=0; i < numPoints; i++) {
-        		points[i] = new Point(x,y);
-        		x += deltaX;
+        		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
+                xCubic = intervalX * Math.pow(t, 3);     // Densità maggiore all'inizio con t^2
+        		x = startPoint.getX() + xCubic;
                 y = yCenter + evaluateFunction(x + r - xCenter);
+                points[i] = new Point(x,y);
             }
     	}
     	
     	else if(convexity == -1)
     	{
-    		double deltaY = intervalY / (double) (numPoints-1);
+    		double t, yCubic;
     		
         	for (int i=0; i < numPoints; i++) {
-        		points[i] = new Point(x,y);
-        		y += deltaY;
+        		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
+                yCubic = intervalY * Math.pow(t, 3);     // Densità maggiore all'inizio con t^2
+        		y = startPoint.getY() + yCubic;
                 x = xCenter + (intervalX/Math.abs(intervalX))*evaluateFunction(y + r - yCenter);
+                points[i] = new Point(x,y);
             }
     	}
     	return points;
@@ -109,23 +112,27 @@ public class Circumference extends Curve {
     	
     	if(convexity == 1)
     	{
-    		double deltaX = intervalX / (double) (numPoints - 1);
-    		double x = r - xCenter(startPoint);
+    		double t, xCubic, x;
+    		double x0 = r - xCenter(startPoint);
         	for (int i=0; i < numPoints; i++) {
+        		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
+                xCubic = intervalX * Math.pow(t, 3);     // Densità maggiore all'inizio con t^3
+                x = x0 +xCubic;
                 slopes[i] = Math.atan((r-x)*Math.sqrt(1/(2*r*x - Math.pow(x, 2))));
-                x += deltaX;
-                //System.out.println((slopes[i]/Math.PI)*180);
+                System.out.println((slopes[i]/Math.PI)*180);
             }
     	}
     	
     	else if(convexity == -1)
     	{
-    		double deltaY = intervalY / (double) (numPoints - 1);
-    		double y = r - yCenter(startPoint);
+    		double t, yCubic, y;
+    		double y0 = r - yCenter(startPoint);
         	for (int i=0; i < numPoints; i++) {
+        		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
+                yCubic = intervalX * Math.pow(t, 3);     // Densità maggiore all'inizio con t^3
+                y = y0 + yCubic;
                 slopes[i] = (Math.PI)/2 - Math.atan((r-y)*Math.sqrt(1/(2*r*y - Math.pow(y, 2))));
-                y += deltaY;
-                //System.out.println((slopes[i]/Math.PI)*180);
+                System.out.println((slopes[i]/Math.PI)*180);
             }
     	}
     	return slopes;

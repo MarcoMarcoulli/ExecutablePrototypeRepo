@@ -62,17 +62,17 @@ public class Cycloid extends Curve {
     public Point[] calculatePoints() 
     {
     	Point[] points = new Point[numPoints];
-    	double t, aCubic;
+    	double t, aPow;
     	double a = 0;
     	double x = startPoint.getX();
     	double y = startPoint.getY();
     	for (int i=0; i < numPoints; i++) {
     		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
-            aCubic = alfa * Math.pow(t, 3);     // Densità maggiore all'inizio con t^3
-            x = startPoint.getX() + evaluateX(aCubic);
-    		y = startPoint.getY() + evaluateY(aCubic);
+            aPow = alfa * Math.pow(t, 3);     // Densità maggiore all'inizio con t^2.5
+            x = startPoint.getX() + evaluateX(aPow);
+    		y = startPoint.getY() + evaluateY(aPow);
             points[i] = new Point(x, y);
-    		//System.out.println("punto " + i + "-esimo - X : " + x + " Y : "+ y );
+    		System.out.println("punto " + i + "-esimo - X : " + x + " Y : "+ y );
         }
     	return points;
     }
@@ -80,15 +80,15 @@ public class Cycloid extends Curve {
     public double[] calculateSlopes()
     {
     	double[] slopes = new double[numPoints];
-    	double t, aCubic;
+    	double t, aPow;
     	double a = 0;
     	slopes[0] = Math.atan(Double.POSITIVE_INFINITY);
     	System.out.println((slopes[0]/Math.PI)*180);
     	for (int i=1; i < numPoints; i++) {
     		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
-            aCubic = alfa * Math.pow(t, 3);     // Densità maggiore all'inizio con t^3
-            slopes[i] =  Math.atan(Math.sin(aCubic)/(1-Math.cos(aCubic)));
-            //System.out.println((slopes[i]/Math.PI)*180);
+            aPow = alfa * Math.pow(t, 3);     // Densità maggiore all'inizio con t^2.5
+            slopes[i] =  Math.atan(Math.sin(aPow)/(1-Math.cos(aPow)));
+            System.out.println((slopes[i]/Math.PI)*180);
         }
     	return slopes;
     }

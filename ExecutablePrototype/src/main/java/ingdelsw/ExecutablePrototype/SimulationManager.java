@@ -14,7 +14,7 @@ public class SimulationManager {
     private double[] slopes;
     private double[] times;
    
-    private static int g = 50;
+    private static int g = 100;
     private long startTime; // Tempo di inizio dell'animazione in nanosecondi
 
     public SimulationManager(Curve curve) {
@@ -47,10 +47,18 @@ public class SimulationManager {
     public double[] calculateTimeParametrization() {
         times = new double[points.length];
         times[0] = 0;
+        times[1] = Double.MIN_VALUE;
+        double h;
         System.out.println("parametrizzazione curva rispetto al tempo");
         for (int i = 1; i < points.length-1; i++) {
-        	times[i+1] = times[i] + (1/(Math.sqrt(2*g*points[i].getY()) * Math.abs(Math.sin(slopes[i-1])))) * (Math.abs(points[i+1].getY() - points[i].getY()));
-            System.out.println(" tempi : " + times[i]);
+        	h = points[i].getY() - curve.getStartPoint().getY();
+        	if(h==0)
+        		times[i+1] = times[i] + Double.MIN_VALUE;
+        	else times[i+1] = times[i] + (1/(Math.sqrt(2*g*h) * Math.abs(Math.sin(slopes[i])))) * (Math.abs(points[i+1].getY() - points[i].getY()));
+        	
+        	System.out.println((1/(Math.sqrt(2*g*h) * Math.abs(Math.sin(slopes[i])))) * (Math.abs(points[i+1].getY() - points[i].getY())));
+        	System.out.println(" velocità : " + Math.sqrt(2*g*(points[i].getY() - curve.getStartPoint().getY())));
+            System.out.println(" tempi : " + times[i+1]);
         }
         return times;
     }
