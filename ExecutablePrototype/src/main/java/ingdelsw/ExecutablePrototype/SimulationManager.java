@@ -5,22 +5,28 @@ import ingdelsw.ExecutablePrototype.Math.Curves.Curve;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 
 public class SimulationManager {
+	
 
     private Mass mass;  // Oggetto rappresentante la massa
     private Curve curve;
     private Point[] points;
     private double[] slopes;
     private double[] times;
+    
+    Pane controlPane;
+    private MassArrivalListener listener;
    
-    private static int g = 1000;
+    private static int g = 400;
     private long startTime; // Tempo di inizio dell'animazione in nanosecondi
 
-    public SimulationManager(Curve curve) {
+    public SimulationManager(Curve curve, MassArrivalListener listener) {
         mass = null;
         this.curve = curve;
         this.points = curve.calculatePoints();
+        this.listener = listener;
         //System.out.println("punti calcolati");
     }
 
@@ -39,10 +45,15 @@ public class SimulationManager {
     public Point[] getPoints() {
         return points;
     }
+    
+    public double getArrivalTime() {
+    	return times[points.length - 1];
+    }
 
     public void setSlopes(double[] slopes) {
         this.slopes = slopes;
     }
+    
 
     public double[] calculateTimeParametrization() {
         times = new double[points.length];
@@ -66,6 +77,12 @@ public class SimulationManager {
     }
 
     private AnimationTimer timer; // Rendi il timer un attributo della classe
+	
+	public void setMassArrivalListener(MassArrivalListener listener)
+    {
+    	this.listener = listener;
+    }
+	
     public void startAnimation() {
     	
     	// Ripristina la posizione della massa all'inizio della curva
@@ -75,6 +92,7 @@ public class SimulationManager {
         startTime = 0;
         
         timer = new AnimationTimer() {
+        	
             @Override
             public void handle(long now) {
                 if (startTime == 0) 
@@ -96,10 +114,12 @@ public class SimulationManager {
                     }
                 }
                 
+                
                 // Ferma l'animazione se abbiamo raggiunto l'ultimo punto
                 if (elapsedTime >= times[times.length - 1]) {
                 	mass.getIcon().relocate(points[points.length-1].getX() - mass.getMassDiameter() / 2, points[points.length-1].getY() - mass.getMassDiameter() / 2);
                     this.stop();
+                    listener.onMassArrival(SimulationManager.this);
                 }
             }
         };

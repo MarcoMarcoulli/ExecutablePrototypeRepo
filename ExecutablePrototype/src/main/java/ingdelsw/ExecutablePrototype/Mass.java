@@ -38,8 +38,8 @@ public class Mass {
     }
 
     // Getter per il tipo di icona (usato per la visualizzazione nell'interfaccia)
-    public MassIcon getIconType() {
-        return iconType;
+    public String getIconTypeString() {
+        return iconType.name();
     }
     
     public ImageView getIcon()

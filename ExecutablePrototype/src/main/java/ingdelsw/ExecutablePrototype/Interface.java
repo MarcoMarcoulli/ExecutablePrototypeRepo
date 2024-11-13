@@ -27,7 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 
-public class Interface extends Application {
+public class Interface extends Application implements MassArrivalListener{
 
 	private InputManager inputManager;
     private ArrayList<SimulationManager> simulations;
@@ -256,7 +256,7 @@ public class Interface extends Application {
     	controlPanel.getChildren().clear();
     	Cycloid cycloid = new Cycloid(inputManager.getStartPoint(),inputManager.getEndPoint());
     	cycloid.setRandomColors();
-    	simulations.add(new SimulationManager(cycloid));
+    	simulations.add(new SimulationManager(cycloid, this));
     	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
     	simulations.getLast().setSlopes(cycloid.calculateSlopes());
     	simulations.getLast().calculateTimeParametrization();
@@ -271,7 +271,7 @@ public class Interface extends Application {
     	controlPanel.getChildren().clear();
     	Parabola parabola = new Parabola(inputManager.getStartPoint(),inputManager.getEndPoint());
     	parabola.setRandomColors();
-    	simulations.add(new SimulationManager(parabola));
+    	simulations.add(new SimulationManager(parabola, this));
     	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), parabola.getRed(),  parabola.getGreen(),  parabola.getBlue());
     	simulations.getLast().setSlopes(parabola.calculateSlopes());
     	simulations.getLast().calculateTimeParametrization();
@@ -293,7 +293,7 @@ public class Interface extends Application {
     	double deltaX = inputManager.getEndPoint().getX() - inputManager.getStartPoint().getX();
     	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), 1);
     	circumference.setRandomColors();
-    	simulations.add(new SimulationManager(circumference));
+    	simulations.add(new SimulationManager(circumference, this));
     	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
     	
     	radiusSlider = new Slider((deltaX/Math.abs(deltaX))*circumference.getR(), (deltaX/Math.abs(deltaX))*circumference.getR()*3, (deltaX/Math.abs(deltaX))*circumference.getR());
@@ -311,7 +311,7 @@ public class Interface extends Application {
     {
     	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), -1);
     	circumference.setRandomColors();
-    	simulations.add(new SimulationManager(circumference));
+    	simulations.add(new SimulationManager(circumference, this));
     	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
     	
     	radiusSlider = new Slider(circumference.getR(), circumference.getR()*3, circumference.getR());
@@ -333,7 +333,7 @@ public class Interface extends Application {
     	circumference.setGreen(simulations.getLast().getCurve().getGreen());
     	circumference.setBlue(simulations.getLast().getCurve().getBlue());
     	simulations.removeLast();
-    	simulations.add(new SimulationManager(circumference));
+    	simulations.add(new SimulationManager(circumference, this));
     	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
     	for (int i = 0; i < simulations.size() - 1; i++) {
     	    CurveVisualizer.drawCurve(simulations.get(i).getPoints(), curveCanvas.getGraphicsContext2D(), simulations.get(i).getCurve().getRed(), simulations.get(i).getCurve().getGreen(), simulations.get(i).getCurve().getBlue());
@@ -354,7 +354,7 @@ public class Interface extends Application {
     	CubicSpline spline = new CubicSpline(inputManager.getStartPoint(),inputManager.getEndPoint(), inputManager.getIntermediatePoint());
     	spline.setRandomColors();
     	inputManager.clearIntermediatePoints();
-    	simulations.add(new SimulationManager(spline));
+    	simulations.add(new SimulationManager(spline, this));
     	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
     	simulations.getLast().setSlopes(spline.calculateSlopes());
     	simulations.getLast().calculateTimeParametrization();
@@ -391,9 +391,23 @@ public class Interface extends Application {
     	controlPanel.getChildren().clear();
     	controlPanel.getChildren().addAll(chooseCurveMessage, curveButtons, btnCancelInput);
     }
+    
+    VBox arrivalTimeMessages = new VBox();
+    
+    @Override
+    public void onMassArrival(SimulationManager source) {
+    	int i = simulations.indexOf(source);
+    	Label arrivalTimeMessage = new Label(simulations.get(i).getMass().getIconTypeString() + " è arrivato in : " + String.format("%.3f", simulations.get(i).getArrivalTime()) + " secondi.");
+    	arrivalTimeMessages.getChildren().add(arrivalTimeMessage);
+    }
    
     private void handleStartSimulationClick()
     {
+    	controlPanel.getChildren().clear(); 
+    	arrivalTimeMessages.getChildren().clear();
+    	if(iconButtons.getChildren().isEmpty())
+        	controlPanel.getChildren().addAll(btnStartSimulation, btnCancelInput, arrivalTimeMessages); 
+        else controlPanel.getChildren().addAll(btnStartSimulation, btnInsertAnotherCurve, btnCancelInput, arrivalTimeMessages); 
     	for(int i=0; i<simulations.size(); i++)
     	{
     		simulations.get(i).startAnimation();
