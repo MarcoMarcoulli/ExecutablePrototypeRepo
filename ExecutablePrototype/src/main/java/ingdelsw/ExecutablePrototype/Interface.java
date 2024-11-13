@@ -60,26 +60,36 @@ public class Interface extends Application implements MassArrivalListener{
 
     @Override
     public void start(Stage primaryStage) {
-        // Layout principale
+    	// Layout principale
         BorderPane root = new BorderPane();
         
-        startPointMessage = new Label("Inserisci il punto di partenza");
-        endPointMessage = new Label("Inserisci il punto di arrivo");
-        chooseCurveMessage = new Label("scegli una curva");
-        intermediatePointsMessage = new Label("Inserisci dei punti intermedi da interpolare");
-        chooseMassMessage = new Label("Inserisci chi vuoi far scivolare"); 
-        chooseRadiusMessage = new Label("Seleziona il raggio della circonferenza");
-        chooseConvexityMessage = new Label("scegli la convessita");
-       
+        // Carica il file CSS
+        root.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         
+        startPointMessage = new Label("Inserisci il punto di partenza".toUpperCase());
+        startPointMessage.getStyleClass().add("label".toUpperCase());
+        endPointMessage = new Label("Inserisci il punto di arrivo".toUpperCase());
+        endPointMessage.getStyleClass().add("label");
+        chooseCurveMessage = new Label("scegli una curva");
+        chooseCurveMessage.getStyleClass().add("label");
+        intermediatePointsMessage = new Label("Inserisci dei punti intermedi da interpolare".toUpperCase());
+        chooseMassMessage = new Label("Inserisci chi vuoi far scivolare".toUpperCase()); 
+        chooseRadiusMessage = new Label("Seleziona il raggio della circonferenza".toUpperCase());
+        chooseConvexityMessage = new Label("scegli la convessita".toUpperCase());
         
         
         btnCancelInput = new Button("Cancella Input");
+        btnCancelInput.getStyleClass().add("button");
+        btnCancelInput.getStyleClass().add("cancel-button");
         // Pulsanti per le curve
         btnCubicSpline = new Button("Spline Cubica");
+        btnCubicSpline.getStyleClass().add("button");
         btnCycloid = new Button("Cicloide");
+        btnCycloid.getStyleClass().add("button");
         btnParabola = new Button("Parabola");
+        btnParabola.getStyleClass().add("button");
         btnCircumference = new Button("Circonferenza");
+        btnCircumference.getStyleClass().add("button");
         btnConfirmRadius = new Button("Seleziona Raggio");
         btnConvexityUp = new Button("verso l'alto");
         btnConvexityDown = new Button("verso il basso");
@@ -103,9 +113,11 @@ public class Interface extends Application implements MassArrivalListener{
         iconViewNewton = createIconButton(iconNewton, MassIcon.NEWTON);
         
         iconButtons = new HBox(10); // Layout per tenere insieme le icone
+        iconButtons.getStyleClass().add("icon-buttons");
         iconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
         
-        curveButtons = new HBox(2);
+        curveButtons = new HBox(10);
+        curveButtons.getStyleClass().add("curve-buttons");
         curveButtons.getChildren().addAll(btnCycloid, btnCircumference, btnParabola, btnCubicSpline);
         
         convexityButtons= new HBox(6);
@@ -113,8 +125,8 @@ public class Interface extends Application implements MassArrivalListener{
 
         // Pannello di controllo (a sinistra)
         controlPanel = new VBox(10);
-        controlPanel.setPrefWidth(400); // Imposta la larghezza predefinita
-        controlPanel.setStyle("-fx-background-color: lightgray;"); // Colore grigio chiaro per il controllo
+        controlPanel.getStyleClass().add("control-panel");
+        controlPanel.getStyleClass().add("control-panel");
         root.setLeft(controlPanel);
         
         // Canvas per disegno (a destra)
