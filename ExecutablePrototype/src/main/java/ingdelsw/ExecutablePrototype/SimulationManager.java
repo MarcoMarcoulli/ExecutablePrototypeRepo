@@ -14,7 +14,7 @@ public class SimulationManager {
     private double[] slopes;
     private double[] times;
    
-    private static int g = 100;
+    private static int g = 1000;
     private long startTime; // Tempo di inizio dell'animazione in nanosecondi
 
     public SimulationManager(Curve curve) {
@@ -52,9 +52,11 @@ public class SimulationManager {
         System.out.println("parametrizzazione curva rispetto al tempo");
         for (int i = 1; i < points.length-1; i++) {
         	h = points[i].getY() - curve.getStartPoint().getY();
+        	
         	if(h==0)
         		times[i+1] = times[i] + Double.MIN_VALUE;
         	else times[i+1] = times[i] + (1/(Math.sqrt(2*g*h) * Math.abs(Math.sin(slopes[i])))) * (Math.abs(points[i+1].getY() - points[i].getY()));
+        	
         	
         	System.out.println((1/(Math.sqrt(2*g*h) * Math.abs(Math.sin(slopes[i])))) * (Math.abs(points[i+1].getY() - points[i].getY())));
         	System.out.println(" velocità : " + Math.sqrt(2*g*(points[i].getY() - curve.getStartPoint().getY())));
@@ -63,11 +65,20 @@ public class SimulationManager {
         return times;
     }
 
+    private AnimationTimer timer; // Rendi il timer un attributo della classe
     public void startAnimation() {
-        AnimationTimer timer = new AnimationTimer() {
+    	
+    	// Ripristina la posizione della massa all'inizio della curva
+        mass.getIcon().relocate(points[0].getX() - mass.getMassDiameter() / 2, points[0].getY() - mass.getMassDiameter() / 2);
+
+        // Reimposta il tempo di inizio
+        startTime = 0;
+        
+        timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (startTime == 0) startTime = now; // Inizializza il tempo di inizio
+                if (startTime == 0) 
+                	startTime = now; // Inizializza il tempo di inizio
 
                 double elapsedTime = (now - startTime) / 1_000_000_000.0; // Tempo trascorso in secondi
                 
@@ -87,6 +98,7 @@ public class SimulationManager {
                 
                 // Ferma l'animazione se abbiamo raggiunto l'ultimo punto
                 if (elapsedTime >= times[times.length - 1]) {
+                	mass.getIcon().relocate(points[points.length-1].getX() - mass.getMassDiameter() / 2, points[points.length-1].getY() - mass.getMassDiameter() / 2);
                     this.stop();
                 }
             }

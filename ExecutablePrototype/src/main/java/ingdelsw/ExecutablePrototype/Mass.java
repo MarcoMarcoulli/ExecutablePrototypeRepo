@@ -14,12 +14,12 @@ public class Mass {
     // Costruttore
     public Mass(Point startPosition, MassIcon iconType, ImageView icon) {
         this.currentPosition = startPosition;
+        this.icon = icon;
+        this.icon.setX(currentPosition.getX() - massDiameter/2);
+        this.icon.setY(currentPosition.getY() - massDiameter/2);
         this.iconType = iconType;
         icon.setFitWidth(massDiameter);
         icon.setFitHeight(massDiameter);
-        this.icon = icon;
-        this.icon.setX(startPosition.getX() - massDiameter/2);
-        this.icon.setY(startPosition.getY() - massDiameter/2);
     }
 
     // Getter e Setter per la posizione corrente
@@ -33,7 +33,8 @@ public class Mass {
     }
 
     public void setCurrentPosition(Point newPosition) {
-        this.currentPosition = newPosition;
+        currentPosition = newPosition;
+        icon.relocate(currentPosition.getX() - massDiameter/2, currentPosition.getY() - massDiameter/2);
     }
 
     // Getter per il tipo di icona (usato per la visualizzazione nell'interfaccia)
