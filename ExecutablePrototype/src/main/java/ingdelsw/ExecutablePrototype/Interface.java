@@ -407,10 +407,20 @@ public class Interface extends Application implements MassArrivalListener{
     VBox arrivalTimeMessages = new VBox();
     
     @Override
-    public void onMassArrival(SimulationManager source) {
+    public void onMassArrival(SimulationManager source, boolean arrived) {
     	int i = simulations.indexOf(source);
-    	Label arrivalTimeMessage = new Label(simulations.get(i).getMass().getIconTypeString() + " è arrivato in : " + String.format("%.3f", simulations.get(i).getArrivalTime()) + " secondi.");
-    	arrivalTimeMessages.getChildren().add(arrivalTimeMessage);
+    	if(i>=0)
+    	{
+    		if(arrived)
+    		{
+    			Label arrivalTimeMessage = new Label(simulations.get(i).getMass().getIconTypeString() + " è arrivato in : " + String.format("%.3f", simulations.get(i).getArrivalTime()) + " secondi.");
+    			arrivalTimeMessages.getChildren().add(arrivalTimeMessage);
+    		}
+    		else {
+    			Label arrivalTimeMessage = new Label(simulations.get(i).getMass().getIconTypeString() + " non arriverà mai a destinazione");
+    			arrivalTimeMessages.getChildren().add(arrivalTimeMessage);
+    		}
+    	}
     }
    
     private void handleStartSimulationClick()

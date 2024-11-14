@@ -85,8 +85,8 @@ public class Cycloid extends Curve {
     	slopes[0] = Math.atan(Double.POSITIVE_INFINITY);
     	System.out.println((slopes[0]/Math.PI)*180);
     	for (int i=1; i < numPoints; i++) {
-    		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
-            aPow = alfa * Math.pow(t, 3);     // Densità maggiore all'inizio con t^2.5
+    		t = (double) i / (numPoints - 1); 
+            aPow = alfa * Math.pow(t, 3);                 
             slopes[i] =  Math.atan(Math.sin(aPow)/(1-Math.cos(aPow)));
             System.out.println((slopes[i]/Math.PI)*180);
         }

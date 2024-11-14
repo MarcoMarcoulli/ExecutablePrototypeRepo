@@ -19,7 +19,7 @@ public class SimulationManager {
     Pane controlPane;
     private MassArrivalListener listener;
    
-    private static int g = 400;
+    private static int g = 300;
     private long startTime; // Tempo di inizio dell'animazione in nanosecondi
 
     public SimulationManager(Curve curve, MassArrivalListener listener) {
@@ -68,7 +68,6 @@ public class SimulationManager {
         		times[i+1] = times[i] + Double.MIN_VALUE;
         	else times[i+1] = times[i] + (1/(Math.sqrt(2*g*h) * Math.abs(Math.sin(slopes[i])))) * (Math.abs(points[i+1].getY() - points[i].getY()));
         	
-        	
         	System.out.println((1/(Math.sqrt(2*g*h) * Math.abs(Math.sin(slopes[i])))) * (Math.abs(points[i+1].getY() - points[i].getY())));
         	System.out.println(" velocità : " + Math.sqrt(2*g*(points[i].getY() - curve.getStartPoint().getY())));
             System.out.println(" tempi : " + times[i+1]);
@@ -76,7 +75,7 @@ public class SimulationManager {
         return times;
     }
 
-    private AnimationTimer timer; // Rendi il timer un attributo della classe
+    private AnimationTimer timer; 
 	
 	public void setMassArrivalListener(MassArrivalListener listener)
     {
@@ -85,10 +84,8 @@ public class SimulationManager {
 	
     public void startAnimation() {
     	
-    	// Ripristina la posizione della massa all'inizio della curva
         mass.getIcon().relocate(points[0].getX() - mass.getMassDiameter() / 2, points[0].getY() - mass.getMassDiameter() / 2);
 
-        // Reimposta il tempo di inizio
         startTime = 0;
         
         timer = new AnimationTimer() {
@@ -102,7 +99,16 @@ public class SimulationManager {
                 
                 // Trova il punto più vicino al tempo trascorso
                 for (int i = 0; i < times.length - 1; i++) {
-                    if (elapsedTime >= times[i] && elapsedTime < times[i + 1]) {
+                	
+                    if(elapsedTime >= times[i] && elapsedTime < times[i + 1]) 
+                    {
+                    	if(points[i+1].getY() < points[0].getY())
+                    	{
+                    		mass.getIcon().relocate(points[i].getX() - mass.getMassDiameter() / 2, points[i].getY() - mass.getMassDiameter() / 2);
+                            this.stop();
+                            listener.onMassArrival(SimulationManager.this, false);
+                    	}
+                    	
                         // Calcola la posizione interpolata tra points[i] e points[i+1]
                         double ratio = (elapsedTime - times[i]) / (times[i + 1] - times[i]);
                         double x = points[i].getX() + (points[i + 1].getX() - points[i].getX()) * ratio;
@@ -112,14 +118,18 @@ public class SimulationManager {
                         mass.getIcon().relocate(x - mass.getMassDiameter() / 2, y - mass.getMassDiameter() / 2);
                         break;
                     }
+       
                 }
+                
+     
                 
                 
                 // Ferma l'animazione se abbiamo raggiunto l'ultimo punto
                 if (elapsedTime >= times[times.length - 1]) {
+                	
                 	mass.getIcon().relocate(points[points.length-1].getX() - mass.getMassDiameter() / 2, points[points.length-1].getY() - mass.getMassDiameter() / 2);
                     this.stop();
-                    listener.onMassArrival(SimulationManager.this);
+                    listener.onMassArrival(SimulationManager.this, true);
                 }
             }
         };
