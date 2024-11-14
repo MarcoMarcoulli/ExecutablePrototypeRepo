@@ -55,7 +55,7 @@ public class Parabola extends Curve {
     
     public String curveName()
 	{
-		return "Parabola";
+		return "parabola";
 	}
     
 }

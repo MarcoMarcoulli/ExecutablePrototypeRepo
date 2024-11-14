@@ -139,6 +139,6 @@ public class Circumference extends Curve {
     
     public String curveName()
 	{
-		return "Circonferenza";
+		return "circonferenza";
 	}
 }

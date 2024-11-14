@@ -100,6 +100,6 @@ public class CubicSpline extends Curve {
 	    
 	    public String curveName()
 		{
-			return "Spline";
+			return "spline";
 		}
 }
