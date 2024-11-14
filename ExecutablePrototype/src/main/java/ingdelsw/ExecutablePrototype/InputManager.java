@@ -47,11 +47,16 @@ public class InputManager {
     }
     
     public void addIntermediatePoint(Point p) {
+    	for(int i = 0; i<intermediatePoints.size(); i++)
+    	{
+    		if(intermediatePoints.get(i).getX() == p.getX())
+				return;
+    	}
     	if(endPoint.getX() <= p.getX() && startPoint.getX() <= p.getX() || endPoint.getX() >= p.getX() && startPoint.getX() >= p.getX())
     		throw new IllegalArgumentException("I punti intermedi devono essere compresi tra il punto di partenza e il punto di arrivo");
     	/*else if(startPoint.getY() >= p.getY())
     		throw new IllegalArgumentException("I punti intermedi devono avere quota più bassa del punto di partenza");*/
-    	else {
+    	else{
     		intermediatePoints.add(p);
     		System.out.println("IntermediatePoint : " + p);
     	}
