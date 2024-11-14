@@ -72,7 +72,7 @@ public class Cycloid extends Curve {
             x = startPoint.getX() + evaluateX(aPow);
     		y = startPoint.getY() + evaluateY(aPow);
             points[i] = new Point(x, y);
-    		System.out.println("punto " + i + "-esimo - X : " + x + " Y : "+ y );
+    		//System.out.println("punto " + i + "-esimo - X : " + x + " Y : "+ y );
         }
     	return points;
     }
@@ -88,7 +88,7 @@ public class Cycloid extends Curve {
     		t = (double) i / (numPoints - 1); 
             aPow = alfa * Math.pow(t, 3);                 
             slopes[i] =  Math.atan(Math.sin(aPow)/(1-Math.cos(aPow)));
-            System.out.println((slopes[i]/Math.PI)*180);
+            //System.out.println((slopes[i]/Math.PI)*180);
         }
     	return slopes;
     }

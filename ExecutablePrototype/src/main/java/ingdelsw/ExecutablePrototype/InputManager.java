@@ -43,7 +43,7 @@ public class InputManager {
     	else {
     		this.endPoint=endPoint;
     	}
-    	System.out.println("endPoint : X : " + endPoint.getX() + " Y : " + endPoint.getY());
+    	//System.out.println("endPoint : X : " + endPoint.getX() + " Y : " + endPoint.getY());
     }
     
     public void addIntermediatePoint(Point p) {
@@ -58,7 +58,7 @@ public class InputManager {
     		throw new IllegalArgumentException("I punti intermedi devono avere quota più bassa del punto di partenza");*/
     	else{
     		intermediatePoints.add(p);
-    		System.out.println("IntermediatePoint : " + p);
+    		//System.out.println("IntermediatePoint : " + p);
     	}
     }
     

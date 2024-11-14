@@ -72,8 +72,8 @@ public class SimulationManager {
         	
         	else times[i+1] = times[i] + (1/(Math.sqrt(2*g*h) * Math.abs(Math.sin(slopes[i])))) * (Math.abs(points[i+1].getY() - points[i].getY()));
         	
-        	System.out.println((1/(Math.sqrt(2*g*h) * Math.abs(Math.sin(slopes[i])))) * (Math.abs(points[i+1].getY() - points[i].getY())));
-        	System.out.println(" velocità : " + Math.sqrt(2*g*h));
+        	//System.out.println((1/(Math.sqrt(2*g*h) * Math.abs(Math.sin(slopes[i])))) * (Math.abs(points[i+1].getY() - points[i].getY())));
+        	System.out.println(i +") velocità : " + Math.sqrt(2*g*h));
             System.out.println(" tempi : " + times[i+1]);
         }
         return times;
