@@ -19,7 +19,6 @@ public class Circumference extends Curve {
         else this.r = (Math.pow(intervalX, 2)+Math.pow(intervalY, 2))/(2 * intervalX);
     }
     
-    //initial circumference constructor
     public Circumference(Point startPoint, Point endPoint, int convexity, double r) {
     	super(startPoint, endPoint);
     	this.r = r;
@@ -118,7 +117,7 @@ public class Circumference extends Curve {
         		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
                 xCubic = intervalX * Math.pow(t, 3);     // Densità maggiore all'inizio con t^3
                 x = x0 +xCubic;
-                slopes[i] = Math.atan((r-x)*Math.sqrt(1/(2*r*x - Math.pow(x, 2))));
+                slopes[i] = Math.atan((r-x)/Math.sqrt(2*r*x - Math.pow(x, 2)));
                 System.out.println((slopes[i]/Math.PI)*180);
             }
     	}
@@ -129,12 +128,17 @@ public class Circumference extends Curve {
     		double y0 = r - yCenter(startPoint);
         	for (int i=0; i < numPoints; i++) {
         		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
-                yCubic = intervalX * Math.pow(t, 3);     // Densità maggiore all'inizio con t^3
+                yCubic = intervalY * Math.pow(t, 3);     // Densità maggiore all'inizio con t^3
                 y = y0 + yCubic;
-                slopes[i] = (Math.PI)/2 - Math.atan((r-y)*Math.sqrt(1/(2*r*y - Math.pow(y, 2))));
+                slopes[i] = Math.PI/2 - Math.atan((r-y)/Math.sqrt(2*r*y - Math.pow(y, 2)));
                 System.out.println((slopes[i]/Math.PI)*180);
             }
     	}
     	return slopes;
     }
+    
+    public String curveName()
+	{
+		return "Circonferenza";
+	}
 }

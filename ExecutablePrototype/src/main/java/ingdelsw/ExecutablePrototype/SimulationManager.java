@@ -63,13 +63,17 @@ public class SimulationManager {
         System.out.println("parametrizzazione curva rispetto al tempo");
         for (int i = 1; i < points.length-1; i++) {
         	h = points[i].getY() - curve.getStartPoint().getY();
+        	//System.out.println(" h : " + h);
         	
         	if(h==0)
+        	{
         		times[i+1] = times[i] + Double.MIN_VALUE;
+        	}
+        	
         	else times[i+1] = times[i] + (1/(Math.sqrt(2*g*h) * Math.abs(Math.sin(slopes[i])))) * (Math.abs(points[i+1].getY() - points[i].getY()));
         	
         	System.out.println((1/(Math.sqrt(2*g*h) * Math.abs(Math.sin(slopes[i])))) * (Math.abs(points[i+1].getY() - points[i].getY())));
-        	System.out.println(" velocità : " + Math.sqrt(2*g*(points[i].getY() - curve.getStartPoint().getY())));
+        	System.out.println(" velocità : " + Math.sqrt(2*g*h));
             System.out.println(" tempi : " + times[i+1]);
         }
         return times;

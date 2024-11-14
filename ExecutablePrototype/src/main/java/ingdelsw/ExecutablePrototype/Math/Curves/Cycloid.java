@@ -92,5 +92,10 @@ public class Cycloid extends Curve {
         }
     	return slopes;
     }
+    
+    public String curveName()
+	{
+		return "Cicloide";
+	}
 
 }

@@ -53,4 +53,9 @@ public class Parabola extends Curve {
     	return slopes;
     }
     
+    public String curveName()
+	{
+		return "Parabola";
+	}
+    
 }

@@ -1,21 +1,19 @@
 package ingdelsw.ExecutablePrototype.Math.Curves;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import ingdelsw.ExecutablePrototype.Math.Point;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 public abstract class Curve {
 	
 	protected double intervalX, intervalY;
 	protected Point startPoint, endPoint;
 	protected int red, green, blue;
-	protected static final int numPoints = 1000;
+	protected static final int numPoints = 500;
 	
 	public abstract Point[] calculatePoints();
 	public abstract double[] calculateSlopes();
+	public abstract String curveName();
 	
 	public Curve(Point startPoint, Point endPoint)
 	{

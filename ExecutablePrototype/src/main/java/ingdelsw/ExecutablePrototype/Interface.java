@@ -413,7 +413,9 @@ public class Interface extends Application implements MassArrivalListener{
     	{
     		if(arrived)
     		{
-    			Label arrivalTimeMessage = new Label(simulations.get(i).getMass().getIconTypeString() + " è arrivato in : " + String.format("%.3f", simulations.get(i).getArrivalTime()) + " secondi.");
+    			String massName = simulations.get(i).getMass().getIconTypeString();
+    			String arrivalTime = String.format("%.3f", simulations.get(i).getArrivalTime());
+    			Label arrivalTimeMessage = new Label(massName + " sulla " + simulations.get(i).getCurve().curveName() + " è arrivato in " + arrivalTime + " secondi.");
     			arrivalTimeMessages.getChildren().add(arrivalTimeMessage);
     		}
     		else {
