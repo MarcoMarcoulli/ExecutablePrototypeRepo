@@ -1,6 +1,7 @@
 package ingdelsw.ExecutablePrototype;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
 import ingdelsw.ExecutablePrototype.Math.Point;
@@ -44,6 +45,8 @@ public class Interface extends Application implements MassArrivalListener{
     				btnConvexityDown, btnStopIntermediatePointsInsertion, btnStartSimulation, btnInsertAnotherCurve;
     private ImageView iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton;
     private Slider radiusSlider;
+    private VBox arrivalTimeMessagesBox = new VBox();
+    private ArrayList<Label> arrivalTimeMessages = new ArrayList<Label>();
     
     public enum UIStates {
     	WAITING_FOR_START_POINT,
@@ -122,6 +125,8 @@ public class Interface extends Application implements MassArrivalListener{
         
         convexityButtons= new HBox(6);
         convexityButtons.getChildren().addAll(btnConvexityUp, btnConvexityDown);
+        
+        
 
         // Pannello di controllo (a sinistra)
         controlPanel = new VBox(10);
@@ -158,8 +163,6 @@ public class Interface extends Application implements MassArrivalListener{
         root.setCenter(stackPane);
         
         root.setLeft(controlPanel);
-        
-       
         
         // Inizializzazione InputManager
         inputManager = new InputManager();
@@ -247,6 +250,8 @@ public class Interface extends Application implements MassArrivalListener{
         iconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
         curveButtons.getChildren().clear();
         curveButtons.getChildren().addAll(btnCycloid, btnCircumference, btnParabola, btnCubicSpline);
+        arrivalTimeMessages.clear();
+    	arrivalTimeMessagesBox.getChildren().clear();
         state = UIStates.WAITING_FOR_START_POINT;
     }
     
@@ -404,7 +409,6 @@ public class Interface extends Application implements MassArrivalListener{
     	controlPanel.getChildren().addAll(chooseCurveMessage, curveButtons, btnCancelInput);
     }
     
-    VBox arrivalTimeMessages = new VBox();
     
     @Override
     public void onMassArrival(SimulationManager source, boolean arrived) {
@@ -413,25 +417,39 @@ public class Interface extends Application implements MassArrivalListener{
     	{
     		if(arrived)
     		{
+    			arrivalTimeMessagesBox.getChildren().clear();
     			String massName = simulations.get(i).getMass().getIconTypeString();
-    			String arrivalTime = String.format("%.3f", simulations.get(i).getArrivalTime());
-    			Label arrivalTimeMessage = new Label(massName + " sulla " + simulations.get(i).getCurve().curveName() + " è arrivato in " + arrivalTime + " secondi.");
-    			arrivalTimeMessages.getChildren().add(arrivalTimeMessage);
+    			String arrivalTime = String.format("%.5f", simulations.get(i).getArrivalTime());
+    			arrivalTimeMessages.add(new Label(massName + " sulla " + simulations.get(i).getCurve().curveName() + " è arrivato in " + arrivalTime + " secondi."));
+    			arrivalTimeMessages.sort(Comparator.comparingInt(label -> extractNumber(label.getText())));
+    			arrivalTimeMessagesBox.getChildren().addAll(arrivalTimeMessages);
     		}
     		else {
     			Label arrivalTimeMessage = new Label(simulations.get(i).getMass().getIconTypeString() + " non arriverà mai a destinazione");
-    			arrivalTimeMessages.getChildren().add(arrivalTimeMessage);
+    			arrivalTimeMessagesBox.getChildren().add(arrivalTimeMessage);
     		}
     	}
+    }
+    
+    // Funzione per estrarre il numero dal testo della Label
+    private static int extractNumber(String text) {
+        // Rimuove tutto tranne i numeri
+        String numberStr = text.replaceAll("[^\\d]", ""); // "\\d" corrisponde a cifre, il caret "^" nega tutto il resto
+        try {
+            return Integer.parseInt(numberStr); // Converte in intero
+        } catch (NumberFormatException e) {
+            return 0; // Valore di default se non ci sono numeri
+        }
     }
    
     private void handleStartSimulationClick()
     {
     	controlPanel.getChildren().clear(); 
-    	arrivalTimeMessages.getChildren().clear();
+    	arrivalTimeMessages.clear();
+    	arrivalTimeMessagesBox.getChildren().clear();
     	if(iconButtons.getChildren().isEmpty())
-        	controlPanel.getChildren().addAll(btnStartSimulation, btnCancelInput, arrivalTimeMessages); 
-        else controlPanel.getChildren().addAll(btnStartSimulation, btnInsertAnotherCurve, btnCancelInput, arrivalTimeMessages); 
+        	controlPanel.getChildren().addAll(btnStartSimulation, btnCancelInput, arrivalTimeMessagesBox); 
+        else controlPanel.getChildren().addAll(btnStartSimulation, btnInsertAnotherCurve, btnCancelInput, arrivalTimeMessagesBox); 
     	for(int i=0; i<simulations.size(); i++)
     	{
     		simulations.get(i).startAnimation();
