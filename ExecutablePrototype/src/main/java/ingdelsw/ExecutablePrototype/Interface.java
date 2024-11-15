@@ -422,7 +422,8 @@ public class Interface extends Application implements MassArrivalListener{
     			massArrivalMessagesBox.getChildren().removeAll(arrivalTimeMessages);
     			String massName = simulations.get(i).getMass().getIconTypeString();
     			String arrivalTime = String.format("%.5f", simulations.get(i).getArrivalTime());
-    			arrivalTimeMessages.add(new Label(massName + " sulla " + simulations.get(i).getCurve().curveName() + " è arrivato in " + arrivalTime + " secondi."));
+    			String curveName = simulations.get(i).getCurve().curveName();
+    			arrivalTimeMessages.add(new Label(massName + " sulla " + curveName + " è arrivato in " + arrivalTime + " secondi."));
     			arrivalTimeMessages.sort(Comparator.comparingInt(label -> extractNumber(label.getText())));
     			massArrivalMessagesBox.getChildren().addAll(0, arrivalTimeMessages);
     		}
@@ -452,13 +453,16 @@ public class Interface extends Application implements MassArrivalListener{
     	arrivalTimeMessages.clear();
     	neverArriveMessages.clear();
     	massArrivalMessagesBox.getChildren().clear();
+    	
     	if(iconButtons.getChildren().isEmpty())
         	controlPanel.getChildren().addAll(btnStartSimulation, btnCancelInput, massArrivalMessagesBox); 
         else controlPanel.getChildren().addAll(btnStartSimulation, btnInsertAnotherCurve, btnCancelInput, massArrivalMessagesBox); 
+    	
     	for(int i=0; i<simulations.size(); i++)
     	{
     		simulations.get(i).startAnimation();
     	}
+    	
     }
     
     public static void main(String[] args) {
