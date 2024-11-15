@@ -419,6 +419,7 @@ public class Interface extends Application implements MassArrivalListener{
     	{
     		if(arrived)
     		{
+    			massArrivalMessagesBox.getChildren().remove(arrivalTimeMessagesBox);
     			arrivalTimeMessagesBox.getChildren().clear();
     			String massName = simulations.get(i).getMass().getIconTypeString();
     			String arrivalTime = String.format("%.5f", simulations.get(i).getArrivalTime());

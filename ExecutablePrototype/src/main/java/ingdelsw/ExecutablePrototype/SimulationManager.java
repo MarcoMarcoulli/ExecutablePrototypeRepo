@@ -115,7 +115,7 @@ public class SimulationManager {
                 	
                     if(elapsedTime >= times[i] && elapsedTime < times[i + 1]) 
                     {
-                    	if(points[i+1].getY() < points[0].getY())
+                    	if(i<times.length - 2 && points[i+2].getY() < points[0].getY())
                     	{
                     		System.out.println("jkniw");
                     		mass.getIcon().relocate(points[i].getX() - mass.getMassDiameter() / 2, points[i].getY() - mass.getMassDiameter() / 2);
