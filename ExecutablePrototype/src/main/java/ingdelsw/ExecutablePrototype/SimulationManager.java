@@ -83,7 +83,7 @@ public class SimulationManager {
         	
         	//System.out.println((1/(Math.sqrt(2*g*h) * Math.abs(Math.sin(slopes[i])))) * (Math.abs(points[i+1].getY() - points[i].getY())));
         	//System.out.println(i +") velocità : " + Math.sqrt(2*g*h));
-            System.out.println(" tempi : " + times[i+1]);
+            //System.out.println(" tempi : " + times[i+1]);
         }
         return times;
     }
@@ -117,6 +117,7 @@ public class SimulationManager {
                     {
                     	if(points[i+1].getY() < points[0].getY())
                     	{
+                    		System.out.println("jkniw");
                     		mass.getIcon().relocate(points[i].getX() - mass.getMassDiameter() / 2, points[i].getY() - mass.getMassDiameter() / 2);
                             this.stop();
                             listener.onMassArrival(SimulationManager.this, false);

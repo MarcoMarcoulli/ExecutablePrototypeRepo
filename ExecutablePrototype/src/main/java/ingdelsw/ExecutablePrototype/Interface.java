@@ -45,6 +45,7 @@ public class Interface extends Application implements MassArrivalListener{
     				btnConvexityDown, btnStopIntermediatePointsInsertion, btnStartSimulation, btnInsertAnotherCurve;
     private ImageView iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton;
     private Slider radiusSlider;
+    private VBox massArrivalMessagesBox = new VBox();
     private VBox arrivalTimeMessagesBox = new VBox();
     private ArrayList<Label> arrivalTimeMessages = new ArrayList<Label>();
     
@@ -252,7 +253,8 @@ public class Interface extends Application implements MassArrivalListener{
         curveButtons.getChildren().addAll(btnCycloid, btnCircumference, btnParabola, btnCubicSpline);
         arrivalTimeMessages.clear();
     	arrivalTimeMessagesBox.getChildren().clear();
-        state = UIStates.WAITING_FOR_START_POINT;
+    	massArrivalMessagesBox.getChildren().clear();
+    	state = UIStates.WAITING_FOR_START_POINT;
     }
     
   //gestore del click sul pulsante CubicSpline
@@ -423,10 +425,12 @@ public class Interface extends Application implements MassArrivalListener{
     			arrivalTimeMessages.add(new Label(massName + " sulla " + simulations.get(i).getCurve().curveName() + " è arrivato in " + arrivalTime + " secondi."));
     			arrivalTimeMessages.sort(Comparator.comparingInt(label -> extractNumber(label.getText())));
     			arrivalTimeMessagesBox.getChildren().addAll(arrivalTimeMessages);
+    			massArrivalMessagesBox.getChildren().addFirst(arrivalTimeMessagesBox);
     		}
     		else {
-    			Label arrivalTimeMessage = new Label(simulations.get(i).getMass().getIconTypeString() + " non arriverà mai a destinazione");
-    			arrivalTimeMessagesBox.getChildren().add(arrivalTimeMessage);
+    			System.out.println("kwdjnck");
+    			Label neverArriveMessage = new Label(simulations.get(i).getMass().getIconTypeString() + " sulla " + simulations.get(i).getCurve().curveName() +" non arriverà mai a destinazione");
+    			massArrivalMessagesBox.getChildren().addLast(neverArriveMessage);
     		}
     	}
     }
@@ -447,9 +451,10 @@ public class Interface extends Application implements MassArrivalListener{
     	controlPanel.getChildren().clear(); 
     	arrivalTimeMessages.clear();
     	arrivalTimeMessagesBox.getChildren().clear();
+    	massArrivalMessagesBox.getChildren().clear();
     	if(iconButtons.getChildren().isEmpty())
-        	controlPanel.getChildren().addAll(btnStartSimulation, btnCancelInput, arrivalTimeMessagesBox); 
-        else controlPanel.getChildren().addAll(btnStartSimulation, btnInsertAnotherCurve, btnCancelInput, arrivalTimeMessagesBox); 
+        	controlPanel.getChildren().addAll(btnStartSimulation, btnCancelInput, massArrivalMessagesBox); 
+        else controlPanel.getChildren().addAll(btnStartSimulation, btnInsertAnotherCurve, btnCancelInput, massArrivalMessagesBox); 
     	for(int i=0; i<simulations.size(); i++)
     	{
     		simulations.get(i).startAnimation();
