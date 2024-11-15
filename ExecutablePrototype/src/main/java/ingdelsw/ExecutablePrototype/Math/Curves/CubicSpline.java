@@ -81,7 +81,7 @@ public class CubicSpline extends Curve {
 	    		for(int i=0; i < numPoints; i++)
 	    		{	
 	    			slopes[i] = m;
-	    			System.out.println((slopes[i]/Math.PI)*180);
+	    			//System.out.println((slopes[i]/Math.PI)*180);
 	    		}
 	    		return slopes;
 	    	}
@@ -91,7 +91,7 @@ public class CubicSpline extends Curve {
 		    	for (int i=0; i < numPoints - 1; i++) {
 		            slopes[i] =  Math.atan(splineFunction.derivative().value(x));
 		            x += deltaX;
-		            System.out.println("slopes "+ i + "-esima : " + (slopes[i]/Math.PI)*180);
+		            //System.out.println("slopes "+ i + "-esima : " + (slopes[i]/Math.PI)*180);
 		        }
 		    	slopes[numPoints-1] = slopes[numPoints-2]; 
 		    	return slopes;
