@@ -82,7 +82,7 @@ public class SimulationManager {
         	times[i+1] = times[i] + ((1/v1y + 1/v2y)/2) * dy;
         	
         	//System.out.println((1/(Math.sqrt(2*g*h) * Math.abs(Math.sin(slopes[i])))) * (Math.abs(points[i+1].getY() - points[i].getY())));
-        	//System.out.println(i +") velocità : " + Math.sqrt(2*g*h));
+        	System.out.println(i +") velocità : " + Math.sqrt(2*g*h1));
             //System.out.println(" tempi : " + times[i+1]);
         }
         return times;
