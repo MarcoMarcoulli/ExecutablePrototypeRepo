@@ -19,7 +19,7 @@ public class SimulationManager {
     Pane controlPane;
     private MassArrivalListener listener;
    
-    private static int g = 300;
+    private static int g = 100;
     private long startTime; // Tempo di inizio dell'animazione in nanosecondi
 
     public SimulationManager(Curve curve, MassArrivalListener listener) {
@@ -81,8 +81,9 @@ public class SimulationManager {
         	
         	times[i+1] = times[i] + ((1/v1y + 1/v2y)/2) * dy;
         	
-        	//System.out.println((1/(Math.sqrt(2*g*h) * Math.abs(Math.sin(slopes[i])))) * (Math.abs(points[i+1].getY() - points[i].getY())));
-        	System.out.println(i +") velocità : " + Math.sqrt(2*g*h1));
+        	//System.out.println(h1);
+        	//System.out.println((slopes[i]/Math.PI)*180);
+        	//System.out.println(i +") velocità : " + v1y);
             //System.out.println(" tempi : " + times[i+1]);
         }
         return times;

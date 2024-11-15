@@ -80,20 +80,20 @@ public class CubicSpline extends Curve {
 	    		double m = (controlPoints[1].getY() - controlPoints[0].getY()) / (controlPoints[1].getX() - controlPoints[0].getX());
 	    		for(int i=0; i < numPoints; i++)
 	    		{	
-	    			slopes[i] = m;
-	    			//System.out.println((slopes[i]/Math.PI)*180);
+	    			slopes[i] = Math.atan(m);
+	    			System.out.println((slopes[i]/Math.PI)*180);
 	    		}
 	    		return slopes;
 	    	}
 	    	else {
 		    	double deltaX = intervalX / (double) (numPoints - 1);
 		    	double x = startPoint.getX();
-		    	for (int i=0; i < numPoints - 1; i++) {
-		            slopes[i] =  Math.atan(splineFunction.derivative().value(x));
+		    	for (int i=0; i < numPoints; i++) {
+		            slopes[i] = Math.atan(splineFunction.derivative().value(x));
 		            x += deltaX;
 		            //System.out.println("slopes "+ i + "-esima : " + (slopes[i]/Math.PI)*180);
-		        }
-		    	slopes[numPoints-1] = slopes[numPoints-2]; 
+		    	}
+		    	slopes[numPoints-1] = slopes[numPoints-2];
 		    	return slopes;
 	    	}
 	    }

@@ -93,15 +93,15 @@ public class Circumference extends Curve {
     {	
     	double xCenter;
     	xCenter = (bCoefficient() + convexity*(intervalX/Math.abs(intervalX))*Math.sqrt(delta()))/(2*aCoefficient());
-    	System.out.print("xCenter : " + (xCenter+startPoint.getX()));
-    	System.out.print(" xR : " + (xCenter+startPoint.getX()-r));
+    	//System.out.print("xCenter : " + (xCenter+startPoint.getX()));
+    	//System.out.print(" xR : " + (xCenter+startPoint.getX()-r));
     	return xCenter;
     }
     
     private double yCenter(Point startPoint)
     {
     	double yCenter = (Math.pow(intervalX, 2) + Math.pow(intervalY, 2) - 2*xCenter(startPoint)*intervalX)/(2*intervalY);
-    	System.out.println(" yCenter : " + (yCenter+startPoint.getY()));
+    	//System.out.println(" yCenter : " + (yCenter+startPoint.getY()));
     	return yCenter;
     } 
     
@@ -118,7 +118,7 @@ public class Circumference extends Curve {
                 xCubic = intervalX * Math.pow(t, 3);     // Densità maggiore all'inizio con t^3
                 x = x0 +xCubic;
                 slopes[i] = Math.atan((r-x)/Math.sqrt(2*r*x - Math.pow(x, 2)));
-                System.out.println((slopes[i]/Math.PI)*180);
+                //System.out.println((slopes[i]/Math.PI)*180);
             }
     	}
     	
@@ -131,7 +131,7 @@ public class Circumference extends Curve {
                 yCubic = intervalY * Math.pow(t, 3);     // Densità maggiore all'inizio con t^3
                 y = y0 + yCubic;
                 slopes[i] = Math.PI/2 - Math.atan((r-y)/Math.sqrt(2*r*y - Math.pow(y, 2)));
-                System.out.println((slopes[i]/Math.PI)*180);
+                //System.out.println((slopes[i]/Math.PI)*180);
             }
     	}
     	return slopes;
