@@ -371,6 +371,7 @@ public class Interface extends Application implements MassArrivalListener{
     
     private void handleStopIntermediatePointsInsertionClick()
     {
+    	controlPanel.getChildren().clear();
     	CubicSpline spline = new CubicSpline(inputManager.getStartPoint(),inputManager.getEndPoint(), inputManager.getIntermediatePoint());
     	spline.setRandomColors();
     	inputManager.clearIntermediatePoints();
@@ -378,7 +379,6 @@ public class Interface extends Application implements MassArrivalListener{
     	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
     	simulations.getLast().setSlopes(spline.calculateSlopes());
     	simulations.getLast().calculateTimeParametrization();
-    	controlPanel.getChildren().clear();
     	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
     	state = UIStates.CHOOSING_MASS;
     }

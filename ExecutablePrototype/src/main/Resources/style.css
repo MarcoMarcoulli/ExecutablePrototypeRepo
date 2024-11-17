@@ -3,7 +3,7 @@
     -fx-background-color: #d1d1d1; /* Colore di sfondo grigio chiaro */
     -fx-padding: 15px;             /* Aumentato il padding per maggiore spazio */
     -fx-spacing: 15px;             /* Spaziatura uniforme tra i componenti */
-    -fx-pref-width: 420px;         /* Larghezza aumentata per visibilità e bilanciamento */
+    -fx-pref-width: 430px;         /* Larghezza aumentata per visibilità e bilanciamento */
     -fx-border-color: #cccccc;     /* Leggero bordo per definire il pannello */
     -fx-border-width: 1px;
 }
