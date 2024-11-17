@@ -40,7 +40,7 @@ public class Interface extends Application implements MassArrivalListener{
     private VBox controlPanel;
     private HBox curveButtons, iconButtons, convexityButtons;
     private Label startPointMessage, endPointMessage, chooseCurveMessage, intermediatePointsMessage, chooseMassMessage, 
-    				chooseRadiusMessage, chooseConvexityMessage;
+    				chooseRadiusMessage, chooseConvexityMessage, simulatingMessage;
     private Button btnCancelInput, btnCycloid, btnParabola, btnCubicSpline, btnCircumference, btnConfirmRadius, btnConvexityUp, 
     				btnConvexityDown, btnStopIntermediatePointsInsertion, btnStartSimulation, btnInsertAnotherCurve;
     private ImageView iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton;
@@ -74,12 +74,13 @@ public class Interface extends Application implements MassArrivalListener{
         startPointMessage.getStyleClass().add("label".toUpperCase());
         endPointMessage = new Label("Inserisci il punto di arrivo".toUpperCase());
         endPointMessage.getStyleClass().add("label");
-        chooseCurveMessage = new Label("scegli una curva");
+        chooseCurveMessage = new Label("scegli una curva".toUpperCase());
         chooseCurveMessage.getStyleClass().add("label");
         intermediatePointsMessage = new Label("Inserisci dei punti intermedi da interpolare".toUpperCase());
         chooseMassMessage = new Label("Inserisci chi vuoi far scivolare".toUpperCase()); 
         chooseRadiusMessage = new Label("Seleziona il raggio della circonferenza".toUpperCase());
         chooseConvexityMessage = new Label("scegli la convessita".toUpperCase());
+        simulatingMessage = new Label("Simulazione in corso".toUpperCase());
         
         
         btnCancelInput = new Button("Cancella Input");
@@ -411,9 +412,11 @@ public class Interface extends Application implements MassArrivalListener{
     	controlPanel.getChildren().addAll(chooseCurveMessage, curveButtons, btnCancelInput);
     }
     
+    private int numberOfSimulations;
     
     @Override
     public void onMassArrival(SimulationManager source, boolean arrived) {
+    	numberOfSimulations--;
     	int i = simulations.indexOf(source);
     	if(i>=0)
     	{
@@ -429,10 +432,17 @@ public class Interface extends Application implements MassArrivalListener{
     		}
     		else {
     			massArrivalMessagesBox.getChildren().removeAll(neverArriveMessages);
-    			System.out.println("kwdjnck");
     			neverArriveMessages.add(new Label(simulations.get(i).getMass().getIconTypeString() + " sulla " + simulations.get(i).getCurve().curveName() +" non arriverà mai a destinazione"));
     			massArrivalMessagesBox.getChildren().addAll(neverArriveMessages);
     		}
+    	}
+    	
+    	if(numberOfSimulations == 0)
+    	{
+    		controlPanel.getChildren().clear();
+    		if(iconButtons.getChildren().isEmpty())
+            	controlPanel.getChildren().addAll(btnStartSimulation, btnCancelInput, massArrivalMessagesBox); 
+            else controlPanel.getChildren().addAll(btnStartSimulation, btnInsertAnotherCurve, btnCancelInput, massArrivalMessagesBox); 
     	}
     }
     
@@ -449,14 +459,13 @@ public class Interface extends Application implements MassArrivalListener{
    
     private void handleStartSimulationClick()
     {
+    	numberOfSimulations = simulations.size();
     	controlPanel.getChildren().clear(); 
     	arrivalTimeMessages.clear();
     	neverArriveMessages.clear();
     	massArrivalMessagesBox.getChildren().clear();
     	
-    	if(iconButtons.getChildren().isEmpty())
-        	controlPanel.getChildren().addAll(btnStartSimulation, btnCancelInput, massArrivalMessagesBox); 
-        else controlPanel.getChildren().addAll(btnStartSimulation, btnInsertAnotherCurve, btnCancelInput, massArrivalMessagesBox); 
+    	controlPanel.getChildren().addAll(simulatingMessage, btnCancelInput, massArrivalMessagesBox);
     	
     	for(int i=0; i<simulations.size(); i++)
     	{
