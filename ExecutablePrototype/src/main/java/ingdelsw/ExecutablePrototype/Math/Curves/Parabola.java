@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import ingdelsw.ExecutablePrototype.Math.Point;
 
+
 public class Parabola extends Curve {
 	
 	private double a;  // Coefficiente della parabola

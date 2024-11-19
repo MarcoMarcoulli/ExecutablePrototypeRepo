@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import ingdelsw.ExecutablePrototype.Math.Point;
 
+
 public class Cycloid extends Curve {
 	
 	private double alfa;

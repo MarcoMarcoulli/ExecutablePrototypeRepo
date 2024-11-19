@@ -19,7 +19,7 @@ public class SimulationManager {
     Pane controlPane;
     private MassArrivalListener listener;
    
-    private static int g = 100;
+    private static int g = 150;
     private long startTime; // Tempo di inizio dell'animazione in nanosecondi
 
     public SimulationManager(Curve curve, MassArrivalListener listener) {

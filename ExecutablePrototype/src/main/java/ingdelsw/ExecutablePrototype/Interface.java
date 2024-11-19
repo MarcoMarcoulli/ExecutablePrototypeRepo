@@ -68,7 +68,9 @@ public class Interface extends Application implements MassArrivalListener{
         BorderPane root = new BorderPane();
         
         // Carica il file CSS
-        root.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        root.getStylesheets().add(
+        	    getClass().getClassLoader().getResource("style.css").toExternalForm()
+        	);
         
         startPointMessage = new Label("Inserisci il punto di partenza".toUpperCase());
         startPointMessage.getStyleClass().add("label".toUpperCase());

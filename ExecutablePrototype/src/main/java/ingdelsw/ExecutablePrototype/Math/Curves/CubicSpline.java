@@ -59,14 +59,14 @@ public class CubicSpline extends Curve {
 	    public Point[] calculatePoints()
         {
         	Point[] points = new Point[numPoints];
-        	double deltaX = intervalX / (double) (numPoints - 1);
-        	double x = startPoint.getX();
-        	double y = startPoint.getY();
+        	double x, y,  t, xPow;
         	for (int i=0; i < numPoints - 1; i++) {
+        		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
+                xPow = intervalX * Math.pow(t, 3);     // Densità maggiore all'inizio con t^2
+                x = startPoint.getX() + xPow;
         		y = evaluateY(x);
         		points[i] = new Point(x, y);
         		//System.out.println("punto " + i + "-esimo - X : " + x + " Y : "+ y );
-        		x += deltaX;
             }
         	points[numPoints-1] = endPoint;
         	return points;
@@ -86,11 +86,12 @@ public class CubicSpline extends Curve {
 	    		return slopes;
 	    	}
 	    	else {
-		    	double deltaX = intervalX / (double) (numPoints - 1);
-		    	double x = startPoint.getX();
+	    		double x, t, xPow;
 		    	for (int i=0; i < numPoints - 1; i++) {
+		    		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
+	                xPow = intervalX * Math.pow(t, 3);     // Densità maggiore all'inizio con t^2
+	                x = startPoint.getX() + xPow;
 		            slopes[i] = Math.atan(splineFunction.derivative().value(x));
-		            x += deltaX;
 		            //System.out.println("slopes "+ i + "-esima : " + (slopes[i]/Math.PI)*180);
 		    	}
 		    	slopes[numPoints-1] = slopes[numPoints-2];
