@@ -150,6 +150,7 @@ public class Interface extends Application implements MassArrivalListener{
             curveCanvas.setWidth(newWidth);
             pointsCanvas.setWidth(newWidth);
             animationPane.setPrefWidth(newWidth);
+            handleCancelInputClick();
         });
 
         root.heightProperty().addListener((obs, oldVal, newVal) -> {
@@ -157,6 +158,7 @@ public class Interface extends Application implements MassArrivalListener{
             curveCanvas.setHeight(newHeight);
             pointsCanvas.setHeight(newHeight);
             animationPane.setPrefHeight(newHeight);
+            handleCancelInputClick();
         });
         
         
@@ -279,7 +281,14 @@ public class Interface extends Application implements MassArrivalListener{
     	Cycloid cycloid = new Cycloid(inputManager.getStartPoint(),inputManager.getEndPoint());
     	cycloid.setRandomColors();
     	simulations.add(new SimulationManager(cycloid, this));
-    	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
+    	
+    	Point[] points = simulations.getLast().getPoints();
+    	
+    	int red = simulations.getLast().getCurve().getRed();
+    	int green = simulations.getLast().getCurve().getGreen();
+    	int blue = simulations.getLast().getCurve().getBlue();
+    	
+    	CurveVisualizer.drawCurve(points, curveCanvas.getGraphicsContext2D(), red,  green,  blue);
     	simulations.getLast().setSlopes(cycloid.calculateSlopes());
     	simulations.getLast().calculateTimeParametrization();
     	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
@@ -294,7 +303,15 @@ public class Interface extends Application implements MassArrivalListener{
     	Parabola parabola = new Parabola(inputManager.getStartPoint(),inputManager.getEndPoint());
     	parabola.setRandomColors();
     	simulations.add(new SimulationManager(parabola, this));
-    	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), parabola.getRed(),  parabola.getGreen(),  parabola.getBlue());
+    	
+    	Point[] points = simulations.getLast().getPoints();
+    	
+    	int red = simulations.getLast().getCurve().getRed();
+    	int green = simulations.getLast().getCurve().getGreen();
+    	int blue = simulations.getLast().getCurve().getBlue();
+    	
+    	CurveVisualizer.drawCurve(points, curveCanvas.getGraphicsContext2D(), red,  green, blue);
+    	
     	simulations.getLast().setSlopes(parabola.calculateSlopes());
     	simulations.getLast().calculateTimeParametrization();
     	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
@@ -312,13 +329,22 @@ public class Interface extends Application implements MassArrivalListener{
     
     private void handleConvexityUpClick()
     {
-    	double deltaX = inputManager.getEndPoint().getX() - inputManager.getStartPoint().getX();
     	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), 1);
     	circumference.setRandomColors();
-    	simulations.add(new SimulationManager(circumference, this));
-    	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
     	
-    	radiusSlider = new Slider((deltaX/Math.abs(deltaX))*circumference.getR(), (deltaX/Math.abs(deltaX))*circumference.getR()*3, (deltaX/Math.abs(deltaX))*circumference.getR());
+    	simulations.add(new SimulationManager(circumference, this));
+    	
+    	Point[] points = simulations.getLast().getPoints();
+    	
+    	int red = simulations.getLast().getCurve().getRed();
+    	int green = simulations.getLast().getCurve().getGreen();
+    	int blue = simulations.getLast().getCurve().getBlue();
+    	
+    	CurveVisualizer.drawCurve(points, curveCanvas.getGraphicsContext2D(), red,  green,  blue);
+    	
+    	double deltaX = inputManager.getEndPoint().getX() - inputManager.getStartPoint().getX();
+    	double initialRadius = (deltaX/Math.abs(deltaX))*circumference.getR();
+    	radiusSlider = new Slider(initialRadius, initialRadius*3, initialRadius);
     	// Aggiungi un listener per il valore dello slider e chiama la funzione
         radiusSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             handleSliderChange(newValue.doubleValue(), 1);
@@ -334,7 +360,14 @@ public class Interface extends Application implements MassArrivalListener{
     	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), -1);
     	circumference.setRandomColors();
     	simulations.add(new SimulationManager(circumference, this));
-    	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
+    	
+    	Point[] points = simulations.getLast().getPoints();
+    	
+    	int red = simulations.getLast().getCurve().getRed();
+    	int green = simulations.getLast().getCurve().getGreen();
+    	int blue = simulations.getLast().getCurve().getBlue();
+    	
+    	CurveVisualizer.drawCurve(points, curveCanvas.getGraphicsContext2D(), red, green,  blue);
     	
     	radiusSlider = new Slider(circumference.getR(), circumference.getR()*3, circumference.getR());
     	// Aggiungi un listener per il valore dello slider e chiama la funzione
@@ -356,15 +389,30 @@ public class Interface extends Application implements MassArrivalListener{
     	circumference.setBlue(simulations.getLast().getCurve().getBlue());
     	simulations.removeLast();
     	simulations.add(new SimulationManager(circumference, this));
-    	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
+    	
+    	Point[] points = simulations.getLast().getPoints();
+    	
+    	int red = simulations.getLast().getCurve().getRed();
+    	int green = simulations.getLast().getCurve().getGreen();
+    	int blue = simulations.getLast().getCurve().getBlue();
+    	
+    	CurveVisualizer.drawCurve(points, curveCanvas.getGraphicsContext2D(), red, green,  blue);
     	for (int i = 0; i < simulations.size() - 1; i++) {
-    	    CurveVisualizer.drawCurve(simulations.get(i).getPoints(), curveCanvas.getGraphicsContext2D(), simulations.get(i).getCurve().getRed(), simulations.get(i).getCurve().getGreen(), simulations.get(i).getCurve().getBlue());
+    		
+    		points = simulations.get(i).getPoints();
+    		
+    		red = simulations.get(i).getCurve().getRed();
+    		green = simulations.get(i).getCurve().getGreen();
+    		blue = simulations.get(i).getCurve().getBlue();
+    		
+    	    CurveVisualizer.drawCurve(points, curveCanvas.getGraphicsContext2D(), red, green, blue);
     	}
     }
     
     private void handleConfirmRadiusClick(double radius, int convexity)
     {
-    	simulations.getLast().setSlopes(simulations.getLast().getCurve().calculateSlopes());
+    	double[] slopes = simulations.getLast().getCurve().calculateSlopes();
+    	simulations.getLast().setSlopes(slopes);
     	simulations.getLast().calculateTimeParametrization();
     	controlPanel.getChildren().clear();
     	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
@@ -378,7 +426,14 @@ public class Interface extends Application implements MassArrivalListener{
     	spline.setRandomColors();
     	inputManager.clearIntermediatePoints();
     	simulations.add(new SimulationManager(spline, this));
-    	CurveVisualizer.drawCurve(simulations.getLast().getPoints(), curveCanvas.getGraphicsContext2D(), simulations.getLast().getCurve().getRed(),  simulations.getLast().getCurve().getGreen(),  simulations.getLast().getCurve().getBlue());
+    	
+    	Point[] points = simulations.getLast().getPoints();
+    	
+    	int red = simulations.getLast().getCurve().getRed();
+    	int green = simulations.getLast().getCurve().getGreen();
+    	int blue = simulations.getLast().getCurve().getBlue();
+    	
+    	CurveVisualizer.drawCurve(points, curveCanvas.getGraphicsContext2D(), red,  green,  blue);
     	simulations.getLast().setSlopes(spline.calculateSlopes());
     	simulations.getLast().calculateTimeParametrization();
     	controlPanel.getChildren().addAll(chooseMassMessage, iconButtons, btnCancelInput);
@@ -426,7 +481,8 @@ public class Interface extends Application implements MassArrivalListener{
     		{
     			massArrivalMessagesBox.getChildren().removeAll(arrivalTimeMessages);
     			String massName = simulations.get(i).getMass().getIconTypeString();
-    			String arrivalTime = String.format("%.5f", simulations.get(i).getArrivalTime());
+    			double arrive = simulations.get(i).getArrivalTime();
+    			String arrivalTime = String.format("%.5f", arrive);
     			String curveName = simulations.get(i).getCurve().curveName();
     			arrivalTimeMessages.add(new Label(massName + " sulla " + curveName + " è arrivato in " + arrivalTime + " secondi."));
     			arrivalTimeMessages.sort(Comparator.comparingInt(label -> extractNumber(label.getText())));
@@ -434,7 +490,9 @@ public class Interface extends Application implements MassArrivalListener{
     		}
     		else {
     			massArrivalMessagesBox.getChildren().removeAll(neverArriveMessages);
-    			neverArriveMessages.add(new Label(simulations.get(i).getMass().getIconTypeString() + " sulla " + simulations.get(i).getCurve().curveName() +" non arriverà mai a destinazione"));
+    			String massName = simulations.get(i).getMass().getIconTypeString();
+    			String curveName = simulations.get(i).getCurve().curveName();
+    			neverArriveMessages.add(new Label(massName + " sulla " + curveName +" non arriverà mai a destinazione"));
     			massArrivalMessagesBox.getChildren().addAll(neverArriveMessages);
     		}
     	}

@@ -62,6 +62,7 @@ public class SimulationManager {
         double h1, h2;
         double v1, v2;
         double v1y, v2y;
+        double integrand;
         double dy;
         System.out.println("parametrizzazione curva rispetto al tempo");
         for (int i = 1; i < points.length-1; i++) {
@@ -78,8 +79,9 @@ public class SimulationManager {
         	v1y = v1*Math.abs(Math.sin(slopes[i]));
         	v2y = v2*Math.abs(Math.sin(slopes[i+1]));
         	dy = (Math.abs(points[i+1].getY() - points[i].getY()));
+        	integrand = ((1/v1y + 1/v2y)/2);
         	
-        	times[i+1] = times[i] + ((1/v1y + 1/v2y)/2) * dy;
+        	times[i+1] = times[i] + integrand * dy;
         	
         	//System.out.println(h1);
         	//System.out.println((slopes[i]/Math.PI)*180);
@@ -98,7 +100,10 @@ public class SimulationManager {
 	
     public void startAnimation() {
     	
-        mass.getIcon().relocate(points[0].getX() - mass.getMassDiameter() / 2, points[0].getY() - mass.getMassDiameter() / 2);
+    	double x0 = points[0].getX() - mass.getMassDiameter() / 2;
+    	double y0 = points[0].getY() - mass.getMassDiameter() / 2;
+    	
+        mass.getIcon().relocate(x0, y0);
 
         startTime = 0;
         
@@ -125,11 +130,11 @@ public class SimulationManager {
                     	
                         // Calcola la posizione interpolata tra points[i] e points[i+1]
                         double ratio = (elapsedTime - times[i]) / (times[i + 1] - times[i]);
-                        double x = points[i].getX() + (points[i + 1].getX() - points[i].getX()) * ratio;
-                        double y = points[i].getY() + (points[i + 1].getY() - points[i].getY()) * ratio;
+                        double x = points[i].getX() + (points[i + 1].getX() - points[i].getX()) * ratio - mass.getMassDiameter() / 2;
+                        double y = points[i].getY() + (points[i + 1].getY() - points[i].getY()) * ratio - mass.getMassDiameter() / 2;
 
                         // Posiziona la massa
-                        mass.getIcon().relocate(x - mass.getMassDiameter() / 2, y - mass.getMassDiameter() / 2);
+                        mass.getIcon().relocate(x, y);
                         break;
                     }
        
@@ -140,8 +145,9 @@ public class SimulationManager {
                 
                 // Ferma l'animazione se abbiamo raggiunto l'ultimo punto
                 if (elapsedTime >= times[times.length - 1]) {
-                	
-                	mass.getIcon().relocate(points[points.length-1].getX() - mass.getMassDiameter() / 2, points[points.length-1].getY() - mass.getMassDiameter() / 2);
+                	double newX = points[points.length-1].getX() - mass.getMassDiameter() / 2;
+                	double newY = points[points.length-1].getY() - mass.getMassDiameter() / 2;
+                	mass.getIcon().relocate(newX, newY);
                     this.stop();
                     listener.onMassArrival(SimulationManager.this, true);
                 }
