@@ -49,7 +49,7 @@ public class Circumference extends Curve {
     		
         	for (int i=0; i < numPoints; i++) {
         		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
-                xPow = intervalX * Math.pow(t, 4);     // Densità maggiore all'inizio con t^2
+                xPow = intervalX * Math.pow(t, 3);     // Densità maggiore all'inizio con t^2
         		x = startPoint.getX() + xPow;
                 y = yCenter + evaluateFunction(x + r - xCenter);
                 points[i] = new Point(x,y);
@@ -62,7 +62,7 @@ public class Circumference extends Curve {
     		
         	for (int i=0; i < numPoints; i++) {
         		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
-                yPow = intervalY * Math.pow(t, 4);     // Densità maggiore all'inizio con t^2
+                yPow = intervalY * Math.pow(t, 3);     // Densità maggiore all'inizio con t^2
         		y = startPoint.getY() + yPow;
                 x = xCenter + (intervalX/Math.abs(intervalX))*evaluateFunction(y + r - yCenter);
                 points[i] = new Point(x,y);
@@ -117,7 +117,7 @@ public class Circumference extends Curve {
     		double x0 = r - xCenter(startPoint);
         	for (int i=0; i < numPoints; i++) {
         		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
-                xCubic = intervalX * Math.pow(t, 4);     // Densità maggiore all'inizio con t^3
+                xCubic = intervalX * Math.pow(t, 3);     // Densità maggiore all'inizio con t^3
                 x = x0 +xCubic;
                 slopes[i] = Math.atan((r-x)/Math.sqrt(2*r*x - Math.pow(x, 2)));
                 //System.out.println((slopes[i]/Math.PI)*180);
@@ -130,7 +130,7 @@ public class Circumference extends Curve {
     		double y0 = r - yCenter(startPoint);
         	for (int i=0; i < numPoints; i++) {
         		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
-                yPow = intervalY * Math.pow(t, 4);     // Densità maggiore all'inizio con t^3
+                yPow = intervalY * Math.pow(t, 3);     // Densità maggiore all'inizio con t^3
                 y = y0 + yPow;
                 slopes[i] = Math.PI/2 - Math.atan((r-y)/Math.sqrt(2*r*y - Math.pow(y, 2)));
                 //System.out.println((slopes[i]/Math.PI)*180);

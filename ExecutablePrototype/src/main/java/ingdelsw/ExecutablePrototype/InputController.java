@@ -8,14 +8,22 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 
-public class InputManager {
+public class InputController {
     private Point startPoint, endPoint;
     private ArrayList<Point> intermediatePoints;
+    private static InputController theController = null;
     
-    public InputManager() {
+    private InputController() {
     	startPoint = null;
     	endPoint = null;
         intermediatePoints = new ArrayList<>();
+    }
+    
+    public static InputController getController()
+    {
+    	if(theController == null)
+    		theController = new InputController();
+    	return theController;
     }
 
     public Point getStartPoint() {

@@ -30,7 +30,7 @@ import javafx.scene.paint.Color;
 
 public class Interface extends Application implements MassArrivalListener{
 
-	private InputManager inputManager;
+	private InputController inputController;
     private ArrayList<SimulationManager> simulations;
     private UIStates state;
     
@@ -171,7 +171,7 @@ public class Interface extends Application implements MassArrivalListener{
         root.setLeft(controlPanel);
         
         // Inizializzazione InputManager
-        inputManager = new InputManager();
+        inputController = InputController.getController();
         simulations = new ArrayList<SimulationManager>();
         controlPanel.getChildren().add(startPointMessage);
         state = UIStates.WAITING_FOR_START_POINT;
@@ -212,7 +212,7 @@ public class Interface extends Application implements MassArrivalListener{
         GraphicsContext gc = pointsCanvas.getGraphicsContext2D();
         switch (state) {
 	        case WAITING_FOR_START_POINT:
-	            inputManager.setStartpoint(new Point(x, y));
+	            inputController.setStartpoint(new Point(x, y));
 	            gc.setFill(Color.RED);
 	            gc.fillOval(x - 5, y - 5, 10, 10);  // Cerchio rosso per il punto di partenza
 	            controlPanel.getChildren().remove(startPointMessage);
@@ -221,9 +221,9 @@ public class Interface extends Application implements MassArrivalListener{
 	            break;
 	        case WAITING_FOR_END_POINT:
 	            try {
-	                inputManager.setEndpoint(new Point(x, y));
+	                inputController.setEndpoint(new Point(x, y));
 	            } catch (IllegalArgumentException e) {
-	                inputManager.handleException(e);
+	                inputController.handleException(e);
 	                return;
 	            }
 	            gc.setFill(Color.BLUE);
@@ -234,9 +234,9 @@ public class Interface extends Application implements MassArrivalListener{
 	            break;
 	        case INSERTING_INTERMEDIATE_POINTS:
 	        	try {
-	                inputManager.addIntermediatePoint(new Point(x,y));
+	                inputController.addIntermediatePoint(new Point(x,y));
 	            } catch (IllegalArgumentException e) {
-	                inputManager.handleException(e);
+	                inputController.handleException(e);
 	                return;
 	            }
 	            gc.setFill(Color.rgb(randomRed, randomGreen, randomBlue));
@@ -278,7 +278,7 @@ public class Interface extends Application implements MassArrivalListener{
     private void handleCycloidClick()
     {
     	controlPanel.getChildren().clear();
-    	Cycloid cycloid = new Cycloid(inputManager.getStartPoint(),inputManager.getEndPoint());
+    	Cycloid cycloid = new Cycloid(inputController.getStartPoint(),inputController.getEndPoint());
     	cycloid.setRandomColors();
     	simulations.add(new SimulationManager(cycloid, this));
     	
@@ -300,7 +300,7 @@ public class Interface extends Application implements MassArrivalListener{
     private void handleParabolaClick()
     {
     	controlPanel.getChildren().clear();
-    	Parabola parabola = new Parabola(inputManager.getStartPoint(),inputManager.getEndPoint());
+    	Parabola parabola = new Parabola(inputController.getStartPoint(),inputController.getEndPoint());
     	parabola.setRandomColors();
     	simulations.add(new SimulationManager(parabola, this));
     	
@@ -329,7 +329,7 @@ public class Interface extends Application implements MassArrivalListener{
     
     private void handleConvexityUpClick()
     {
-    	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), 1);
+    	Circumference circumference = new Circumference(inputController.getStartPoint(),inputController.getEndPoint(), 1);
     	circumference.setRandomColors();
     	
     	simulations.add(new SimulationManager(circumference, this));
@@ -342,7 +342,7 @@ public class Interface extends Application implements MassArrivalListener{
     	
     	CurveVisualizer.drawCurve(points, curveCanvas.getGraphicsContext2D(), red,  green,  blue);
     	
-    	double deltaX = inputManager.getEndPoint().getX() - inputManager.getStartPoint().getX();
+    	double deltaX = inputController.getEndPoint().getX() - inputController.getStartPoint().getX();
     	double initialRadius = (deltaX/Math.abs(deltaX))*circumference.getR();
     	radiusSlider = new Slider(initialRadius, initialRadius*3, initialRadius);
     	// Aggiungi un listener per il valore dello slider e chiama la funzione
@@ -357,7 +357,7 @@ public class Interface extends Application implements MassArrivalListener{
     
     private void handleConvexityDownClick()
     {
-    	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), -1);
+    	Circumference circumference = new Circumference(inputController.getStartPoint(),inputController.getEndPoint(), -1);
     	circumference.setRandomColors();
     	simulations.add(new SimulationManager(circumference, this));
     	
@@ -383,7 +383,7 @@ public class Interface extends Application implements MassArrivalListener{
     private void handleSliderChange(double radius, int convexity)
     {
     	curveCanvas.getGraphicsContext2D().clearRect(0, 0, curveCanvas.getWidth(), curveCanvas.getHeight());
-    	Circumference circumference = new Circumference(inputManager.getStartPoint(),inputManager.getEndPoint(), convexity, radius);
+    	Circumference circumference = new Circumference(inputController.getStartPoint(),inputController.getEndPoint(), convexity, radius);
     	circumference.setRed(simulations.getLast().getCurve().getRed());
     	circumference.setGreen(simulations.getLast().getCurve().getGreen());
     	circumference.setBlue(simulations.getLast().getCurve().getBlue());
@@ -422,9 +422,9 @@ public class Interface extends Application implements MassArrivalListener{
     private void handleStopIntermediatePointsInsertionClick()
     {
     	controlPanel.getChildren().clear();
-    	CubicSpline spline = new CubicSpline(inputManager.getStartPoint(),inputManager.getEndPoint(), inputManager.getIntermediatePoint());
+    	CubicSpline spline = new CubicSpline(inputController.getStartPoint(),inputController.getEndPoint(), inputController.getIntermediatePoint());
     	spline.setRandomColors();
-    	inputManager.clearIntermediatePoints();
+    	inputController.clearIntermediatePoints();
     	simulations.add(new SimulationManager(spline, this));
     	
     	Point[] points = simulations.getLast().getPoints();
@@ -454,7 +454,7 @@ public class Interface extends Application implements MassArrivalListener{
     // Gestione della selezione della massa
     private void handleMassSelection(MassIcon iconType, ImageView selectedMass) {
         ImageView mass = new ImageView(selectedMass.getImage());
-        simulations.getLast().setMass(new Mass(inputManager.getStartPoint(), iconType, mass));
+        simulations.getLast().setMass(new Mass(inputController.getStartPoint(), iconType, mass));
         animationPane.getChildren().add(simulations.getLast().getMass().getIcon());
         controlPanel.getChildren().clear();
         iconButtons.getChildren().remove(selectedMass);

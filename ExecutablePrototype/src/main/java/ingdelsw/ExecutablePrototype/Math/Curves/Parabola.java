@@ -31,7 +31,7 @@ public class Parabola extends Curve {
     	double t, yPow;
     	for (int i=0; i < numPoints; i++) {
     		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
-            yPow = intervalY * Math.pow(t, 4);   // Densità maggiore all'inizio con t^2.5
+            yPow = intervalY * Math.pow(t, 3);   // Densità maggiore all'inizio con t^2.5
             y = startPoint.getY() + yPow;
             x = startPoint.getX() + evaluateX(y-startPoint.getY());
             points[i] = new Point(x,y);
@@ -47,7 +47,7 @@ public class Parabola extends Curve {
     	double t, yPow;
     	for (int i=0; i < numPoints; i++) {
     		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
-            yPow = intervalY * Math.pow(t, 4);     // Densità maggiore all'inizio con t^2.5
+            yPow = intervalY * Math.pow(t, 3);     // Densità maggiore all'inizio con t^2.5
     		slopes[i] = Math.PI/2 - Math.atan(2*a*yPow);
             System.out.println((slopes[i]/Math.PI)*180);
         }
