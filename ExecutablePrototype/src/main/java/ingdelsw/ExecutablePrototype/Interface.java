@@ -34,18 +34,6 @@ public class Interface extends Application implements MassArrivalListener{
     private ArrayList<SimulationManager> simulations;
     private UIStates state;
     
-    private Canvas pointsCanvas;
-    private Canvas curveCanvas;
-    private Pane animationPane;
-    private VBox controlPanel;
-    private HBox curveButtons, iconButtons, convexityButtons;
-    private Label startPointMessage, endPointMessage, chooseCurveMessage, intermediatePointsMessage, chooseMassMessage, 
-    				chooseRadiusMessage, chooseConvexityMessage, simulatingMessage;
-    private Button btnCancelInput, btnCycloid, btnParabola, btnCubicSpline, btnCircumference, btnConfirmRadius, btnConvexityUp, 
-    				btnConvexityDown, btnStopIntermediatePointsInsertion, btnStartSimulation, btnInsertAnotherCurve;
-    private ImageView iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton;
-    private Slider radiusSlider;
-    private VBox massArrivalMessagesBox = new VBox();
     private ArrayList<Label> arrivalTimeMessages = new ArrayList<Label>();
     private ArrayList<Label> neverArriveMessages = new ArrayList<Label>();
     
@@ -133,7 +121,6 @@ public class Interface extends Application implements MassArrivalListener{
         
 
         // Pannello di controllo (a sinistra)
-        controlPanel = new VBox(10);
         controlPanel.getStyleClass().add("control-panel");
         controlPanel.getStyleClass().add("control-panel");
         root.setLeft(controlPanel);
