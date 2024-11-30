@@ -1,7 +1,10 @@
 
 package ingdelsw.ExecutablePrototype;
 
+import java.util.ArrayList;
+
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
@@ -30,16 +33,28 @@ public class Layout {
     private VBox massArrivalMessagesBox;
     private StackPane stackPane;
     private ImageView iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton;
+    
+    private ArrayList<Label> arrivalTimeMessages;
+    private ArrayList<Label> neverArriveMessages;
+    
+    GraphicsContext gc = pointsCanvas.getGraphicsContext2D();
+    
+    private static Layout theLayout = null;
+    
+    private WindowResizingListener listener;
 
-    public Layout() {
+    private Layout() {
     	root = new BorderPane();
     	// Carica il file CSS
         root.getStylesheets().add(
         	    getClass().getClassLoader().getResource("style.css").toExternalForm()
         	);
+        
         controlPanel = new VBox(10);
         controlPanel.getStyleClass().add("control-panel");
         controlPanel.getStyleClass().add("control-panel");
+        controlPanel.getChildren().add(startPointMessage);
+        
         // Canvas per disegno (a destra)
         curveCanvas = new Canvas();
         pointsCanvas = new Canvas();
@@ -104,6 +119,40 @@ public class Layout {
         iconViewJakob = createIconButton(iconJakob, MassIcon.JAKOB);
         iconViewLeibnitz = createIconButton(iconLeibnitz, MassIcon.LEIBNITZ);
         iconViewNewton = createIconButton(iconNewton, MassIcon.NEWTON);
+        
+        arrivalTimeMessages = new ArrayList<Label>();
+        neverArriveMessages = new ArrayList<Label>();
+        
+        // Aggiungi entrambi i Canvas al centro del layout
+        stackPane = new StackPane();
+        stackPane.getChildren().addAll(curveCanvas, pointsCanvas, animationPane);
+        root.setCenter(stackPane);
+        
+        root.setLeft(controlPanel);
+        
+        root.widthProperty().addListener((obs, oldVal, newVal) -> {
+            double newWidth = newVal.doubleValue() - controlPanel.getWidth();
+            curveCanvas.setWidth(newWidth);
+            pointsCanvas.setWidth(newWidth);
+            animationPane.setPrefWidth(newWidth);
+            listener.onWindowResizing();
+        });
+
+        root.heightProperty().addListener((obs, oldVal, newVal) -> {
+            double newHeight = newVal.doubleValue();
+            curveCanvas.setHeight(newHeight);
+            pointsCanvas.setHeight(newHeight);
+            animationPane.setPrefHeight(newHeight);
+            listener.onWindowResizing();
+        });
+        
+    }
+    
+    public static Layout getLayout()
+    {
+    	if(theLayout == null)
+    		theLayout = new Layout();
+    	return theLayout;
     }
     
     final double IconButtonDiameter = 70;
@@ -113,8 +162,12 @@ public class Layout {
         ImageView iconView = new ImageView(image);
         iconView.setFitWidth(IconButtonDiameter); // Imposta la larghezza desiderata per l'icona
         iconView.setFitHeight(IconButtonDiameter);
-        iconView.setOnMouseClicked(e -> handleMassSelection(iconType, (ImageView) e.getSource()));
         return iconView;
+    }
+    
+    public BorderPane getBorderPane()
+    {
+    	return root;
     }
 
     public VBox getControlPanel() {
@@ -252,4 +305,38 @@ public class Layout {
     public ImageView getIconViewNewton() {
         return iconViewNewton;
     }
+    
+    public GraphicsContext getGC()
+    {
+    	return gc;
+    }
+    
+    public void setWindowResizingListener(WindowResizingListener listener)
+    {
+    	this.listener = listener;
+    }
+    
+    public void clear()
+    {
+    	pointsCanvas.getGraphicsContext2D().clearRect(0, 0, pointsCanvas.getWidth(), pointsCanvas.getHeight());
+        curveCanvas.getGraphicsContext2D().clearRect(0, 0, curveCanvas.getWidth(), curveCanvas.getHeight());
+        animationPane.getChildren().clear();
+        controlPanel.getChildren().clear();
+        controlPanel.getChildren().add(startPointMessage);
+        iconButtons.getChildren().clear();
+        iconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
+        curveButtons.getChildren().clear();
+        curveButtons.getChildren().addAll(btnCycloid, btnCircumference, btnParabola, btnCubicSpline);
+        arrivalTimeMessages.clear();
+    	neverArriveMessages.clear();
+    	massArrivalMessagesBox.getChildren().clear();
+    }
+
+	public ArrayList<Label> getArrivalTimeMessages() {
+		return arrivalTimeMessages;
+	}
+	
+	public ArrayList<Label> getNeverArriveMessages() {
+		return neverArriveMessages;
+	}
 }
