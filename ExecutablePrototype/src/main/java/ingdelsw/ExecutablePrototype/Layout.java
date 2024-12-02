@@ -37,13 +37,16 @@ public class Layout {
     private ArrayList<Label> arrivalTimeMessages;
     private ArrayList<Label> neverArriveMessages;
     
-    GraphicsContext gc = pointsCanvas.getGraphicsContext2D();
+    private GraphicsContext gc;
     
     private static Layout theLayout = null;
     
     private WindowResizingListener listener;
 
-    private Layout() {
+    private Layout(WindowResizingListener listener) {
+    	
+    	this.listener = listener;
+    	
     	root = new BorderPane();
     	// Carica il file CSS
         root.getStylesheets().add(
@@ -53,7 +56,6 @@ public class Layout {
         controlPanel = new VBox(10);
         controlPanel.getStyleClass().add("control-panel");
         controlPanel.getStyleClass().add("control-panel");
-        controlPanel.getChildren().add(startPointMessage);
         
         // Canvas per disegno (a destra)
         curveCanvas = new Canvas();
@@ -63,20 +65,20 @@ public class Layout {
         
         curveButtons = new HBox(10);
         curveButtons.getStyleClass().add("curve-buttons");
-        curveButtons.getChildren().addAll(btnCycloid, btnCircumference, btnParabola, btnCubicSpline);
         
         iconButtons = new HBox(10); // Layout per tenere insieme le icone
         iconButtons.getStyleClass().add("icon-buttons");
-        iconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
         
         convexityButtons= new HBox(6);
-        convexityButtons.getChildren().addAll(btnConvexityUp, btnConvexityDown);
         
         massArrivalMessagesBox = new VBox();
         stackPane = new StackPane(curveCanvas, pointsCanvas, animationPane);
         
+        radiusSlider = null;
+        
         startPointMessage = new Label("Inserisci il punto di partenza".toUpperCase());
         startPointMessage.getStyleClass().add("label".toUpperCase());
+        controlPanel.getChildren().add(startPointMessage);
         endPointMessage = new Label("Inserisci il punto di arrivo".toUpperCase());
         endPointMessage.getStyleClass().add("label");
         chooseCurveMessage = new Label("scegli una curva".toUpperCase());
@@ -106,6 +108,9 @@ public class Layout {
         btnStartSimulation = new Button("avvia simulazione");
         btnInsertAnotherCurve = new Button("inserisci un' altra curva");
         
+        curveButtons.getChildren().addAll(btnCycloid, btnCircumference, btnParabola, btnCubicSpline);
+        convexityButtons.getChildren().addAll(btnConvexityUp, btnConvexityDown);
+        
         // Carica le icone
         Image iconBernoulli = new Image(getClass().getResource("/images/Bernoulli.png").toExternalForm());
         Image iconGalileo = new Image(getClass().getResource("/images/Galileo.png").toExternalForm());
@@ -120,8 +125,12 @@ public class Layout {
         iconViewLeibnitz = createIconButton(iconLeibnitz, MassIcon.LEIBNITZ);
         iconViewNewton = createIconButton(iconNewton, MassIcon.NEWTON);
         
+        iconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
+        
         arrivalTimeMessages = new ArrayList<Label>();
         neverArriveMessages = new ArrayList<Label>();
+        
+        gc = pointsCanvas.getGraphicsContext2D();
         
         // Aggiungi entrambi i Canvas al centro del layout
         stackPane = new StackPane();
@@ -148,10 +157,10 @@ public class Layout {
         
     }
     
-    public static Layout getLayout()
+    public static Layout getLayout(WindowResizingListener listener)
     {
     	if(theLayout == null)
-    		theLayout = new Layout();
+    		theLayout = new Layout(listener);
     	return theLayout;
     }
     
@@ -284,6 +293,10 @@ public class Layout {
 
     public Slider getRadiusSlider() {
         return radiusSlider;
+    }
+    
+    public void setRadiusSlider(Slider radiusSlider) {
+        this.radiusSlider = radiusSlider;
     }
 
     public ImageView getIconViewBernoulli() {
