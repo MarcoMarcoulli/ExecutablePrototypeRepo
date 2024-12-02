@@ -2,6 +2,7 @@ package ingdelsw.ExecutablePrototype;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import ingdelsw.ExecutablePrototype.Math.Point;
 import javafx.scene.control.Alert;
@@ -36,7 +37,7 @@ public class InputController {
     	return endPoint;
     }
     
-    public ArrayList<Point> getIntermediatePoint() {
+    public List<Point> getIntermediatePoint() {
     	return intermediatePoints;
     }
 

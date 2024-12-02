@@ -4,6 +4,7 @@ import ingdelsw.ExecutablePrototype.Math.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
@@ -12,15 +13,15 @@ public class CubicSpline extends Curve {
 	private PolynomialSplineFunction splineFunction;  // Funzione spline generata
 	private Point[] controlPoints;  // Array dei punti di controllo
 	
-	 public CubicSpline(Point startPoint, Point endPoint, ArrayList<Point> intermediatePoints) {
+	 public CubicSpline(Point startPoint, Point endPoint, List<Point> list) {
 	        super(startPoint, endPoint);
 
-	        int n = intermediatePoints.size() + 2;
+	        int n = list.size() + 2;
 	    	controlPoints = new Point[n];
 	    	controlPoints[0] = startPoint;
 	    	for(int i = 1; i < n-1; i++)
 	    	{
-	    		controlPoints[i] = intermediatePoints.get(i-1);
+	    		controlPoints[i] = list.get(i-1);
 	    	}
 	    	controlPoints[n-1] = endPoint;
 	    	
@@ -86,7 +87,9 @@ public class CubicSpline extends Curve {
 	    		return slopes;
 	    	}
 	    	else {
-	    		double x, t, xPow;
+	    		double x;
+	    		double  t;
+	    		double  xPow;
 		    	for (int i=0; i < numPoints - 1; i++) {
 		    		t = (double) i / (numPoints - 1); // Parametro normale da 0 a 1
 	                xPow = intervalX * Math.pow(t, 3);     // Densità maggiore all'inizio con t^2
