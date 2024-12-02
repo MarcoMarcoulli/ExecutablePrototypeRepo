@@ -59,9 +59,12 @@ public class SimulationManager {
         times = new double[points.length];
         times[0] = 0;
         times[1] = Double.MIN_VALUE;
-        double h1, h2;
-        double v1, v2;
-        double v1y, v2y;
+        double h1;
+        double h2;
+        double v1;
+        double v2;
+        double v1y;
+        double v2y;
         double integrand;
         double dy;
         System.out.println("parametrizzazione curva rispetto al tempo");
@@ -91,7 +94,6 @@ public class SimulationManager {
         return times;
     }
 
-    private AnimationTimer timer; 
 	
 	public void setMassArrivalListener(MassArrivalListener listener)
     {
@@ -99,6 +101,8 @@ public class SimulationManager {
     }
 	
     public void startAnimation() {
+    	
+    	AnimationTimer timer; 
     	
     	double x0 = points[0].getX() - mass.getMassDiameter() / 2;
     	double y0 = points[0].getY() - mass.getMassDiameter() / 2;

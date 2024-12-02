@@ -19,6 +19,8 @@ public class InputController {
         intermediatePoints = new ArrayList<>();
     }
     
+    
+    //Singleton pattern implementation
     public static InputController getController()
     {
     	if(theController == null)
