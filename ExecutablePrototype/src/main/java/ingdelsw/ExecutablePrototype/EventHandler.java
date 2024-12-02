@@ -207,7 +207,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
         layout.getRadiusSlider().valueProperty().addListener((observable, oldValue, newValue) -> {
             handleSliderChange(newValue.doubleValue(), 1);
         });
-        layout.getBtnConfirmRadius().setOnAction(e -> handleConfirmRadiusClick(layout.getRadiusSlider().getValue(), 1));
+        layout.getBtnConfirmRadius().setOnAction(e -> handleConfirmRadiusClick());
         layout.getControlPanel().getChildren().clear();
         layout.getControlPanel().getChildren().addAll(layout.getChooseRadiusMessage(), layout.getRadiusSlider(), layout.getBtnConfirmRadius(), layout.getBtnCancelInput());
     }
@@ -233,7 +233,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
         layout.getRadiusSlider().valueProperty().addListener((observable, oldValue, newValue) -> {
             handleSliderChange(newValue.doubleValue(), -1);
         });
-        layout.getBtnConfirmRadius().setOnAction(e -> handleConfirmRadiusClick(layout.getRadiusSlider().getValue(), -1));
+        layout.getBtnConfirmRadius().setOnAction(e -> handleConfirmRadiusClick());
         layout.getControlPanel().getChildren().clear();
         layout.getControlPanel().getChildren().addAll(layout.getChooseRadiusMessage(), layout.getRadiusSlider(), layout.getBtnConfirmRadius());
     }
@@ -267,7 +267,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	}
     }
     
-    public void handleConfirmRadiusClick(double radius, int convexity)
+    public void handleConfirmRadiusClick()
     {
     	double[] slopes = simulations.getLast().getCurve().calculateSlopes();
     	simulations.getLast().setSlopes(slopes);
