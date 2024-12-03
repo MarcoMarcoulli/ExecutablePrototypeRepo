@@ -25,9 +25,9 @@ public class Layout {
     private Pane animationPane;
     private HBox curveButtons, iconButtons, convexityButtons;
     private Label startPointMessage, endPointMessage, chooseCurveMessage, intermediatePointsMessage, 
-                  chooseMassMessage, chooseRadiusMessage, chooseConvexityMessage, simulatingMessage;
+                  chooseMassMessage, chooseRadiusMessage, chooseConvexityMessage, selectGravityMessage, simulatingMessage;
     private Button btnCancelInput, btnCycloid, btnParabola, btnCubicSpline, btnCircumference, 
-                   btnConfirmRadius, btnConvexityUp, btnConvexityDown, btnStopIntermediatePointsInsertion, 
+                   btnConfirmRadius, btnConvexityUp, btnConvexityDown, btnStopIntermediatePointsInsertion, btnPrepareToStart,
                    btnStartSimulation, btnInsertAnotherCurve;
     private Slider radiusSlider;
     private VBox massArrivalMessagesBox;
@@ -87,6 +87,7 @@ public class Layout {
         chooseMassMessage = new Label("Inserisci chi vuoi far scivolare".toUpperCase()); 
         chooseRadiusMessage = new Label("Seleziona il raggio della circonferenza".toUpperCase());
         chooseConvexityMessage = new Label("scegli la convessita".toUpperCase());
+        selectGravityMessage = new Label("scegli il campo gravitazionale in cui far avvenire la caduta".toUpperCase());
         simulatingMessage = new Label("Simulazione in corso".toUpperCase());
         
         btnCancelInput = new Button("Cancella Input");
@@ -102,11 +103,12 @@ public class Layout {
         btnCircumference = new Button("Circonferenza");
         btnCircumference.getStyleClass().add("button");
         btnConfirmRadius = new Button("Seleziona Raggio");
-        btnConvexityUp = new Button("verso l'alto");
-        btnConvexityDown = new Button("verso il basso");
+        btnConvexityUp = new Button("Verso l'alto");
+        btnConvexityDown = new Button("Verso il basso");
         btnStopIntermediatePointsInsertion = new Button("Fine immissione");
-        btnStartSimulation = new Button("avvia simulazione");
-        btnInsertAnotherCurve = new Button("inserisci un' altra curva");
+        btnPrepareToStart = new Button("Prepararsi alla partenza");
+        btnStartSimulation = new Button("Avvia simulazione");
+        btnInsertAnotherCurve = new Button("Inserisci un' altra curva");
         
         curveButtons.getChildren().addAll(btnCycloid, btnCircumference, btnParabola, btnCubicSpline);
         convexityButtons.getChildren().addAll(btnConvexityUp, btnConvexityDown);

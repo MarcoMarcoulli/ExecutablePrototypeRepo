@@ -144,9 +144,6 @@ public class SimulationManager {
        
                 }
                 
-     
-                
-                
                 // Ferma l'animazione se abbiamo raggiunto l'ultimo punto
                 if (elapsedTime >= times[times.length - 1]) {
                 	double newX = points[points.length-1].getX() - mass.getMassDiameter() / 2;
