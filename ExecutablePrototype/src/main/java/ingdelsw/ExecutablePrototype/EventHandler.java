@@ -303,14 +303,15 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     }
     
     // Gestione della selezione della massa
-    private void handleMassSelection(MassIcon iconType, ImageView mass) {
+    private void handleMassSelection(MassIcon iconType, ImageView selectedMass) {
+        ImageView mass = new ImageView(selectedMass.getImage());
         simulations.getLast().setMass(new Mass(inputController.getStartPoint(), iconType, mass));
         layout.getAnimationPane().getChildren().add(simulations.getLast().getMass().getIcon());
         layout.getControlPanel().getChildren().clear();
-        layout.getMassIconButtons().getChildren().remove(mass);
+        layout.getMassIconButtons().getChildren().remove(selectedMass);
         if(layout.getMassIconButtons().getChildren().isEmpty())
-        	layout.getControlPanel().getChildren().addAll(layout.getBtnPrepareToStart(), layout.getBtnCancelInput()); 
-        else layout.getControlPanel().getChildren().addAll(layout.getBtnPrepareToStart(), layout.getBtnInsertAnotherCurve(), layout.getBtnCancelInput()); 
+        	layout.getControlPanel().getChildren().addAll(layout.getBtnStartSimulation(), layout.getBtnCancelInput()); 
+        else layout.getControlPanel().getChildren().addAll(layout.getBtnStartSimulation(), layout.getBtnInsertAnotherCurve(), layout.getBtnCancelInput()); 
     }
  
     private int numberOfSimulations;
