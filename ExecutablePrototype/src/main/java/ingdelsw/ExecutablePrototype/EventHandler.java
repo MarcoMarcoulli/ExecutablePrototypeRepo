@@ -27,10 +27,14 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
 	private UIStates state;
 	
 	private InputController inputController;
+	
     private ArrayList<SimulationManager> simulations;
 	
     private Layout layout;
+    
 	private static EventHandler theHandler = null;
+	
+	private static int g;
 
 	public EventHandler(){
 		inputController = InputController.getController();
@@ -150,7 +154,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	
     	CurveVisualizer.drawCurve(points, layout.getCurveCanvas().getGraphicsContext2D(), red,  green,  blue);
     	simulations.getLast().setSlopes(cycloid.calculateSlopes());
-    	simulations.getLast().calculateTimeParametrization();
+    	simulations.getLast().calculateTimeParametrization(g);
     	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getMassIconButtons(), layout.getBtnCancelInput());
     	layout.getCurveButtons().getChildren().remove(layout.getBtnCycloid());
     }
@@ -172,7 +176,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	CurveVisualizer.drawCurve(points, layout.getCurveCanvas().getGraphicsContext2D(), red,  green, blue);
     	
     	simulations.getLast().setSlopes(parabola.calculateSlopes());
-    	simulations.getLast().calculateTimeParametrization();
+    	simulations.getLast().calculateTimeParametrization(g);
     	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getMassIconButtons(), layout.getBtnCancelInput());
     	layout.getCurveButtons().getChildren().remove(layout.getBtnParabola());
     }
@@ -271,7 +275,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     {
     	double[] slopes = simulations.getLast().getCurve().calculateSlopes();
     	simulations.getLast().setSlopes(slopes);
-    	simulations.getLast().calculateTimeParametrization();
+    	simulations.getLast().calculateTimeParametrization(g);
     	layout.getControlPanel().getChildren().clear();
     	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getMassIconButtons(), layout.getBtnCancelInput());
     }
@@ -292,7 +296,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	
     	CurveVisualizer.drawCurve(points, layout.getCurveCanvas().getGraphicsContext2D(), red,  green,  blue);
     	simulations.getLast().setSlopes(spline.calculateSlopes());
-    	simulations.getLast().calculateTimeParametrization();
+    	simulations.getLast().calculateTimeParametrization(g);
     	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getMassIconButtons(), layout.getBtnCancelInput());
     }
     
@@ -362,9 +366,10 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
         }
     }
     
-    public void handlePrepareToStartClick(ImageView planet)
+    public void handleChoosePlanetClick(ImageView planet)
     {
-   
+    	layout.getControlPanel().getChildren().clear();
+    	layout.getControlPanel().getChildren().addAll(layout.getSelectGravityMessage(), layout.getPlanetIconButtons(), layout.getBtnCancelInput());
     }
     
     public void handleStartSimulationClick()
@@ -381,6 +386,28 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	{
     		simulations.get(i).startAnimation();
     	}
+    }
+    
+    public void handleGravitySelection(PlanetIcon iconType)
+    {
+    	switch(iconType) {
+    		case MOON : 
+    			g = 10;
+    			break;
+    		case MARS : 
+    			g = 100;
+    			break;
+    		case EARTH : 
+    			g = 500;
+    			break;
+    		case JUPITER : 
+    			g = 1000;
+    			break;
+    		case SUN : 
+    			g = 2000;
+    			break;
+    	}
+    	
     }
     
     @Override 

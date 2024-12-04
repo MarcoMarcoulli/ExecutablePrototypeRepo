@@ -52,7 +52,6 @@ public class Layout {
     private Button  btnConvexityUp;
     private Button  btnConvexityDown;
     private Button  btnStopIntermediatePointsInsertion;
-    private Button  btnPrepareToStart;
     private Button  btnStartSimulation;
     private Button  btnInsertAnotherCurve;
     
@@ -119,6 +118,8 @@ public class Layout {
         
         radiusSlider = null;
         
+        selectGravityMessage = new Label("scegli il campo gravitazionale in cui far avvenire la caduta".toUpperCase());
+        controlPanel.getChildren().addAll(selectGravityMessage, planetIconButtons);
         startPointMessage = new Label("Inserisci il punto di partenza".toUpperCase());
         startPointMessage.getStyleClass().add("label".toUpperCase());
         controlPanel.getChildren().add(startPointMessage);
@@ -130,7 +131,6 @@ public class Layout {
         chooseMassMessage = new Label("Inserisci chi vuoi far scivolare".toUpperCase()); 
         chooseRadiusMessage = new Label("Seleziona il raggio della circonferenza".toUpperCase());
         chooseConvexityMessage = new Label("scegli la convessita".toUpperCase());
-        selectGravityMessage = new Label("scegli il campo gravitazionale in cui far avvenire la caduta".toUpperCase());
         simulatingMessage = new Label("Simulazione in corso".toUpperCase());
         
         btnCancelInput = new Button("Cancella Input");
@@ -149,7 +149,6 @@ public class Layout {
         btnConvexityUp = new Button("Verso l'alto");
         btnConvexityDown = new Button("Verso il basso");
         btnStopIntermediatePointsInsertion = new Button("Fine immissione");
-        btnPrepareToStart = new Button("Prepararsi alla partenza");
         btnStartSimulation = new Button("Avvia simulazione");
         btnInsertAnotherCurve = new Button("Inserisci un' altra curva");
         
@@ -263,6 +262,10 @@ public class Layout {
     public HBox getMassIconButtons() {
         return massIconButtons;
     }
+    
+    public HBox getPlanetIconButtons() {
+        return planetIconButtons;
+    }
 
     public HBox getConvexityButtons() {
         return convexityButtons;
@@ -294,6 +297,10 @@ public class Layout {
 
     public Label getChooseMassMessage() {
         return chooseMassMessage;
+    }
+    
+    public Label getSelectGravityMessage() {
+        return selectGravityMessage;
     }
 
     public Label getChooseRadiusMessage() {
@@ -348,10 +355,6 @@ public class Layout {
         return btnStartSimulation;
     }
     
-    public Button getBtnPrepareToStart() {
-        return btnPrepareToStart;
-    }
-
     public Button getBtnInsertAnotherCurve() {
         return btnInsertAnotherCurve;
     }
@@ -434,7 +437,7 @@ public class Layout {
 		return arrivalTimeMessages;
 	}
 	
-	public ArrayList<Label> getNeverArriveMessages() {
+	public List<Label> getNeverArriveMessages() {
 		return neverArriveMessages;
 	}
 }
