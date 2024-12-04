@@ -151,7 +151,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	CurveVisualizer.drawCurve(points, layout.getCurveCanvas().getGraphicsContext2D(), red,  green,  blue);
     	simulations.getLast().setSlopes(cycloid.calculateSlopes());
     	simulations.getLast().calculateTimeParametrization();
-    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getIconButtons(), layout.getBtnCancelInput());
+    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getMassIconButtons(), layout.getBtnCancelInput());
     	layout.getCurveButtons().getChildren().remove(layout.getBtnCycloid());
     }
 	    
@@ -173,7 +173,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	
     	simulations.getLast().setSlopes(parabola.calculateSlopes());
     	simulations.getLast().calculateTimeParametrization();
-    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getIconButtons(), layout.getBtnCancelInput());
+    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getMassIconButtons(), layout.getBtnCancelInput());
     	layout.getCurveButtons().getChildren().remove(layout.getBtnParabola());
     }
     
@@ -273,7 +273,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	simulations.getLast().setSlopes(slopes);
     	simulations.getLast().calculateTimeParametrization();
     	layout.getControlPanel().getChildren().clear();
-    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getIconButtons(), layout.getBtnCancelInput());
+    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getMassIconButtons(), layout.getBtnCancelInput());
     }
     
     public void handleStopIntermediatePointsInsertionClick()
@@ -293,7 +293,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	CurveVisualizer.drawCurve(points, layout.getCurveCanvas().getGraphicsContext2D(), red,  green,  blue);
     	simulations.getLast().setSlopes(spline.calculateSlopes());
     	simulations.getLast().calculateTimeParametrization();
-    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getIconButtons(), layout.getBtnCancelInput());
+    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getMassIconButtons(), layout.getBtnCancelInput());
     }
     
     private void handleInsertAnotherCurveClick()
@@ -303,18 +303,15 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     }
     
     // Gestione della selezione della massa
-    private void handleMassSelection(MassIcon iconType, ImageView selectedMass) {
-        ImageView mass = new ImageView(selectedMass.getImage());
+    private void handleMassSelection(MassIcon iconType, ImageView mass) {
         simulations.getLast().setMass(new Mass(inputController.getStartPoint(), iconType, mass));
         layout.getAnimationPane().getChildren().add(simulations.getLast().getMass().getIcon());
         layout.getControlPanel().getChildren().clear();
-        layout.getIconButtons().getChildren().remove(selectedMass);
-        if(layout.getIconButtons().getChildren().isEmpty())
-        	layout.getControlPanel().getChildren().addAll(layout.getBtnStartSimulation(), layout.getBtnCancelInput()); 
-        else layout.getControlPanel().getChildren().addAll(layout.getBtnStartSimulation(), layout.getBtnInsertAnotherCurve(), layout.getBtnCancelInput()); 
+        layout.getMassIconButtons().getChildren().remove(mass);
+        if(layout.getMassIconButtons().getChildren().isEmpty())
+        	layout.getControlPanel().getChildren().addAll(layout.getBtnPrepareToStart(), layout.getBtnCancelInput()); 
+        else layout.getControlPanel().getChildren().addAll(layout.getBtnPrepareToStart(), layout.getBtnInsertAnotherCurve(), layout.getBtnCancelInput()); 
     }
-    
-    final double IconButtonDiameter = 70;
  
     private int numberOfSimulations;
     
@@ -347,7 +344,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	if(numberOfSimulations == 0)
     	{
     		layout.getControlPanel().getChildren().clear();
-    		if(layout.getIconButtons().getChildren().isEmpty())
+    		if(layout.getMassIconButtons().getChildren().isEmpty())
             	layout.getControlPanel().getChildren().addAll(layout.getBtnStartSimulation(), layout.getBtnCancelInput(), layout.getMassArrivalMessagesBox()); 
             else layout.getControlPanel().getChildren().addAll(layout.getBtnStartSimulation(), layout.getBtnInsertAnotherCurve(), layout.getBtnCancelInput(), layout.getMassArrivalMessagesBox()); 
     	}
@@ -362,6 +359,11 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
         } catch (NumberFormatException e) {
             return 0; // Valore di default se non ci sono numeri
         }
+    }
+    
+    public void handlePrepareToStartClick(ImageView planet)
+    {
+   
     }
     
     public void handleStartSimulationClick()

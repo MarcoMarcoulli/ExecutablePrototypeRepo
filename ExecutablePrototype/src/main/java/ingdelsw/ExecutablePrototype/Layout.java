@@ -2,6 +2,7 @@
 package ingdelsw.ExecutablePrototype;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -19,20 +20,59 @@ import javafx.scene.image.ImageView;
 public class Layout {
 			// Layout principale
     private BorderPane root;
+    
     private VBox controlPanel;
+    
     private Canvas pointsCanvas;
     private Canvas curveCanvas;
+    
     private Pane animationPane;
-    private HBox curveButtons, iconButtons, convexityButtons;
-    private Label startPointMessage, endPointMessage, chooseCurveMessage, intermediatePointsMessage, 
-                  chooseMassMessage, chooseRadiusMessage, chooseConvexityMessage, selectGravityMessage, simulatingMessage;
-    private Button btnCancelInput, btnCycloid, btnParabola, btnCubicSpline, btnCircumference, 
-                   btnConfirmRadius, btnConvexityUp, btnConvexityDown, btnStopIntermediatePointsInsertion, btnPrepareToStart,
-                   btnStartSimulation, btnInsertAnotherCurve;
+    
+    private HBox curveButtons;
+    private HBox  massIconButtons;
+    private HBox  convexityButtons;
+    private HBox  planetIconButtons;
+    
+    private Label startPointMessage;
+    private Label  endPointMessage;
+    private Label  chooseCurveMessage;
+    private Label  intermediatePointsMessage;
+    private Label  chooseMassMessage;
+    private Label  chooseRadiusMessage;
+    private Label  chooseConvexityMessage;
+    private Label  selectGravityMessage;
+    private Label  simulatingMessage;
+    
+    private Button btnCancelInput;
+    private Button  btnCycloid;
+    private Button  btnParabola;
+    private Button  btnCubicSpline;
+    private Button  btnCircumference;
+    private Button  btnConfirmRadius;
+    private Button  btnConvexityUp;
+    private Button  btnConvexityDown;
+    private Button  btnStopIntermediatePointsInsertion;
+    private Button  btnPrepareToStart;
+    private Button  btnStartSimulation;
+    private Button  btnInsertAnotherCurve;
+    
     private Slider radiusSlider;
+    
     private VBox massArrivalMessagesBox;
+    
     private StackPane stackPane;
-    private ImageView iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton;
+    
+    private ImageView  iconViewBernoulli;
+    private ImageView  iconViewGalileo;
+    private ImageView  iconViewJakob;
+    private ImageView  iconViewLeibnitz;
+    private ImageView  iconViewNewton;
+    
+    private ImageView  iconViewMoon;
+    private ImageView  iconViewMars;
+    private ImageView  iconViewEarth;
+    private ImageView  iconViewJupiter;
+    private ImageView  iconViewSun;
     
     private ArrayList<Label> arrivalTimeMessages;
     private ArrayList<Label> neverArriveMessages;
@@ -66,8 +106,11 @@ public class Layout {
         curveButtons = new HBox(10);
         curveButtons.getStyleClass().add("curve-buttons");
         
-        iconButtons = new HBox(10); // Layout per tenere insieme le icone
-        iconButtons.getStyleClass().add("icon-buttons");
+        massIconButtons = new HBox(10); // Layout per tenere insieme le icone
+        massIconButtons.getStyleClass().add("icon-buttons");
+        
+        planetIconButtons = new HBox(10); // Layout per tenere insieme le icone
+        planetIconButtons.getStyleClass().add("icon-buttons");
         
         convexityButtons= new HBox(6);
         
@@ -113,7 +156,7 @@ public class Layout {
         curveButtons.getChildren().addAll(btnCycloid, btnCircumference, btnParabola, btnCubicSpline);
         convexityButtons.getChildren().addAll(btnConvexityUp, btnConvexityDown);
         
-        // Carica le icone
+        // Carica le icone delle masse
         Image iconBernoulli = new Image(getClass().getResource("/images/Bernoulli.png").toExternalForm());
         Image iconGalileo = new Image(getClass().getResource("/images/Galileo.png").toExternalForm());
         Image iconJakob = new Image(getClass().getResource("/images/Jakob.png").toExternalForm());
@@ -121,16 +164,32 @@ public class Layout {
         Image iconNewton = new Image(getClass().getResource("/images/Newton.png").toExternalForm());
 
         // Crea pulsanti immagine
-        iconViewBernoulli = createIconButton(iconBernoulli, MassIcon.BERNOULLI);
-        iconViewGalileo = createIconButton(iconGalileo,MassIcon.GALILEO);
-        iconViewJakob = createIconButton(iconJakob, MassIcon.JAKOB);
-        iconViewLeibnitz = createIconButton(iconLeibnitz, MassIcon.LEIBNITZ);
-        iconViewNewton = createIconButton(iconNewton, MassIcon.NEWTON);
+        iconViewBernoulli = createIconButton(iconBernoulli);
+        iconViewGalileo = createIconButton(iconGalileo);
+        iconViewJakob = createIconButton(iconJakob);
+        iconViewLeibnitz = createIconButton(iconLeibnitz);
+        iconViewNewton = createIconButton(iconNewton);
         
-        iconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
+        massIconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
         
-        arrivalTimeMessages = new ArrayList<Label>();
-        neverArriveMessages = new ArrayList<Label>();
+     // Carica le icone delle masse
+        Image iconMoon = new Image(getClass().getResource("/images/moon.png").toExternalForm());
+        Image iconMars = new Image(getClass().getResource("/images/mars.png").toExternalForm());
+        Image iconEarth = new Image(getClass().getResource("/images/earth.png").toExternalForm());
+        Image iconJupiter = new Image(getClass().getResource("/images/jupiter.png").toExternalForm());
+        Image iconSun = new Image(getClass().getResource("/images/sun.png").toExternalForm());
+
+        // Crea pulsanti immagine
+        iconViewMoon = createIconButton(iconMoon);
+        iconViewMars = createIconButton(iconMars);
+        iconViewEarth = createIconButton(iconEarth);
+        iconViewJupiter = createIconButton(iconJupiter);
+        iconViewSun = createIconButton(iconSun);
+        
+        planetIconButtons.getChildren().addAll(iconViewMoon, iconViewMars, iconViewEarth, iconViewJupiter, iconViewSun);
+        
+        arrivalTimeMessages = new ArrayList<>();
+        neverArriveMessages = new ArrayList<>();
         
         gc = pointsCanvas.getGraphicsContext2D();
         
@@ -146,7 +205,7 @@ public class Layout {
             curveCanvas.setWidth(newWidth);
             pointsCanvas.setWidth(newWidth);
             animationPane.setPrefWidth(newWidth);
-            listener.onWindowResizing();
+            this.listener.onWindowResizing();
         });
 
         root.heightProperty().addListener((obs, oldVal, newVal) -> {
@@ -154,7 +213,7 @@ public class Layout {
             curveCanvas.setHeight(newHeight);
             pointsCanvas.setHeight(newHeight);
             animationPane.setPrefHeight(newHeight);
-            listener.onWindowResizing();
+            this.listener.onWindowResizing();
         });
         
     }
@@ -166,13 +225,13 @@ public class Layout {
     	return theLayout;
     }
     
-    final double IconButtonDiameter = 70;
+    private static final double iconButtonDiameter = 70;
     
     // Metodo helper per creare un pulsante icona
-    private ImageView createIconButton(Image image, MassIcon iconType) {
+    private ImageView createIconButton(Image image) {
         ImageView iconView = new ImageView(image);
-        iconView.setFitWidth(IconButtonDiameter); // Imposta la larghezza desiderata per l'icona
-        iconView.setFitHeight(IconButtonDiameter);
+        iconView.setFitWidth(iconButtonDiameter); // Imposta la larghezza desiderata per l'icona
+        iconView.setFitHeight(iconButtonDiameter);
         return iconView;
     }
     
@@ -201,8 +260,8 @@ public class Layout {
         return curveButtons;
     }
 
-    public HBox getIconButtons() {
-        return iconButtons;
+    public HBox getMassIconButtons() {
+        return massIconButtons;
     }
 
     public HBox getConvexityButtons() {
@@ -288,6 +347,10 @@ public class Layout {
     public Button getBtnStartSimulation() {
         return btnStartSimulation;
     }
+    
+    public Button getBtnPrepareToStart() {
+        return btnPrepareToStart;
+    }
 
     public Button getBtnInsertAnotherCurve() {
         return btnInsertAnotherCurve;
@@ -301,6 +364,26 @@ public class Layout {
         this.radiusSlider = radiusSlider;
     }
 
+    public ImageView getIconViewMoon() {
+        return iconViewMoon;
+    }
+
+    public ImageView getIconViewMars() {
+        return iconViewMars;
+    }
+
+    public ImageView getIconViewEarth() {
+        return iconViewEarth;
+    }
+
+    public ImageView getIconViewJupiter() {
+        return iconViewJupiter;
+    }
+
+    public ImageView getIconViewSun() {
+        return iconViewSun;
+    }
+    
     public ImageView getIconViewBernoulli() {
         return iconViewBernoulli;
     }
@@ -338,8 +421,8 @@ public class Layout {
         animationPane.getChildren().clear();
         controlPanel.getChildren().clear();
         controlPanel.getChildren().add(startPointMessage);
-        iconButtons.getChildren().clear();
-        iconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
+        massIconButtons.getChildren().clear();
+        massIconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
         curveButtons.getChildren().clear();
         curveButtons.getChildren().addAll(btnCycloid, btnCircumference, btnParabola, btnCubicSpline);
         arrivalTimeMessages.clear();
@@ -347,7 +430,7 @@ public class Layout {
     	massArrivalMessagesBox.getChildren().clear();
     }
 
-	public ArrayList<Label> getArrivalTimeMessages() {
+	public List<Label> getArrivalTimeMessages() {
 		return arrivalTimeMessages;
 	}
 	
