@@ -1,5 +1,7 @@
 package ingdelsw.ExecutablePrototype;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
@@ -15,10 +17,12 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 
 public class EventHandler implements MassArrivalListener, WindowResizingListener{
 	
 	public enum UIStates {
+		SELECTING_GRAVITY,
     	WAITING_FOR_START_POINT,
         WAITING_FOR_END_POINT,
         INSERTING_INTERMEDIATE_POINTS;
@@ -27,15 +31,23 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
 	private UIStates state;
 	
 	private InputController inputController;
+	
     private ArrayList<SimulationManager> simulations;
 	
     private Layout layout;
+    
 	private static EventHandler theHandler = null;
+	
+	private static double g;
+	
+	double pixelHeightMm;
+	
 
 	public EventHandler(){
 		inputController = InputController.getController();
 		layout = Layout.getLayout(this);
 		simulations = new ArrayList<>();
+		state = UIStates.SELECTING_GRAVITY;
 		// Gestione del click sul pannello di disegno
         layout.getPointsCanvas().setOnMouseClicked(e -> handleMouseClick(e, inputController));
         layout.getBtnCancelInput().setOnAction(e -> handleCancelInputClick());
@@ -53,6 +65,30 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
 		layout.getIconViewJakob().setOnMouseClicked(e -> handleMassSelection(MassIcon.JAKOB, (ImageView) e.getSource()));
 		layout.getIconViewLeibnitz().setOnMouseClicked(e -> handleMassSelection(MassIcon.LEIBNITZ, (ImageView) e.getSource()));
 		layout.getIconViewNewton().setOnMouseClicked(e -> handleMassSelection(MassIcon.NEWTON, (ImageView) e.getSource()));
+		layout.getIconViewMoon().setOnMouseClicked(e -> handleGravitySelection(PlanetIcon.MOON));
+		layout.getIconViewMars().setOnMouseClicked(e -> handleGravitySelection(PlanetIcon.MARS));
+		layout.getIconViewEarth().setOnMouseClicked(e -> handleGravitySelection(PlanetIcon.EARTH));
+		layout.getIconViewJupiter().setOnMouseClicked(e -> handleGravitySelection(PlanetIcon.JUPITER));
+		layout.getIconViewSun().setOnMouseClicked(e -> handleGravitySelection(PlanetIcon.SUN));
+		
+		 // Ottieni lo schermo primario
+        Screen primaryScreen = Screen.getPrimary();
+
+        // Ottieni la risoluzione in pixel
+        double screenHeightPixels = primaryScreen.getBounds().getHeight(); // Altezza in pixel
+
+        // Ottieni il fattore di scala HiDPI
+        double scaleY = primaryScreen.getOutputScaleY();
+
+        // Ottieni il DPI dello schermo (dots per inch)
+        double dpi = 96 * scaleY; // JavaFX usa 96 DPI come base
+
+        // Calcola l'altezza dello schermo in millimetri
+        double screenHeightMm = screenHeightPixels * 25.4 / dpi;
+
+        // Calcola la dimensione di un pixel in millimetri
+        pixelHeightMm = screenHeightMm / screenHeightPixels;
+
 	}
 	
 	public static EventHandler getHandler()
@@ -75,7 +111,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
 	        inputController.setStartpoint(p);
 	        gc.setFill(Color.RED);
 	        gc.fillOval(p.getX() - 5, p.getY() - 5, 10, 10);  // Cerchio rosso per il punto di partenza
-	        layout.getControlPanel().getChildren().remove(layout.getStartPointMessage());
+	        layout.getControlPanel().getChildren().clear();
 	        layout.getControlPanel().getChildren().addAll(layout.getEndPointMessage(), layout.getBtnCancelInput());
 	        state = UIStates.WAITING_FOR_END_POINT;
 	        break;
@@ -115,7 +151,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     public void handleCancelInputClick(){
         layout.clear();
         simulations.clear();
-    	state = UIStates.WAITING_FOR_START_POINT;
+        state = UIStates.SELECTING_GRAVITY;
     }
     
     private int randomRed;
@@ -150,8 +186,8 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	
     	CurveVisualizer.drawCurve(points, layout.getCurveCanvas().getGraphicsContext2D(), red,  green,  blue);
     	simulations.getLast().setSlopes(cycloid.calculateSlopes());
-    	simulations.getLast().calculateTimeParametrization();
-    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getIconButtons(), layout.getBtnCancelInput());
+    	simulations.getLast().calculateTimeParametrization(g);
+    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getMassIconButtons(), layout.getBtnCancelInput());
     	layout.getCurveButtons().getChildren().remove(layout.getBtnCycloid());
     }
 	    
@@ -172,8 +208,8 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	CurveVisualizer.drawCurve(points, layout.getCurveCanvas().getGraphicsContext2D(), red,  green, blue);
     	
     	simulations.getLast().setSlopes(parabola.calculateSlopes());
-    	simulations.getLast().calculateTimeParametrization();
-    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getIconButtons(), layout.getBtnCancelInput());
+    	simulations.getLast().calculateTimeParametrization(g);
+    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getMassIconButtons(), layout.getBtnCancelInput());
     	layout.getCurveButtons().getChildren().remove(layout.getBtnParabola());
     }
     
@@ -271,9 +307,9 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     {
     	double[] slopes = simulations.getLast().getCurve().calculateSlopes();
     	simulations.getLast().setSlopes(slopes);
-    	simulations.getLast().calculateTimeParametrization();
+    	simulations.getLast().calculateTimeParametrization(g);
     	layout.getControlPanel().getChildren().clear();
-    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getIconButtons(), layout.getBtnCancelInput());
+    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getMassIconButtons(), layout.getBtnCancelInput());
     }
     
     public void handleStopIntermediatePointsInsertionClick()
@@ -292,8 +328,8 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	
     	CurveVisualizer.drawCurve(points, layout.getCurveCanvas().getGraphicsContext2D(), red,  green,  blue);
     	simulations.getLast().setSlopes(spline.calculateSlopes());
-    	simulations.getLast().calculateTimeParametrization();
-    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getIconButtons(), layout.getBtnCancelInput());
+    	simulations.getLast().calculateTimeParametrization(g);
+    	layout.getControlPanel().getChildren().addAll(layout.getChooseMassMessage(), layout.getMassIconButtons(), layout.getBtnCancelInput());
     }
     
     private void handleInsertAnotherCurveClick()
@@ -308,13 +344,11 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
         simulations.getLast().setMass(new Mass(inputController.getStartPoint(), iconType, mass));
         layout.getAnimationPane().getChildren().add(simulations.getLast().getMass().getIcon());
         layout.getControlPanel().getChildren().clear();
-        layout.getIconButtons().getChildren().remove(selectedMass);
-        if(layout.getIconButtons().getChildren().isEmpty())
+        layout.getMassIconButtons().getChildren().remove(selectedMass);
+        if(layout.getMassIconButtons().getChildren().isEmpty())
         	layout.getControlPanel().getChildren().addAll(layout.getBtnStartSimulation(), layout.getBtnCancelInput()); 
         else layout.getControlPanel().getChildren().addAll(layout.getBtnStartSimulation(), layout.getBtnInsertAnotherCurve(), layout.getBtnCancelInput()); 
     }
-    
-    final double IconButtonDiameter = 70;
  
     private int numberOfSimulations;
     
@@ -347,7 +381,7 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	if(numberOfSimulations == 0)
     	{
     		layout.getControlPanel().getChildren().clear();
-    		if(layout.getIconButtons().getChildren().isEmpty())
+    		if(layout.getMassIconButtons().getChildren().isEmpty())
             	layout.getControlPanel().getChildren().addAll(layout.getBtnStartSimulation(), layout.getBtnCancelInput(), layout.getMassArrivalMessagesBox()); 
             else layout.getControlPanel().getChildren().addAll(layout.getBtnStartSimulation(), layout.getBtnInsertAnotherCurve(), layout.getBtnCancelInput(), layout.getMassArrivalMessagesBox()); 
     	}
@@ -378,6 +412,34 @@ public class EventHandler implements MassArrivalListener, WindowResizingListener
     	{
     		simulations.get(i).startAnimation();
     	}
+    }
+    
+    public void handleGravitySelection(PlanetIcon iconType)
+    {
+    	double gMm;
+    	switch(iconType) {
+    		case MOON : 
+    			gMm = 1620;
+    			break;
+    		case MARS : 
+    			gMm = 3730;
+    			break;
+    		case EARTH : 
+    			gMm = 9810;
+    			break;
+    		case JUPITER : 
+    			gMm = 24790;
+    			break;
+    		case SUN : 
+    			gMm = 274000;
+    			break;
+    		default: gMm = 0;
+    	}
+    	g = gMm/(pixelHeightMm*100);
+    	System.out.println("g : " + g);
+    	layout.getControlPanel().getChildren().clear();
+    	layout.getControlPanel().getChildren().addAll(layout.getStartPointMessage(), layout.getBtnCancelInput());
+    	state = UIStates.WAITING_FOR_START_POINT;
     }
     
     @Override 

@@ -19,7 +19,6 @@ public class SimulationManager {
     Pane controlPane;
     private MassArrivalListener listener;
    
-    private static int g = 150;
     private long startTime; // Tempo di inizio dell'animazione in nanosecondi
 
     public SimulationManager(Curve curve, MassArrivalListener listener) {
@@ -55,7 +54,7 @@ public class SimulationManager {
     }
     
 
-    public double[] calculateTimeParametrization() {
+    public double[] calculateTimeParametrization(double g) {
         times = new double[points.length];
         times[0] = 0;
         times[1] = Double.MIN_VALUE;
@@ -143,9 +142,6 @@ public class SimulationManager {
                     }
        
                 }
-                
-     
-                
                 
                 // Ferma l'animazione se abbiamo raggiunto l'ultimo punto
                 if (elapsedTime >= times[times.length - 1]) {
