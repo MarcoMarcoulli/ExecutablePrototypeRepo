@@ -54,7 +54,7 @@ public class SimulationManager {
     }
     
 
-    public double[] calculateTimeParametrization(int g) {
+    public double[] calculateTimeParametrization(double g) {
         times = new double[points.length];
         times[0] = 0;
         times[1] = Double.MIN_VALUE;

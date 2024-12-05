@@ -4,6 +4,7 @@ package ingdelsw.ExecutablePrototype;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
@@ -61,17 +62,17 @@ public class Layout {
     
     private StackPane stackPane;
     
-    private ImageView  iconViewBernoulli;
-    private ImageView  iconViewGalileo;
-    private ImageView  iconViewJakob;
-    private ImageView  iconViewLeibnitz;
-    private ImageView  iconViewNewton;
+    private VBox iconViewBernoulli;
+    private VBox iconViewGalileo;
+    private VBox iconViewJakob;
+    private VBox iconViewLeibnitz;
+    private VBox iconViewNewton;
     
-    private ImageView  iconViewMoon;
-    private ImageView  iconViewMars;
-    private ImageView  iconViewEarth;
-    private ImageView  iconViewJupiter;
-    private ImageView  iconViewSun;
+    private VBox iconViewMoon;
+    private VBox iconViewMars;
+    private VBox iconViewEarth;
+    private VBox iconViewJupiter;
+    private VBox iconViewSun;
     
     private ArrayList<Label> arrivalTimeMessages;
     private ArrayList<Label> neverArriveMessages;
@@ -105,10 +106,10 @@ public class Layout {
         curveButtons = new HBox(10);
         curveButtons.getStyleClass().add("curve-buttons");
         
-        massIconButtons = new HBox(10); // Layout per tenere insieme le icone
+        massIconButtons = new HBox(50); // Layout per tenere insieme le icone
         massIconButtons.getStyleClass().add("icon-buttons");
         
-        planetIconButtons = new HBox(10); // Layout per tenere insieme le icone
+        planetIconButtons = new HBox(50); // Layout per tenere insieme le icone
         planetIconButtons.getStyleClass().add("icon-buttons");
         
         convexityButtons= new HBox(6);
@@ -118,7 +119,7 @@ public class Layout {
         
         radiusSlider = null;
         
-        selectGravityMessage = new Label("scegli il campo gravitazionale in cui far avvenire la caduta".toUpperCase());
+        selectGravityMessage = new Label("scegli il campo gravitazionale".toUpperCase());
         controlPanel.getChildren().addAll(selectGravityMessage, planetIconButtons);
         startPointMessage = new Label("Inserisci il punto di partenza".toUpperCase());
         startPointMessage.getStyleClass().add("label".toUpperCase());
@@ -163,15 +164,15 @@ public class Layout {
         Image iconNewton = new Image(getClass().getResource("/images/Newton.png").toExternalForm());
 
         // Crea pulsanti immagine
-        iconViewBernoulli = createIconButton(iconBernoulli);
-        iconViewGalileo = createIconButton(iconGalileo);
-        iconViewJakob = createIconButton(iconJakob);
-        iconViewLeibnitz = createIconButton(iconLeibnitz);
-        iconViewNewton = createIconButton(iconNewton);
+        iconViewBernoulli = createIconButton(iconBernoulli, "BERNOULLI");
+        iconViewGalileo = createIconButton(iconGalileo, "GALILEO");
+        iconViewJakob = createIconButton(iconJakob, "JAKOB");
+        iconViewLeibnitz = createIconButton(iconLeibnitz, "LEIBNITZ");
+        iconViewNewton = createIconButton(iconNewton, "NEWTON");
         
         massIconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
         
-     // Carica le icone delle masse
+        // Carica le icone delle masse
         Image iconMoon = new Image(getClass().getResource("/images/moon.png").toExternalForm());
         Image iconMars = new Image(getClass().getResource("/images/mars.png").toExternalForm());
         Image iconEarth = new Image(getClass().getResource("/images/earth.png").toExternalForm());
@@ -179,11 +180,11 @@ public class Layout {
         Image iconSun = new Image(getClass().getResource("/images/sun.png").toExternalForm());
 
         // Crea pulsanti immagine
-        iconViewMoon = createIconButton(iconMoon);
-        iconViewMars = createIconButton(iconMars);
-        iconViewEarth = createIconButton(iconEarth);
-        iconViewJupiter = createIconButton(iconJupiter);
-        iconViewSun = createIconButton(iconSun);
+        iconViewMoon = createIconButton(iconMoon, "g = 1,62");
+        iconViewMars = createIconButton(iconMars, "g = 3,73");
+        iconViewEarth = createIconButton(iconEarth, "g = 9,81");
+        iconViewJupiter = createIconButton(iconJupiter, "g = 24,79");
+        iconViewSun = createIconButton(iconSun, "g = 274");
         
         planetIconButtons.getChildren().addAll(iconViewMoon, iconViewMars, iconViewEarth, iconViewJupiter, iconViewSun);
         
@@ -227,11 +228,21 @@ public class Layout {
     private static final double iconButtonDiameter = 70;
     
     // Metodo helper per creare un pulsante icona
-    private ImageView createIconButton(Image image) {
+    private VBox createIconButton(Image image, String text) {
         ImageView iconView = new ImageView(image);
         iconView.setFitWidth(iconButtonDiameter); // Imposta la larghezza desiderata per l'icona
         iconView.setFitHeight(iconButtonDiameter);
-        return iconView;
+        
+        // Crea la didascalia
+        Label caption = new Label(text);
+        caption.getStyleClass().add("label-masses");;
+
+        // Aggiungi l'icona e la didascalia in una VBox
+        VBox vbox = new VBox(6); // Spaziatura tra icona e testo
+        vbox.setAlignment(Pos.CENTER); // Centra tutto
+        vbox.getChildren().addAll(iconView, caption);
+
+        return vbox;
     }
     
     public BorderPane getBorderPane()
@@ -368,43 +379,43 @@ public class Layout {
     }
 
     public ImageView getIconViewMoon() {
-        return iconViewMoon;
+        return (ImageView)iconViewMoon.getChildren().getFirst();
     }
 
     public ImageView getIconViewMars() {
-        return iconViewMars;
+        return (ImageView)iconViewMars.getChildren().getFirst();
     }
 
     public ImageView getIconViewEarth() {
-        return iconViewEarth;
+        return (ImageView)iconViewEarth.getChildren().getFirst();
     }
 
     public ImageView getIconViewJupiter() {
-        return iconViewJupiter;
+        return (ImageView)iconViewJupiter.getChildren().getFirst();
     }
 
     public ImageView getIconViewSun() {
-        return iconViewSun;
+        return (ImageView)iconViewSun.getChildren().getFirst();
     }
     
     public ImageView getIconViewBernoulli() {
-        return iconViewBernoulli;
+        return (ImageView)iconViewBernoulli.getChildren().getFirst();
     }
 
     public ImageView getIconViewGalileo() {
-        return iconViewGalileo;
+        return (ImageView)iconViewGalileo.getChildren().getFirst();
     }
 
     public ImageView getIconViewJakob() {
-        return iconViewJakob;
+        return (ImageView)iconViewJakob.getChildren().getFirst();
     }
 
     public ImageView getIconViewLeibnitz() {
-        return iconViewLeibnitz;
+        return (ImageView)iconViewLeibnitz.getChildren().getFirst();
     }
 
     public ImageView getIconViewNewton() {
-        return iconViewNewton;
+        return (ImageView)iconViewNewton.getChildren().getFirst();
     }
     
     public GraphicsContext getGC()
@@ -423,7 +434,7 @@ public class Layout {
         curveCanvas.getGraphicsContext2D().clearRect(0, 0, curveCanvas.getWidth(), curveCanvas.getHeight());
         animationPane.getChildren().clear();
         controlPanel.getChildren().clear();
-        controlPanel.getChildren().add(startPointMessage);
+        controlPanel.getChildren().addAll(selectGravityMessage, planetIconButtons);
         massIconButtons.getChildren().clear();
         massIconButtons.getChildren().addAll(iconViewBernoulli, iconViewGalileo, iconViewJakob, iconViewLeibnitz, iconViewNewton);
         curveButtons.getChildren().clear();
