@@ -1,6 +1,5 @@
 package ingdelsw.ExecutablePrototype.Math.Curves;
 
-import java.util.ArrayList;
 
 import ingdelsw.ExecutablePrototype.Math.Point;
 

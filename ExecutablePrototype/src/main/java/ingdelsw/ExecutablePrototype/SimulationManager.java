@@ -4,7 +4,6 @@ import ingdelsw.ExecutablePrototype.Math.Point;
 import ingdelsw.ExecutablePrototype.Math.Curves.Curve;
 
 import javafx.animation.AnimationTimer;
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
 public class SimulationManager {

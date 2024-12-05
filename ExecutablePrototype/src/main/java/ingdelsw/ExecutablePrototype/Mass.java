@@ -37,7 +37,6 @@ public class Mass {
         icon.relocate(position.getX() - massDiameter/2, position.getY() - massDiameter/2);
     }
 
-    // Getter per il tipo di icona (usato per la visualizzazione nell'interfaccia)
     public String getIconTypeString() {
         return iconType.name();
     }
@@ -46,7 +45,4 @@ public class Mass {
     {
     	return icon;
     }
-    
-
-    // Altri metodi logici, come il calcolo della posizione futura, possono essere aggiunti qui
 }
